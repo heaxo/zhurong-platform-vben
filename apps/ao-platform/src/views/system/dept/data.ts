@@ -1,12 +1,10 @@
-import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+import type {VxeTableGridOptions} from '@vben/plugins/vxe-table';
 
-import type { VbenFormSchema } from '#/adapter/form';
-import type { OnActionClickFn } from '#/adapter/vxe-table';
-import type { SystemDeptApi } from '#/api/system/dept';
-
-import { z } from '#/adapter/form';
-import { getDeptList } from '#/api/system/dept';
-import { $t } from '#/locales';
+import type {VbenFormSchema} from '#/adapter/form';
+import {z} from '#/adapter/form';
+import type {OnActionClickFn} from '#/adapter/vxe-table';
+import {getTreeList, type SystemDeptApi} from '#/api/system/dept';
+import {$t} from '#/locales';
 
 /**
  * 获取编辑表单的字段配置。如果没有使用多语言，可以直接export一个数组常量
@@ -29,7 +27,7 @@ export function useSchema(): VbenFormSchema[] {
       component: 'ApiTreeSelect',
       componentProps: {
         allowClear: true,
-        api: getDeptList,
+        api: getTreeList,
         class: 'w-full',
         labelField: 'name',
         valueField: 'id',
@@ -43,8 +41,8 @@ export function useSchema(): VbenFormSchema[] {
       componentProps: {
         buttonStyle: 'solid',
         options: [
-          { label: $t('common.enabled'), value: 1 },
-          { label: $t('common.disabled'), value: 0 },
+          {label: $t('common.enabled'), value: 1},
+          {label: $t('common.disabled'), value: 0},
         ],
         optionType: 'button',
       },
@@ -87,7 +85,7 @@ export function useColumns(
       width: 150,
     },
     {
-      cellRender: { name: 'CellTag' },
+      cellRender: {name: 'CellTag'},
       field: 'status',
       title: $t('system.dept.status'),
       width: 100,

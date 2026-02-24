@@ -20,6 +20,11 @@ async function getDeptList() {
     `${AUTH_BASE_PRIFIX}/sysDept/page`,
   );
 }
+async function getTreeList() {
+  return requestClient.get<Array<SystemDeptApi.SystemDept>>(
+    `${AUTH_BASE_PRIFIX}/sysDept/tree-list`,
+  );
+}
 
 /**
  * 创建部门
@@ -52,4 +57,4 @@ async function deleteDept(id: string) {
   return requestClient.delete(`${AUTH_BASE_PRIFIX}/sysDept/${id}`);
 }
 
-export { createDept, deleteDept, getDeptList, updateDept };
+export { createDept, deleteDept, getDeptList, getTreeList, updateDept };

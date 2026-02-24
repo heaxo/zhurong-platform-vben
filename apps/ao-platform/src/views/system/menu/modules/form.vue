@@ -17,7 +17,7 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { useVbenForm, z } from '#/adapter/form';
 import {
   createMenu,
-  getMenuList,
+  getMenuList, getMenuTreeList,
   isMenuNameExists,
   isMenuPathExists,
   SystemMenuApi,
@@ -69,7 +69,7 @@ const schema: VbenFormSchema[] = [
   {
     component: 'ApiTreeSelect',
     componentProps: {
-      api: getMenuList,
+      api: getMenuTreeList,
       class: 'w-full',
       filterTreeNode(input: string, node: Recordable<any>) {
         if (!input || input.length === 0) {
