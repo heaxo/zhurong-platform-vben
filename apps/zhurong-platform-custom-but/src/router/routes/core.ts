@@ -39,7 +39,7 @@ const coreRoutes: RouteRecordRaw[] = [
     children: [],
   },
   {
-    component: AuthPageLayout,
+    // component: AuthPageLayout,
     meta: {
       hideInTab: true,
       title: 'Authentication',
@@ -51,7 +51,7 @@ const coreRoutes: RouteRecordRaw[] = [
       {
         name: 'Login',
         path: 'login',
-        component: () => import('#/views/_core/authentication/login.vue'),
+        component: () => import('#/views/_core/authentication/but-login.vue'),
         meta: {
           title: $t('page.auth.login'),
         },
