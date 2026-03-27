@@ -92,7 +92,7 @@ const menus = computed(() => [
     icon: 'lucide:user',
     text: $t('page.auth.profile'),
   },
-  {
+  /*{
     handler: () => {
       openWindow(VBEN_DOC_URL, {
         target: '_blank',
@@ -118,7 +118,7 @@ const menus = computed(() => [
     },
     icon: CircleHelp,
     text: $t('ui.widgets.qa'),
-  },
+  },*/
 ]);
 
 const avatar = computed(() => {

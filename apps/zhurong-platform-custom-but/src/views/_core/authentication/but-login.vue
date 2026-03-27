@@ -24,10 +24,6 @@ const formSchema = computed((): VbenFormSchema[] => [
     },
     fieldName: 'password',
   },
-  {
-    component: markRaw(SliderCaptcha),
-    fieldName: 'captcha',
-  },
 ]);
 </script>
 
@@ -41,7 +37,7 @@ const formSchema = computed((): VbenFormSchema[] => [
     <div class="login-wrapper">
       <!-- 左侧品牌区 -->
       <div class="login-left">
-        <h1 class="logo">BUT</h1>
+        <h1 class="logo">iPlant</h1>
         <p class="desc">专注于液压控制，结构力学，仿真模拟，金属热处理，智能制造等专业领域</p>
 
         <div class="scan-line"></div>
@@ -57,7 +53,7 @@ const formSchema = computed((): VbenFormSchema[] => [
             :form-schema="formSchema"
             :loading="authStore.loginLoading"
             @submit="authStore.authLogin"
-            title="巴特车间下料平台"
+            title="iPlant车间下料平台"
             :showRegister="false"
             :showRememberMe="false"
             :showThirdPartyLogin="false"
@@ -72,6 +68,9 @@ const formSchema = computed((): VbenFormSchema[] => [
 </template>
 
 <style scoped>
+::v-deep(.text-foreground){
+  color: hsl(0 0% 95%);
+}
 /* ================= 背景 ================= */
 
 .login-root {
