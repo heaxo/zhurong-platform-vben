@@ -26,6 +26,7 @@
   "type": "module",
   "scripts": {
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
+    "build:zhurongCustom:but": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build --filter=@zhurong-platform/custom-but",
     "build:analyze": "turbo build:analyze",
     "build:antd": "pnpm run build --filter=@vben/web-antd",
     "build:docker": "./scripts/deploy/build-local-docker-image.sh",

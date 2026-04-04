@@ -17,6 +17,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm vite build --mode production",
+    "docker:build": "docker build -f deploy/Dockerfile -t zhurong-platform/but-nginx .",
     "build:analyze": "pnpm vite build --mode analyze",
     "dev": "pnpm vite --mode development",
     "preview": "vite preview",
