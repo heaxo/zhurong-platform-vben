@@ -21,6 +21,7 @@ import { refreshTokenApi } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
 export const CORE_BASE_PREFIX = "/api/core";
+export const AUTH_BASE_PRIFIX = "/api/auth";
 export const CUSTOM_BASE_PREFIX = "/api/custom";
 function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   const client = new RequestClient({

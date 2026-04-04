@@ -109,6 +109,14 @@
       "path": "packages/@core/ui-kit/tabs-ui",
     },
     {
+      "name": "@zhurong/api",
+      "path": "packages/zhurong/api",
+    },
+    {
+      "name": "@zhurong/components",
+      "path": "packages/zhurong/components",
+    },
+    {
       "name": "@vben/constants",
       "path": "packages/constants",
     },

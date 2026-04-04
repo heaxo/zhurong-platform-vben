@@ -6,6 +6,9 @@ settings:
 
 catalogs:
   default:
+    '@ant-design/icons-vue':
+      specifier: ^7.0.1
+      version: 7.0.1
     '@changesets/changelog-github':
       specifier: ^0.5.2
       version: 0.5.2
@@ -309,6 +312,9 @@ catalogs:
     lefthook:
       specifier: ^2.1.0
       version: 2.1.0
+    lodash-es:
+      specifier: ^4.17.21
+      version: 4.17.23
     lodash.clonedeep:
       specifier: ^4.5.0
       version: 4.5.0
@@ -973,6 +979,9 @@ importers:
 
   apps/zhurong-platform-custom-but:
     dependencies:
+      '@ant-design/icons-vue':
+        specifier: 'catalog:'
+        version: 7.0.1(vue@3.5.27(typescript@5.9.3))
       '@iconify/json':
         specifier: 'catalog:'
         version: 2.2.437
@@ -1030,12 +1039,18 @@ importers:
       '@vueuse/core':
         specifier: 'catalog:'
         version: 14.2.0(vue@3.5.27(typescript@5.9.3))
+      '@zhurong/components':
+        specifier: workspace:*
+        version: link:../../packages/zhurong/components
       ant-design-vue:
         specifier: 'catalog:'
         version: 4.2.6(vue@3.5.27(typescript@5.9.3))
       dayjs:
         specifier: 'catalog:'
         version: 1.11.19
+      lodash-es:
+        specifier: 'catalog:'
+        version: 4.17.23
       pinia:
         specifier: ^3.0.4
         version: 3.0.4(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))
@@ -2025,6 +2040,96 @@ importers:
       '@vben-core/typings':
         specifier: workspace:*
         version: link:../@core/base/typings
+      vue-router:
+        specifier: 'catalog:'
+        version: 4.6.4(vue@3.5.27(typescript@5.9.3))
+
+  packages/zhurong/api:
+    dependencies:
+      '@vben/constants':
+        specifier: workspace:*
+        version: link:../../constants
+      '@vben/hooks':
+        specifier: workspace:*
+        version: link:../../effects/hooks
+      '@vben/locales':
+        specifier: workspace:*
+        version: link:../../locales
+      '@vben/preferences':
+        specifier: workspace:*
+        version: link:../../preferences
+      '@vben/request':
+        specifier: workspace:*
+        version: link:../../effects/request
+      '@vben/stores':
+        specifier: workspace:*
+        version: link:../../stores
+      '@vben/types':
+        specifier: workspace:*
+        version: link:../../types
+      '@vben/utils':
+        specifier: workspace:*
+        version: link:../../utils
+      ant-design-vue:
+        specifier: 'catalog:'
+        version: 4.2.6(vue@3.5.27(typescript@5.9.3))
+      lodash-es:
+        specifier: 'catalog:'
+        version: 4.17.23
+      pinia:
+        specifier: ^3.0.4
+        version: 3.0.4(typescript@5.9.3)(vue@3.5.27(typescript@5.9.3))
+      vue-router:
+        specifier: 'catalog:'
+        version: 4.6.4(vue@3.5.27(typescript@5.9.3))
+
+  packages/zhurong/components:
+    dependencies:
+      '@ant-design/icons-vue':
+        specifier: 'catalog:'
+        version: 7.0.1(vue@3.5.27(typescript@5.9.3))
+      '@vben/common-ui':
+        specifier: workspace:*
+        version: link:../../effects/common-ui
+      '@vben/constants':
+        specifier: workspace:*
+        version: link:../../constants
+      '@vben/icons':
+        specifier: workspace:*
+        version: link:../../icons
+      '@vben/locales':
+        specifier: workspace:*
+        version: link:../../locales
+      '@vben/plugins':
+        specifier: workspace:*
+        version: link:../../effects/plugins
+      '@vben/preferences':
+        specifier: workspace:*
+        version: link:../../preferences
+      '@vben/types':
+        specifier: workspace:*
+        version: link:../../types
+      '@vben/utils':
+        specifier: workspace:*
+        version: link:../../utils
+      '@vueuse/core':
+        specifier: 'catalog:'
+        version: 14.2.0(vue@3.5.27(typescript@5.9.3))
+      '@zhurong/api':
+        specifier: workspace:*
+        version: link:../api
+      ant-design-vue:
+        specifier: 'catalog:'
+        version: 4.2.6(vue@3.5.27(typescript@5.9.3))
+      dayjs:
+        specifier: 'catalog:'
+        version: 1.11.19
+      lodash-es:
+        specifier: 'catalog:'
+        version: 4.17.23
+      vue:
+        specifier: ^3.5.27
+        version: 3.5.27(typescript@5.9.3)
       vue-router:
         specifier: 'catalog:'
         version: 4.6.4(vue@3.5.27(typescript@5.9.3))
@@ -11027,6 +11132,7 @@ packages:
   whatwg-encoding@3.1.1:
     resolution: {integrity: sha512-6qN4hJdMwfYBtE3YBTTHhoeuUrDBPZmbQaxWAqSALV/MeEnR5z1xd8UKud2RAkFoPkmB+hli1TZSnyi84xz1vQ==}
     engines: {node: '>=18'}
+    deprecated: Use @exodus/bytes instead for a more spec-conformant and faster implementation
 
   whatwg-mimetype@3.0.0:
     resolution: {integrity: sha512-nt+N2dzIutVRxARx1nghPKGv1xHikU7HKdfafKkLNLindmPU/ch3U31NOCGGA/dmPcmb1VlofO0vnKAcsm0o/Q==}
@@ -14567,7 +14673,7 @@ snapshots:
   '@v-c/slick@1.0.0(vue@3.5.27(typescript@5.9.3))':
     dependencies:
       '@v-c/util': 1.0.13(vue@3.5.27(typescript@5.9.3))
-      es-toolkit: 1.43.0
+      es-toolkit: 1.44.0
       vue: 3.5.27(typescript@5.9.3)
 
   '@v-c/slider@1.0.10(vue@3.5.27(typescript@5.9.3))':

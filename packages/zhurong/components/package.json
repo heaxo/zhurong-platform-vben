@@ -1,0 +1,39 @@
+{
+  "name": "@zhurong/components",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "packageManager": "pnpm@10.28.2",
+  "license": "UNLICENSED",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
+    "@zhurong/api": "workspace:*",
+    "@vben/common-ui": "workspace:*",
+    "@vben/constants": "workspace:*",
+    "@vben/icons": "workspace:*",
+    "@vben/locales": "workspace:*",
+    "@vben/plugins": "workspace:*",
+    "@vben/preferences": "workspace:*",
+    "@vben/types": "workspace:*",
+    "@vben/utils": "workspace:*",
+    "ant-design-vue": "catalog:",
+    "dayjs": "catalog:",
+    "lodash-es": "catalog:",
+    "vue-router": "catalog:",
+    "@vueuse/core": "catalog:",
+    "vue": "catalog:"
+  }
+}

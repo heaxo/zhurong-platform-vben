@@ -15,6 +15,10 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   theme: {
     colorPrimary: '#fdcc06',
+    builtinType: 'yellow',
+  },
+  transition: {
+    name: 'fade-down'
   },
   logo: {
     enable: true,

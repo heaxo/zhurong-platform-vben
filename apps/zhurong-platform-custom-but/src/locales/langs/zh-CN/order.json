@@ -2,5 +2,20 @@
   "title": "订单管理",
   "production": {
     "title": "生产订单"
-  }
+  },
+  "belposId": "订单编号",
+  "itemCode": "物料编号",
+  "coutKey": "SAP分厂",
+  "cfccad": "总成图号",
+  "cfType": "总成型号",
+  "ccad": "零件编号",
+  "itemName": "零件名称",
+  "uznr": "材质",
+  "udf1": "厚度",
+  "aplatzId": "机床",
+  "mengeVerbrauch": "数量",
+  "anfzeit": "开始时间",
+  "lieferdatum": "交货期",
+  "vversion": "生产计划批注",
+  "icadproduct": "总成内码"
 }

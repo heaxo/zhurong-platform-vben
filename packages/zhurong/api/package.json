@@ -1,0 +1,35 @@
+{
+  "name": "@zhurong/api",
+  "version": "1.0.0",
+  "description": "",
+  "author": "",
+  "packageManager": "pnpm@10.28.2",
+  "license": "UNLICENSED",
+  "type": "module",
+  "sideEffects": [
+    "**/*.css"
+  ],
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "exports": {
+    ".": {
+      "types": "./src/index.ts",
+      "default": "./src/index.ts"
+    }
+  },
+  "dependencies": {
+    "vue-router": "catalog:",
+    "@vben/request": "workspace:*",
+    "@vben/hooks": "workspace:*",
+    "@vben/preferences": "workspace:*",
+    "@vben/types": "workspace:*",
+    "@vben/constants": "workspace:*",
+    "@vben/stores": "workspace:*",
+    "@vben/locales": "workspace:*",
+    "@vben/utils": "workspace:*",
+    "ant-design-vue": "catalog:",
+    "pinia": "catalog:",
+    "lodash-es": "catalog:"
+  }
+}

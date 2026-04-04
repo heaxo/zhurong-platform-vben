@@ -2,5 +2,15 @@
   "title": "库存管理",
   "steelPlate": {
     "title": "钢板库存"
-  }
+  },
+  "itemCode": "钢板编号",
+  "itemName":"钢板名称",
+  "ubeasZnr": "钢板材质",
+  "uhd":"钢板厚度",
+  "batchNum": "批次",
+  "quantity":"数量",
+  "width": "宽度",
+  "length":"长度",
+  "whsName": "仓库",
+  "weight":"重量"
 }
