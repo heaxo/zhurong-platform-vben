@@ -7,7 +7,11 @@ async function requestGetAvailableInventoryQtyList(params: Recordable<any>) {
     params,
   });
 }
+async function requestImportInventory(data: Recordable<any>) {
+  return requestClient.post<Array<VimOrderlVO>>(`${CUSTOM_BASE_PREFIX}/sap/ava/inventoyrQty/importInventory`, data);
+}
 
 export {
   requestGetAvailableInventoryQtyList,
+  requestImportInventory,
 }

@@ -1,6 +1,6 @@
 import type {VbenFormSchema} from "#/adapter/form";
 import {$t} from '#/locales';
-import type {OnActionClickFn, VxeTableGridOptions} from "#/adapter/vxe-table";
+import type {VxeTableGridOptions} from "#/adapter/vxe-table";
 import type {VimOrderlVO} from "#/api/order/typing";
 
 export function useGridFormSchema(): VbenFormSchema[] {
@@ -59,13 +59,22 @@ export function useGridFormSchema(): VbenFormSchema[] {
 }
 
 export function useColumns<T = VimOrderlVO>(
-  onActionClick: OnActionClickFn<T>,
 ): VxeTableGridOptions['columns'] {
-  return [
+  return [{
+    align: 'left',
+    type: 'checkbox',
+    width: 30,
+  },
     {
       field: 'itemCode',
       title: $t('inventory.itemCode'),
       width: 300,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     },
     {
       field: 'itemName',

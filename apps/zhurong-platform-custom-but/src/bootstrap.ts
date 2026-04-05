@@ -7,6 +7,7 @@ import { initStores } from '@vben/stores';
 import '@vben/styles';
 import '@vben/styles/antd';
 
+
 import { useTitle } from '@vueuse/core';
 
 import { $t, setupI18n } from '#/locales';
@@ -15,6 +16,8 @@ import { initComponentAdapter } from './adapter/component';
 import { initSetupVbenForm } from './adapter/form';
 import App from './app.vue';
 import { router } from './router';
+import {setupVxeTable} from "@zhurong/components";
+
 
 async function bootstrap(namespace: string) {
   // 初始化组件适配器
@@ -69,6 +72,8 @@ async function bootstrap(namespace: string) {
       useTitle(pageTitle);
     }
   });
+
+  setupVxeTable(app);
 
   app.mount('#app');
 }

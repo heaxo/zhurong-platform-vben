@@ -16,10 +16,10 @@ import {JobBrowserSelecter} from '@zhurong/components';
 
 import {Page, useVbenModal} from '@vben/common-ui';
 
-const selectRows = ref([]);
+const selectedRows = ref([]);
 
-function handleSelectionChange() {
-  selectRows.value = gridApi?.grid?.getCheckboxRecords();
+function handleSelectionChange({records}) {
+  selectedRows.value = records;
 }
 
 const [Grid, gridApi] = useVbenVxeGrid({
@@ -34,6 +34,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
     checkboxAll: handleSelectionChange,
   },
   gridOptions: {
+    virtualYConfig: {
+      enabled: true,   // 开启纵向虚拟滚动
+      gt: 50,
+    },
     loading: false,
     columns: useColumns(onActionClick),
     height: 'auto',
@@ -54,7 +58,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
     },
     rowConfig: {
-      keyField: 'id',
+      keyField: 'belposId',
     },
 
     toolbarConfig: {
@@ -97,7 +101,7 @@ function importToExpert() {
     <JobBrowserSelecterModal />
     <Grid>
       <template #toolbar-actions>
-        <Button :disabled="isEmpty(selectRows)" @click="importToExpert">
+        <Button :disabled="isEmpty(selectedRows)" @click="importToExpert">
           <template #icon>
             <ExportOutlined/>
           </template>
