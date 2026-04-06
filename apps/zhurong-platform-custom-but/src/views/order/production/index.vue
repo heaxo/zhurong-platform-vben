@@ -7,8 +7,8 @@ import {
 import {ref} from 'vue';
 import {useColumns} from "#/views/order/production/data";
 import type {VimOrderlVO} from "#/api/order";
-import {requestGetViPmOrderlList} from "#/api/order";
-import {Button} from 'ant-design-vue';
+import {requestGetViPmOrderlList,requestImportToExpert} from "#/api/order";
+import {Button, message} from 'ant-design-vue';
 import {ExportOutlined} from '@ant-design/icons-vue';
 import {isEmpty} from 'lodash-es';
 import {JobBrowserSelecter} from '@zhurong/components';
@@ -71,13 +71,38 @@ const [Grid, gridApi] = useVbenVxeGrid({
   } as VxeTableGridOptions<VimOrderlVO>,
 });
 
+const importLoading = ref(false);
 
 const [JobBrowserSelecterModal, jobBrowserSelecterModalApi] = useVbenModal({
     connectedComponent: JobBrowserSelecter,
     draggable: true,
-    onClosed:() => {
-      const data = jobBrowserSelecterModalApi.getData();
-      console.log(data);
+    onClosed:async () => {
+      try {
+        gridApi.setGridOptions({
+          loading: true,
+        });
+        importLoading.value = true;
+        const data = jobBrowserSelecterModalApi.getData();
+        const jobRef = data.selected[0].id;
+        const values = data.values;
+        if (isEmpty(selectedRows.value)){
+          return message.warn("请选择要导入的生产订单");
+        }
+        const succeed = await requestImportToExpert({
+          belposIds: selectedRows.value.map(it => it.belposId),
+          jobRef,
+          ...values,
+        })
+        if (succeed){
+          gridApi.reload();
+          return message.success("导入成功");
+        }
+      }finally {
+        gridApi.setGridOptions({
+          loading: false,
+        });
+        importLoading.value = false;
+      }
     }
 });
 function onActionClick(e: OnActionClickParams<VimOrderlVO>) {
@@ -101,7 +126,7 @@ function importToExpert() {
     <JobBrowserSelecterModal />
     <Grid>
       <template #toolbar-actions>
-        <Button :disabled="isEmpty(selectedRows)" @click="importToExpert">
+        <Button :disabled="isEmpty(selectedRows)" @click="importToExpert" :loading="importLoading">
           <template #icon>
             <ExportOutlined/>
           </template>

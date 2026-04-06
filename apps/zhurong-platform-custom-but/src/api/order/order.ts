@@ -8,6 +8,11 @@ async function requestGetViPmOrderlList(params: Recordable<any>) {
   });
 }
 
+async function requestImportToExpert(data: Recordable<any>) {
+  return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/erp/vi/pm/orderl/importToExpert`, data);
+}
+
 export {
   requestGetViPmOrderlList,
+  requestImportToExpert,
 }

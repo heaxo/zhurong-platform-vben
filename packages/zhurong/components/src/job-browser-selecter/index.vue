@@ -1,17 +1,17 @@
 <script lang="ts" setup>
-import {ref,toRaw} from 'vue';
+import {ref, toRaw} from 'vue';
 import {useVbenModal} from '@vben/common-ui';
 import {useVbenForm} from '#/adapter/form';
 import type {TreeProps} from 'ant-design-vue';
-import {Button, message, Tree,Spin} from 'ant-design-vue';
-import type {JobBrowserTreeVO} from "@zhurong/api";
-import {requestGetJobBrowserTree,requestGetJobRefs} from "@zhurong/api";
-import {isEmpty} from 'lodash-es';
+import {Button, message, Spin, Tree} from 'ant-design-vue';
 import {
-  FolderOpenOutlined,
-  PlusSquareOutlined,
-  MinusSquareOutlined,
-} from '@ant-design/icons-vue';
+  type JobBrowserTreeVO,
+  requestGetDisMmttMmtt00000100PageList, requestGetWwccWwcc00000100PageList
+} from "@zhurong/api";
+import {requestGetJobBrowserTree, requestGetJobRefs} from "@zhurong/api";
+import {isEmpty} from 'lodash-es';
+import {FolderOpenOutlined, MinusSquareOutlined, PlusSquareOutlined,} from '@ant-design/icons-vue';
+import { $t } from '@vben/locales';
 
 // ========== props ==========
 const props = withDefaults(
@@ -110,7 +110,7 @@ function isSelectable(node: JobBrowserTreeVO) {
 
 // ========== 表单（右侧查询） ==========
 const [Form, formApi] = useVbenForm({
-  wrapperClass:'grid-cols-2',
+  wrapperClass: 'grid-cols-2',
   schema: [
     {
       component: 'Input',
@@ -140,10 +140,49 @@ const [Form, formApi] = useVbenForm({
   ],
   showDefaultActions: true,
   handleSubmit: onSearch,
-  handleReset:  resetForm,
-  submitButtonOptions:{
-    content:'搜索',
+  handleReset: resetForm,
+  submitButtonOptions: {
+    content: '搜索',
   }
+});
+const [OptionForm, optionFormApi] = useVbenForm({
+  wrapperClass: 'grid-cols-3',
+  compact: true,
+  schema: [
+    {
+      component: 'ApiSelect',
+      componentProps: {
+        api: requestGetWwccWwcc00000100PageList,
+        allowClear: true,
+        labelField: 'wrkRef',
+        valueField: 'wrkRef',
+        resultField: 'items',
+        showSearch: true,
+        style:{
+          width:'200px',
+        }
+      },
+      fieldName: 'wrkRef',
+      label: $t('lantek.wrkRef'),
+    },
+    {
+      component: 'ApiSelect',
+      componentProps: {
+        api: requestGetDisMmttMmtt00000100PageList,
+        allowClear: true,
+        labelField: 'matRef',
+        valueField: 'matRef',
+        resultField: 'items',
+        showSearch: true,
+        style:{
+          width:'200px',
+        }
+      },
+      fieldName: 'matRef',
+      label: $t('lantek.matRef'),
+    },
+  ],
+  showDefaultActions: false,
 });
 
 // 模拟查询接口（返回 nodeId 列表）
@@ -160,6 +199,7 @@ async function onSearch(values: any) {
 // ========== Modal ==========
 const [Modal, modalApi] = useVbenModal({
   title: '作业浏览器',
+  footerClass: 'justify-start',
   fullscreenButton: true,
   onOpenChange(isOpen) {
     if (isOpen) {
@@ -171,14 +211,18 @@ const [Modal, modalApi] = useVbenModal({
   },
   async onConfirm() {
     const result = getSelectedNodes();
-
+    const values = await optionFormApi.getValues();
     if (!result.length) {
       message.warning('请选择数据');
       return;
     }
-
-    modalApi.close();
-    modalApi.setData({selected: result.map((item) => toRaw(item))});
+    try {
+      modalApi.setState({loading: true});
+      modalApi.close();
+      modalApi.setData({selected: result.map((item) => toRaw(item)),values: {...values}});
+    } finally {
+      modalApi.setState({loading: false});
+    }
   },
 });
 
@@ -202,16 +246,20 @@ const treeProps: TreeProps = {
     children: 'children',
   },
 };
+
 function resetForm() {
   treeData.value = rawTreeData.value;
   formApi.resetForm();
 }
+
 function collapseAll() {
   expandedKeys.value = [];
 }
+
 function expandAll() {
   expandedKeys.value = Array.from(nodeMap.value.keys());
 }
+
 function expandSelected() {
   const keys = props.multiple ? checkedKeys.value : selectedKeys.value;
 
@@ -254,26 +302,26 @@ function expandSelected() {
         <!-- 工具栏 -->
         <div class="mb-2 flex gap-2">
           <Button
+            :disabled="isEmpty(selectedKeys)"
             size="small"
             @click="expandSelected"
-            :disabled="isEmpty(selectedKeys)"
           >
             <template #icon>
-              <FolderOpenOutlined />
+              <FolderOpenOutlined/>
             </template>
             展开选中
           </Button>
 
           <Button size="small" @click="expandAll">
             <template #icon>
-              <PlusSquareOutlined />
+              <PlusSquareOutlined/>
             </template>
             展开全部
           </Button>
 
           <Button size="small" @click="collapseAll">
             <template #icon>
-              <MinusSquareOutlined />
+              <MinusSquareOutlined/>
             </template>
             收起全部
           </Button>
@@ -281,22 +329,21 @@ function expandSelected() {
 
         <Spin :spinning="treeLoading">
           <Tree
-            virtual
             :block-node="true"
             :checkable="props.multiple"
             :checked-keys="checkedKeys"
+            :expanded-keys="expandedKeys"
             :field-names="treeProps.fieldNames"
             :selected-keys="selectedKeys"
             :tree-data="treeData"
-            :expanded-keys="expandedKeys"
-            @expand="(keys) => expandedKeys = keys"
+            virtual
             @check="handleCheck"
+            @expand="(keys) => expandedKeys = keys"
             @select="handleSelect"
           >
             <template #title="{ data }">
             <span
               :style="{
-                color: data.isFolder ? '#999' : '#000',
                 cursor: isSelectable(data) ? 'pointer' : 'not-allowed',
               }"
             >
@@ -312,5 +359,8 @@ function expandSelected() {
         <Form/>
       </div>
     </div>
+    <template #prepend-footer>
+      <OptionForm class="flex-1"/>
+    </template>
   </Modal>
 </template>
