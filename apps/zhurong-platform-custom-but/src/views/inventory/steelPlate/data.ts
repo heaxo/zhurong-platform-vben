@@ -109,6 +109,10 @@ export function useColumns<T = VimOrderlVO>(
       title: $t('inventory.whsName'),
       width: 150,
     }, {
+      field: 'locName',
+      title: $t('inventory.locName'),
+      width: 150,
+    }, {
       field: 'weight',
       title: $t('inventory.weight'),
       width: 100,
