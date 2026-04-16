@@ -9,6 +9,7 @@ import {
 } from 'lodash-es';
 import {
   getImageResourcesBaseURL,
+  requestGetDisMmttMmtt00000100PageList, requestGetWwccWwcc00000100PageList,
   requestPageNestOverview,
 } from "@zhurong/api";
 import {AttributeCell, type QueryOptions, type SimpleColumnSchema} from "#/nesting-table/index";
@@ -17,12 +18,9 @@ import {
   useFieldRegistry,
   type GroupColumnSchema
 } from "#/nesting-table/data";
+import {$t} from "@vben/locales";
 
-const {
-  height,
-  columnsSchema, mode, loadPlan,
-  enableCheckbox,enableServerSideSorting,
-} = defineProps({
+const props = defineProps({
   //表高度
   height: {
     type: String,
@@ -61,8 +59,27 @@ const {
   enableServerSideSorting:{
     type: Boolean,
     default: false,
+  },
+  //显示搜索表格
+  showSearchForm:{
+    type: Boolean,
+    default: false,
+  },
+  //查询参数
+  queryParameters:{
+    type: Object,
+    default: {},
+  },
+  gridEvents:{
+    type: Object,
+    default: null,
   }
 })
+const {
+  height,
+  columnsSchema, mode, loadPlan,queryParameters,gridEvents,
+  enableCheckbox,enableServerSideSorting,showSearchForm,
+} = props;
 const groupSortOrderRecord:Record<string, string> = {
 
 }
@@ -240,6 +257,62 @@ function buildAttributeProps(metas, row) {
 
 
 const [Grid, gridApi] = useVbenVxeGrid({
+  formOptions:{
+    wrapperClass: 'grid-cols-3',
+    schema: [
+      {
+        component: 'Input',
+        fieldName: 'nstRef',
+        label: '套料编码',
+      },
+      {
+        component: 'Input',
+        fieldName: 'cnc',
+        label: 'CNC',
+      },
+      {
+        component: 'ApiSelect',
+        componentProps: {
+          api: requestGetWwccWwcc00000100PageList,
+          allowClear: true,
+          labelField: 'wrkRef',
+          valueField: 'wrkRef',
+          resultField: 'items',
+          showSearch: true,
+          style:{
+            width:'100%',
+          }
+        },
+        fieldName: 'wrkRef',
+        label: $t('lantek.wrkRef'),
+      },
+      {
+        component: 'ApiSelect',
+        componentProps: {
+          api: requestGetDisMmttMmtt00000100PageList,
+          allowClear: true,
+          labelField: 'matRef',
+          valueField: 'matRef',
+          resultField: 'items',
+          showSearch: true,
+          style:{
+            width:'100%',
+          }
+        },
+        fieldName: 'matRef',
+        label: $t('lantek.matRef'),
+      },
+      {
+        component: 'InputNumber',
+        fieldName: 'sThickness',
+        label: '厚度',
+      },
+    ],
+    showDefaultActions: true,
+    collapsed: true,
+  },
+  showSearchForm: showSearchForm,
+  gridEvents:gridEvents,
   gridOptions: {
     sortConfig: {
       remote: enableServerSideSorting,
@@ -255,15 +328,14 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({page,sorts}, formValues) => {
-          console.log(sorts);
           const data = await requestPageNestOverview({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
-            queryOrders: sorts.map(sort => ({field: sort.field,order:sort.order})),
+            ...queryParameters,
+            sortRules: sorts.map(sort => ({property: sort.field,direction:sort.order})),
             loadPlan,
           });
-          console.log(data);
           data.items?.forEach((it: any, index: number) => {
             if (it.nestingDocument) {
               it.image = getImageResourcesBaseURL(it.nestingDocument.imgb);
@@ -304,6 +376,14 @@ watch(() => enableServerSideSorting,(enableServerSideSorting) => {
     }
   })
 })
+
+watch(() => props.queryParameters,(queryParameters) => {
+  console.log(queryParameters);
+  gridApi.query();
+},{
+  deep: true
+})
+
 defineExpose({
   _gridApi: gridApi,
 });

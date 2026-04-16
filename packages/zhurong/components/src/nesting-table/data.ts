@@ -16,20 +16,20 @@ export const FIELDS = {
   shtRef: 'shtRef',
   shtRefOrg: 'shtRefOrg',
 
-  sLength: 'sLength',
-  sWidth: 'sWidth',
-  sThickness: 'sThickness',
+  slength: 'slength',
+  swidth: 'swidth',
+  sthickness: 'sthickness',
 
-  sArea: 'sArea',
-  suArea: 'suArea',
+  sarea: 'sarea',
+  suarea: 'suarea',
   partArea: 'partArea',
 
-  sWeight: 'sWeight',
-  suWeight: 'suWeight',
+  sweight: 'sweight',
+  suweight: 'suweight',
   partWeight: 'partWeight',
 
-  sProfit: 'sProfit',
-  sProfitS: 'sProfitS',
+  sprofit: 'sprofit',
+  sprofitS: 'sprofitS',
 } as const;
 type FieldKey = keyof typeof FIELDS;
 export type DataTableColumnSchema =
@@ -106,7 +106,6 @@ function columnSort({column},events) {
 export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSchema> {
   const {sortEvent} = params??{};
   function sort(params) {
-    console.log(params);
     const {column} = params;
     return columnSort(params,{
       onClick: (e) => {
@@ -139,6 +138,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
           width: 120,
           showOverflow: true,
           resizable: true,
+          sortable: true,
           slots:{
             sort,
           }
@@ -226,66 +226,71 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       }
     },
 
-    sLength: {
+    slength: {
       type: 'field',
-      field: FIELDS.sLength,
+      field: FIELDS.slength,
       title: '板长',
       override: {
         width: 100,
         resizable: true,
         showOverflow: false,
+        sortable: true,
         slots:{
           sort,
         }
       }
     },
-    sWidth: {
+    swidth: {
       type: 'field',
-      field: FIELDS.sWidth,
+      field: FIELDS.swidth,
       title: '板宽',
       override: {
         width: 100,
         resizable: true,
         showOverflow: false,
+        sortable: true,
         slots:{
           sort,
         }
       }
     },
-    sThickness: {
+    sthickness: {
       type: 'field',
-      field: FIELDS.sThickness,
+      field: FIELDS.sthickness,
       title: '板厚',
       override: {
         width: 90,
         resizable: true,
         showOverflow: false,
+        sortable: true,
         slots:{
           sort,
         }
       }
     },
-    sArea: {
+    sarea: {
       type: 'field',
-      field: FIELDS.sArea,
+      field: FIELDS.sarea,
       title: '钢板面积',
       override: {
         width: 100,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
       }
     },
-    suArea: {
+    suarea: {
       type: 'field',
-      field: FIELDS.suArea,
+      field: FIELDS.suarea,
       title: '使用面积',
       override: {
         width: 100,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
@@ -299,32 +304,35 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         width: 100,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
       }
     },
-    sWeight: {
+    sweight: {
       type: 'field',
-      field: FIELDS.sWeight,
+      field: FIELDS.sweight,
       title: '钢板重量',
       override: {
         width: 100,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
       }
     },
-    suWeight: {
+    suweight: {
       type: 'field',
-      field: FIELDS.suWeight,
+      field: FIELDS.suweight,
       title: '使用重量',
       override: {
         width: 100,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
@@ -338,32 +346,35 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         width: 100,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
       }
     },
-    sProfit: {
+    sprofit: {
       type: 'field',
-      field: FIELDS.sProfit,
+      field: FIELDS.sprofit,
       title: '钢板利用率',
       override: {
         width: 120,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
       }
     },
-    sProfitS: {
+    sprofitS: {
       type: 'field',
-      field: FIELDS.sProfitS,
+      field: FIELDS.sprofitS,
       title: '去余料利用率',
       override: {
         width: 120,
         resizable: true,
         showOverflow: false,
+          sortable: true,
         slots:{
           sort,
         }
@@ -390,6 +401,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
           width: 160,
           showOverflow: true,
           resizable: true,
+          sortable: true,
           slots:{
             sort,
           }

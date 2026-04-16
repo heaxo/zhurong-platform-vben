@@ -6,12 +6,21 @@ import type {TreeProps} from 'ant-design-vue';
 import {Button, message, Spin, Tree} from 'ant-design-vue';
 import {
   type JobBrowserTreeVO,
-  requestGetDisMmttMmtt00000100PageList, requestGetWwccWwcc00000100PageList
+  requestGetDisMmttMmtt00000100PageList,
+  requestGetJobBrowserTree,
+  requestGetJobRefs,
+  requestGetWwccWwcc00000100PageList
 } from "@zhurong/api";
-import {requestGetJobBrowserTree, requestGetJobRefs} from "@zhurong/api";
 import {isEmpty} from 'lodash-es';
-import {FolderOpenOutlined, MinusSquareOutlined, PlusSquareOutlined,} from '@ant-design/icons-vue';
-import { $t } from '@vben/locales';
+import {
+  FolderOpenOutlined,
+  FolderOutlined,
+  MinusSquareOutlined,
+  PlusSquareOutlined,
+  CreditCardOutlined,
+} from '@ant-design/icons-vue';
+import {$t} from '@vben/locales';
+import {JobBrowserSearchFormSchema} from "#/job-browser-selecter/data";
 
 // ========== props ==========
 const props = withDefaults(
@@ -111,33 +120,7 @@ function isSelectable(node: JobBrowserTreeVO) {
 // ========== 表单（右侧查询） ==========
 const [Form, formApi] = useVbenForm({
   wrapperClass: 'grid-cols-2',
-  schema: [
-    {
-      component: 'Input',
-      fieldName: 'nestingRecID',
-      label: '套料ID',
-    },
-    {
-      component: 'Input',
-      fieldName: 'cnc',
-      label: 'CNC',
-    },
-    {
-      component: 'Input',
-      fieldName: 'jobName',
-      label: '作业名称',
-    },
-    {
-      component: 'Input',
-      fieldName: 'mnORef',
-      label: '工单号',
-    },
-    {
-      component: 'Input',
-      fieldName: 'ordRef',
-      label: '订单号',
-    },
-  ],
+  schema: JobBrowserSearchFormSchema,
   showDefaultActions: true,
   handleSubmit: onSearch,
   handleReset: resetForm,
@@ -158,8 +141,8 @@ const [OptionForm, optionFormApi] = useVbenForm({
         valueField: 'wrkRef',
         resultField: 'items',
         showSearch: true,
-        style:{
-          width:'200px',
+        style: {
+          width: '200px',
         }
       },
       fieldName: 'wrkRef',
@@ -174,8 +157,8 @@ const [OptionForm, optionFormApi] = useVbenForm({
         valueField: 'matRef',
         resultField: 'items',
         showSearch: true,
-        style:{
-          width:'200px',
+        style: {
+          width: '200px',
         }
       },
       fieldName: 'matRef',
@@ -219,7 +202,7 @@ const [Modal, modalApi] = useVbenModal({
     try {
       modalApi.setState({loading: true});
       modalApi.close();
-      modalApi.setData({selected: result.map((item) => toRaw(item)),values: {...values}});
+      modalApi.setData({selected: result.map((item) => toRaw(item)), values: {...values}});
     } finally {
       modalApi.setState({loading: false});
     }
@@ -337,18 +320,24 @@ function expandSelected() {
             :selected-keys="selectedKeys"
             :tree-data="treeData"
             virtual
+            showIcon
             @check="handleCheck"
             @expand="(keys) => expandedKeys = keys"
             @select="handleSelect"
           >
             <template #title="{ data }">
-            <span
-              :style="{
-                cursor: isSelectable(data) ? 'pointer' : 'not-allowed',
-              }"
-            >
-              {{ data.label }}
-            </span>
+              <span
+                :style="{
+                  cursor: isSelectable(data) ? 'pointer' : 'not-allowed',
+                }"
+              >
+                {{ data.label }}
+              </span>
+            </template>
+            <template #icon="{expanded, dataRef,}">
+              <FolderOutlined v-if="dataRef.isFolder && !expanded"/>
+              <FolderOpenOutlined v-else-if="dataRef.isFolder && expanded" />
+              <CreditCardOutlined v-else-if="!dataRef.isFolder" />
             </template>
           </Tree>
         </Spin>

@@ -2,7 +2,8 @@
 import {onMounted, ref} from 'vue';
 import {useVbenForm} from '#/adapter/form';
 import type {TreeProps} from 'ant-design-vue';
-import {Button, Spin, Tree, Tooltip,Row,Col, Space} from 'ant-design-vue';
+import {Button, Spin, Tree, Tooltip, Row, Col, Space} from 'ant-design-vue';
+import {useVbenModal} from '@vben/common-ui';
 import {
   type JobBrowserTreeVO,
   requestGetDisMmttMmtt00000100PageList,
@@ -11,8 +12,20 @@ import {
   requestGetWwccWwcc00000100PageList
 } from "@zhurong/api";
 import {isEmpty} from 'lodash-es';
-import {FolderOpenOutlined, AimOutlined, MinusSquareOutlined, PlusSquareOutlined,} from '@ant-design/icons-vue';
+import {
+  FolderOutlined,
+  FolderOpenOutlined,
+  DownOutlined,
+  SearchOutlined,
+  ReloadOutlined,
+  AimOutlined,
+  MinusSquareOutlined,
+  PlusSquareOutlined, CreditCardOutlined,
+} from '@ant-design/icons-vue';
 import {$t} from '@vben/locales';
+import JobBrowserSearchForm from './modules/form.vue';
+
+const emit = defineEmits(['select']);
 
 // ========== props ==========
 const props = withDefaults(
@@ -36,6 +49,23 @@ const treeLoading = ref(false);
 
 // id -> node map（用于快速过滤）
 const nodeMap = ref<Map<string, JobBrowserTreeVO>>(new Map());
+
+
+const [JobBrowserSearchFormModal, jobBrowserSearchFormModalApi] = useVbenModal({
+  connectedComponent: JobBrowserSearchForm,
+  draggable: true,
+  onClosed: async () => {
+    try {
+      treeLoading.value = true;
+      const data = jobBrowserSearchFormModalApi.getData();
+      const jobRefs = data.jobRefs;
+      filterTreeByIds(jobRefs);
+      console.log(jobRefs);
+    } finally {
+      treeLoading.value = false;
+    }
+  }
+});
 
 // ========== API（自行替换） ==========
 async function fetchTree() {
@@ -97,6 +127,7 @@ function filterTreeByIds(ids: string[]) {
 // ========== 树选择逻辑 ==========
 function handleSelect(keys: string[]) {
   selectedKeys.value = keys;
+  emit('select', keys);
 }
 
 function handleCheck(keys: any) {
@@ -108,83 +139,6 @@ function isSelectable(node: JobBrowserTreeVO) {
   if (props.selectFolder) return true;
   return !node.isFolder;
 }
-
-// ========== 表单（右侧查询） ==========
-const [Form, formApi] = useVbenForm({
-  wrapperClass: 'grid-cols-2',
-  schema: [
-    {
-      component: 'Input',
-      fieldName: 'nestingRecID',
-      label: '套料ID',
-    },
-    {
-      component: 'Input',
-      fieldName: 'cnc',
-      label: 'CNC',
-    },
-    {
-      component: 'Input',
-      fieldName: 'jobName',
-      label: '作业名称',
-    },
-    {
-      component: 'Input',
-      fieldName: 'mnORef',
-      label: '工单号',
-    },
-    {
-      component: 'Input',
-      fieldName: 'ordRef',
-      label: '订单号',
-    },
-  ],
-  showDefaultActions: true,
-  handleSubmit: onSearch,
-  handleReset: resetForm,
-  submitButtonOptions: {
-    content: '搜索',
-  }
-});
-const [OptionForm, optionFormApi] = useVbenForm({
-  wrapperClass: 'grid-cols-3',
-  compact: true,
-  schema: [
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        api: requestGetWwccWwcc00000100PageList,
-        allowClear: true,
-        labelField: 'wrkRef',
-        valueField: 'wrkRef',
-        resultField: 'items',
-        showSearch: true,
-        style: {
-          width: '200px',
-        }
-      },
-      fieldName: 'wrkRef',
-      label: $t('lantek.wrkRef'),
-    },
-    {
-      component: 'ApiSelect',
-      componentProps: {
-        api: requestGetDisMmttMmtt00000100PageList,
-        allowClear: true,
-        labelField: 'matRef',
-        valueField: 'matRef',
-        resultField: 'items',
-        showSearch: true,
-        style: {
-          width: '200px',
-        }
-      },
-      fieldName: 'matRef',
-      label: $t('lantek.matRef'),
-    },
-  ],
-  showDefaultActions: false,
-});
 
 // 模拟查询接口（返回 nodeId 列表）
 async function onSearch(values: any) {
@@ -221,7 +175,6 @@ const treeProps: TreeProps = {
 
 function resetForm() {
   treeData.value = rawTreeData.value;
-  formApi.resetForm();
 }
 
 function collapseAll() {
@@ -265,85 +218,128 @@ function expandSelected() {
   expandedKeys.value = Array.from(result);
 }
 
+function searchJobTree() {
+  jobBrowserSearchFormModalApi.open();
+}
+
 onMounted(() => {
   fetchTree();
 });
 </script>
 
 <template>
-  <Row>
-    <!-- 左侧树 -->
-    <Col :span="6">
+  <div>
+    <JobBrowserSearchFormModal/>
+    <Row>
+      <!-- 左侧树 -->
+      <Col :span="6">
 
-      <!-- 工具栏 -->
-      <Space class="ml-2 mt-2">
-        <Tooltip title="展开所有">
-          <Button size="small" @click="expandAll">
-            <template #icon>
-              <PlusSquareOutlined/>
-            </template>
-          </Button>
-        </Tooltip>
-        <Tooltip title="收起所有">
-          <Button size="small" @click="collapseAll">
-            <template #icon>
-              <MinusSquareOutlined/>
-            </template>
-          </Button>
-        </Tooltip>
-        <Tooltip title="展开已选择">
-          <Button
-            :disabled="isEmpty(selectedKeys)"
-            size="small"
-            @click="expandSelected"
-          >
-            <template #icon>
-              <AimOutlined />
-            </template>
-          </Button>
-        </Tooltip>
-      </Space>
-      <Spin :spinning="treeLoading" wrapperClassName="h-full">
-        <Tree
-          :block-node="true"
-          :checkable="props.multiple"
-          :checked-keys="checkedKeys"
-          :expanded-keys="expandedKeys"
-          :field-names="treeProps.fieldNames"
-          :selected-keys="selectedKeys"
-          :tree-data="treeData"
-          virtual
-          @check="handleCheck"
-          @expand="(keys) => expandedKeys = keys"
-          @select="handleSelect"
-          class="m-2"
-          style="height: 100%;"
-        >
-          <template #title="{ data }">
-            <span
-              :style="{
-                cursor: isSelectable(data) ? 'pointer' : 'not-allowed',
-              }"
+        <!-- 工具栏 -->
+        <Space class="ml-2 mt-2">
+          <Tooltip title="展开所有">
+            <Button size="small" @click="expandAll">
+              <template #icon>
+                <PlusSquareOutlined/>
+              </template>
+            </Button>
+          </Tooltip>
+          <Tooltip title="收起所有">
+            <Button size="small" @click="collapseAll">
+              <template #icon>
+                <MinusSquareOutlined/>
+              </template>
+            </Button>
+          </Tooltip>
+          <Tooltip title="展开已选择">
+            <Button
+              :disabled="isEmpty(selectedKeys)"
+              size="small"
+              @click="expandSelected"
             >
-              {{ data.label }}
-            </span>
-          </template>
-        </Tree>
-      </Spin>
-    </Col>
+              <template #icon>
+                <AimOutlined/>
+              </template>
+            </Button>
+          </Tooltip>
+          <Tooltip title="检索作业">
+            <Button
+              size="small"
+              @click="searchJobTree"
+            >
+              <template #icon>
+                <SearchOutlined/>
+              </template>
+            </Button>
+          </Tooltip>
+          <Tooltip title="重置作业">
+            <Button
+              size="small"
+              @click="treeData = rawTreeData"
+            >
+              <template #icon>
+                <ReloadOutlined/>
+              </template>
+            </Button>
+          </Tooltip>
+        </Space>
+        <Spin :spinning="treeLoading" wrapperClassName="h-full">
+          <Tree
+            :block-node="true"
+            :checkable="props.multiple"
+            :checked-keys="checkedKeys"
+            :expanded-keys="expandedKeys"
+            :field-names="treeProps.fieldNames"
+            :selected-keys="selectedKeys"
+            :tree-data="treeData"
+            class="m-2"
+            style="height: 100%;"
+            virtual
+            showIcon
+            @check="handleCheck"
+            @expand="(keys) => expandedKeys = keys"
+            @select="handleSelect"
+          >
+            <template #title="{ data }">
+              <span
+                :style="{
+                  cursor: isSelectable(data) ? 'pointer' : 'not-allowed',
+                  color: data.isFolder ? 'hsl(var(--primary))' : 'unset',
+                }"
+              >
+                {{ data.label }}
+              </span>
+            </template>
+            <template #icon="{expanded, dataRef,}">
+              <FolderOutlined v-if="dataRef.isFolder && !expanded" style="color: hsl(var(--primary));"/>
+              <FolderOpenOutlined v-else-if="dataRef.isFolder && expanded" style="color: hsl(var(--primary));"/>
+              <CreditCardOutlined v-else-if="!dataRef.isFolder" />
+            </template>
+            <template #switcherIcon="{ switcherCls,dataRef }">
+              <DownOutlined :class="switcherCls" :style="{color: dataRef.isFolder ? 'hsl(var(--primary))':'unset'}"/>
+            </template>
 
-    <!-- 右侧插槽 -->
-    <Col :span="18">
-      <slot name="default"></slot>
-    </Col>
-  </Row>
+          </Tree>
+        </Spin>
+      </Col>
+
+      <!-- 右侧插槽 -->
+      <Col :span="18">
+        <slot name="default"></slot>
+      </Col>
+    </Row>
+  </div>
 </template>
 
 <style scoped>
-::v-deep(.ant-tree){
+::v-deep(.ant-tree) {
   height: calc(100% - 50px);
 }
-::v-deep(.ant-spin-container){
+
+::v-deep(.ant-spin-container) {
   height: 100%;
+}
+
+.icon svg{
+  fill: currentColor;
 }
 </style>
