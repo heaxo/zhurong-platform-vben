@@ -29,6 +29,7 @@
     "@vben/preferences": "workspace:*",
     "@vben/types": "workspace:*",
     "@vben/utils": "workspace:*",
+    "vxe-pc-ui": "catalog:",
     "ant-design-vue": "catalog:",
     "dayjs": "catalog:",
     "lodash-es": "catalog:",

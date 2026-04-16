@@ -20,8 +20,7 @@ import {
 
 const {
   height,
-  autoHeight,
-  columnsSchema, mode, queryOptions,
+  columnsSchema, mode, loadPlan,
   enableCheckbox,enableServerSideSorting,
 } = defineProps({
   //表高度
@@ -45,12 +44,12 @@ const {
     default: 'flat',
   },
   //查询关联数据选项
-  queryOptions: {
+  loadPlan: {
     type: Object as PropType<QueryOptions>,
     default: {
-      queryNestingDocuments: true,
-      queryNestingParts: true,
-      queryItems: true,
+      includeNestFiles: true,
+      includeNestParts: true,
+      includePartMaster: true,
     },
   },
   //开启复选框
@@ -250,25 +249,26 @@ const [Grid, gridApi] = useVbenVxeGrid({
       columnsSchema?.length ? columnsSchema : mode === 'group' ? DEFAULT_GROUP_SCHEMA : DEFAULT_SCHEMA,
       mode
     ),
-    height: autoHeight ? 'auto' : height,
+    height: 'auto',
     keepSource: true,
     proxyConfig: {
       sort: true,
       ajax: {
         query: async ({page,sorts}, formValues) => {
           console.log(sorts);
-          const data = await requestGetPageWithRelations({
+          const data = await requestPageNestOverview({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
             queryOrders: sorts.map(sort => ({field: sort.field,order:sort.order})),
-            queryOptions,
+            loadPlan,
           });
+          console.log(data);
           data.items?.forEach((it: any, index: number) => {
             if (it.nestingDocument) {
               it.image = getImageResourcesBaseURL(it.nestingDocument.imgb);
               console.log(it.nestingDocument, it.image);
-              data.records[index].image = it.image;
+              data.items[index].image = it.image;
             }
           });
           return data;

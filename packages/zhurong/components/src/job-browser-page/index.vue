@@ -2,7 +2,7 @@
 import {onMounted, ref} from 'vue';
 import {useVbenForm} from '#/adapter/form';
 import type {TreeProps} from 'ant-design-vue';
-import {Button, Spin, Tree} from 'ant-design-vue';
+import {Button, Spin, Tree, Tooltip,Row,Col, Space} from 'ant-design-vue';
 import {
   type JobBrowserTreeVO,
   requestGetDisMmttMmtt00000100PageList,
@@ -11,7 +11,7 @@ import {
   requestGetWwccWwcc00000100PageList
 } from "@zhurong/api";
 import {isEmpty} from 'lodash-es';
-import {FolderOpenOutlined, MinusSquareOutlined, PlusSquareOutlined,} from '@ant-design/icons-vue';
+import {FolderOpenOutlined, AimOutlined, MinusSquareOutlined, PlusSquareOutlined,} from '@ant-design/icons-vue';
 import {$t} from '@vben/locales';
 
 // ========== props ==========
@@ -271,38 +271,39 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="flex h-full gap-4">
+  <Row>
     <!-- 左侧树 -->
-    <div class="flex-[1] border rounded p-2 overflow-auto">
+    <Col :span="6">
+
       <!-- 工具栏 -->
-      <div class="mb-2 flex gap-2">
-        <Button
-          :disabled="isEmpty(selectedKeys)"
-          size="small"
-          @click="expandSelected"
-        >
-          <template #icon>
-            <FolderOpenOutlined/>
-          </template>
-          展开选中
-        </Button>
-
-        <Button size="small" @click="expandAll">
-          <template #icon>
-            <PlusSquareOutlined/>
-          </template>
-          展开全部
-        </Button>
-
-        <Button size="small" @click="collapseAll">
-          <template #icon>
-            <MinusSquareOutlined/>
-          </template>
-          收起全部
-        </Button>
-      </div>
-
-      <Spin :spinning="treeLoading">
+      <Space class="ml-2 mt-2">
+        <Tooltip title="展开所有">
+          <Button size="small" @click="expandAll">
+            <template #icon>
+              <PlusSquareOutlined/>
+            </template>
+          </Button>
+        </Tooltip>
+        <Tooltip title="收起所有">
+          <Button size="small" @click="collapseAll">
+            <template #icon>
+              <MinusSquareOutlined/>
+            </template>
+          </Button>
+        </Tooltip>
+        <Tooltip title="展开已选择">
+          <Button
+            :disabled="isEmpty(selectedKeys)"
+            size="small"
+            @click="expandSelected"
+          >
+            <template #icon>
+              <AimOutlined />
+            </template>
+          </Button>
+        </Tooltip>
+      </Space>
+      <Spin :spinning="treeLoading" wrapperClassName="h-full">
         <Tree
           :block-node="true"
           :checkable="props.multiple"
@@ -315,6 +316,8 @@ onMounted(() => {
           @check="handleCheck"
           @expand="(keys) => expandedKeys = keys"
           @select="handleSelect"
+          class="m-2"
+          style="height: 100%;"
         >
           <template #title="{ data }">
             <span
@@ -327,11 +330,20 @@ onMounted(() => {
           </template>
         </Tree>
       </Spin>
-    </div>
+    </Col>
 
     <!-- 右侧插槽 -->
-    <div class="flex-[2] border rounded p-2">
+    <Col :span="18">
       <slot name="default"></slot>
-    </div>
-  </div>
+    </Col>
+  </Row>
 </template>
+
+<style scoped>
+::v-deep(.ant-tree){
+  height: calc(100% - 50px);
+}
+::v-deep(.ant-spin-container){
+  height: 100%;
+}
+</style>
