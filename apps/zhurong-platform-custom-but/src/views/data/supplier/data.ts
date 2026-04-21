@@ -6,33 +6,43 @@ export function useFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'nstRef',
-      label: '套料编码',
-    },
-    {
-      component: 'Input',
-      fieldName: 'supplierName',
-      label: '供应商编码',
+      fieldName: 'cnc',
+      label: '下料程序名',
     },
     {
       component: 'Input',
       fieldName: 'whsName',
-      label: '仓库编码',
+      label: '供应商编号',
     },
     {
       component: 'Input',
-      fieldName: 'udata1',
-      label: '自定义数据1',
+      fieldName: 'locName',
+      label: '位置',
     },
     {
       component: 'Input',
-      fieldName: 'udata2',
-      label: '自定义数据2',
+      fieldName: 'shtRef',
+      label: '钢板编码',
     },
     {
       component: 'Input',
-      fieldName: 'udata3',
-      label: '自定义数据3',
+      fieldName: 'shtName',
+      label: '钢板名称',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'quantity',
+      label: '钢板张数',
+    },
+    {
+      component: 'Input',
+      fieldName: 'batchNumber',
+      label: '钢板批号',
+    },
+    {
+      component: 'Input',
+      fieldName: 'businessType',
+      label: '业务类型',
     },
   ];
 }
@@ -40,33 +50,53 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'nstRef',
-      label: '套料编码',
-    },
-    {
-      component: 'Input',
-      fieldName: 'supplierName',
-      label: '供应商编码',
+      fieldName: 'cnc',
+      label: '下料程序名',
     },
     {
       component: 'Input',
       fieldName: 'whsName',
-      label: '仓库编码',
+      label: '供应商编号',
     },
     {
       component: 'Input',
-      fieldName: 'udata1',
-      label: '自定义数据1',
+      fieldName: 'locName',
+      label: '位置',
     },
     {
       component: 'Input',
-      fieldName: 'udata2',
-      label: '自定义数据2',
+      fieldName: 'shtRef',
+      label: '钢板编码',
     },
     {
       component: 'Input',
-      fieldName: 'udata3',
-      label: '自定义数据3',
+      fieldName: 'shtName',
+      label: '钢板名称',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'quantity',
+      label: '钢板张数',
+    },
+    {
+      component: 'Input',
+      fieldName: 'batchNumber',
+      label: '钢板批号',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'weight',
+      label: '钢板总重',
+    },
+    {
+      component: 'Input',
+      fieldName: 'unit',
+      label: '单位',
+    },
+    {
+      component: 'Input',
+      fieldName: 'businessType',
+      label: '业务类型',
     },
   ];
 }
@@ -79,38 +109,58 @@ export function useColumns<T = ZhurongButSupplierinfoVO>(): VxeTableGridOptions[
       width: 30,
     },
     {
-      field: 'nstRef',
-      title: '套料编码',
-      width: 200,
+      field: 'cnc',
+      title: '下料程序名',
+      width: 260,
       filters: [{data: ''}],
       filterRender: {
         name: 'TableTextFilterInput',
       }
     },
     {
-      field: 'supplierName',
-      title: '供应商编码',
-      width: 200
-    },
-    {
       field: 'whsName',
-      title: '仓库编码',
-      width: 200
+      title: '供应商编号',
+      width: 100,
     },
     {
-      field: 'udata1',
-      title: '自定义数据1',
-      width: 150
+      field: 'locName',
+      title: '位置',
+      width: 260,
     },
     {
-      field: 'udata2',
-      title: '自定义数据2',
-      width: 150
+      field: 'shtRef',
+      title: '钢板编码',
+      width: 120,
     },
     {
-      field: 'udata3',
-      title: '自定义数据3',
-      width: 150
+      field: 'shtName',
+      title: '钢板名称',
+      width: 150,
+    },
+    {
+      field: 'quantity',
+      title: '钢板张数',
+      width: 100,
+    },
+    {
+      field: 'batchNumber',
+      title: '钢板批号',
+      width: 100,
+    },
+    {
+      field: 'weight',
+      title: '钢板总重',
+      width: 100,
+    },
+    {
+      field: 'unit',
+      title: '单位',
+      width: 80,
+    },
+    {
+      field: 'businessType',
+      title: '业务类型',
+      width: 90,
     },
   ];
 }

@@ -5,11 +5,11 @@ import {
   type VxeTableGridOptions
 } from "#/adapter/vxe-table";
 import {useColumns, useGridFormSchema} from "./data";
-import {requestGetZhurongButSupplierinfoPage, requestSyncSupplierinfo} from "#/api";
+import {requestGetZhurongButSupplierinfoPage, requestSyncSupplierinfo, requestSyncReportedStatus} from "#/api";
 import type {ZhurongButSupplierinfoVO} from "#/api";
 
 import {Page, useVbenDrawer} from '@vben/common-ui';
-import {Button,Input, message} from "ant-design-vue";
+import {Button,Input, Space,message} from "ant-design-vue";
 import {isEmpty} from 'lodash-es';
 import {CloudSyncOutlined} from "@ant-design/icons-vue";
 import {Plus} from '@vben/icons';
@@ -108,6 +108,17 @@ async function onSyncSupplier() {
     syncSupplierLoading.value = false;
   }
 }
+async function onSyncReportedStatus() {
+  try{
+    syncSupplierLoading.value = true;
+    const response = await requestSyncReportedStatus();
+    if (response){
+      successHandler();
+    }
+  } finally {
+    syncSupplierLoading.value = false;
+  }
+}
 </script>
 
 <template>
@@ -119,10 +130,16 @@ async function onSyncSupplier() {
 <!--          <Plus class="size-5" />-->
 <!--          {{ $t('ui.actionTitle.create') }}-->
 <!--        </Button>-->
-        <Button type="primary" @click="onSyncSupplier" :loading="syncSupplierLoading">
-          <CloudSyncOutlined />
-          同步供应商
-        </Button>
+        <Space>
+          <Button type="primary" @click="onSyncSupplier" :loading="syncSupplierLoading">
+            <CloudSyncOutlined />
+            同步供应商
+          </Button>
+          <Button type="default" @click="onSyncReportedStatus" :loading="syncSupplierLoading">
+            <CloudSyncOutlined />
+            同步报工状态
+          </Button>
+        </Space>
       </template>
       <template #toolbar-actions>
 
