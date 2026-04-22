@@ -120,7 +120,7 @@ export function useColumns<T = ZhurongButSupplierinfoVO>(): VxeTableGridOptions[
     {
       field: 'whsName',
       title: '供应商编号',
-      width: 100,
+      width: 150,
     },
     {
       field: 'locName',

@@ -1,5 +1,6 @@
 import type {VxeGridPropTypes} from "@vben/plugins/vxe-table";
 import {h} from "vue";
+import {Tag} from 'ant-design-vue';
 import {VxeButton} from "vxe-pc-ui";
 
 export const FIELDS = {
@@ -7,6 +8,7 @@ export const FIELDS = {
   nstRef: 'nstRef',
   crtDate: 'crtDate',
   crtUser: 'crtUser',
+  mstate: 'mstate',
 
   wrkRef: 'wrkRef',
   oprRef: 'oprRef',
@@ -120,6 +122,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         title: '排版图',
         override: {
           width: 135,
+          showOverflow: false,
           cellRender: {
             name: 'VxeImage',
             props: {
@@ -130,21 +133,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         },
       },
 
-      nstRef: {
-        type: 'field',
-        field: FIELDS.nstRef,
-        title: '套料编码',
-        override: {
-          width: 120,
-          showOverflow: true,
-          resizable: true,
-          sortable: true,
-          slots:{
-            sort,
-          }
-        }
-      },
-
     cnc: {
       type: 'field',
       field: FIELDS.cnc,
@@ -152,9 +140,24 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 160,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         slots:{
           sort,
+          default: (param) => {
+            return [
+              h(
+                'span',
+                {
+                  style: {
+                    color: 'hsl(var(--primary))',
+                    cursor: 'pointer',
+                    // textDecoration: 'underline',
+                  },
+                },
+                param.row[FIELDS.cnc] || '-'
+              )
+            ]
+          }
         }
       }
     },
@@ -165,7 +168,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 200,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         slots:{
           sort,
         }
@@ -179,7 +182,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         slots:{
           sort,
         }
@@ -193,7 +196,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         slots:{
           sort,
         }
@@ -206,7 +209,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 130,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         slots:{
           sort,
         }
@@ -219,7 +222,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 130,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         slots:{
           sort,
         }
@@ -233,7 +236,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         sortable: true,
         slots:{
           sort,
@@ -247,7 +250,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
         sortable: true,
         slots:{
           sort,
@@ -261,7 +264,22 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 90,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
+        sortable: true,
+        slots:{
+          sort,
+        }
+      }
+    },
+
+    nstRef: {
+      type: 'field',
+      field: FIELDS.nstRef,
+      title: '套料编码',
+      override: {
+        width: 120,
+        showOverflow: true,
+        resizable: true,
         sortable: true,
         slots:{
           sort,
@@ -275,7 +293,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -289,7 +307,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -303,7 +321,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -317,7 +335,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -331,7 +349,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -345,7 +363,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 100,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -359,7 +377,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 120,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -373,7 +391,7 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
       override: {
         width: 120,
         resizable: true,
-        showOverflow: false,
+        // showOverflow: false,
           sortable: true,
         slots:{
           sort,
@@ -404,6 +422,33 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
           sortable: true,
           slots:{
             sort,
+          }
+        }
+      },
+    mstate: {
+        type: 'field',
+        field: FIELDS.mstate,
+        title: '套料状态',
+        override: {
+          width: 100,
+          showOverflow: true,
+          fixed:"right",
+          slots:{
+            default({ row }){
+              const stateMap = {
+                10: { text: '编程中', color: 'geekblue' },
+                40: { text: '在车间', color: 'orange' },
+                90: { text: '已报工', color: 'success' }
+              }
+              const state = stateMap[row.mstate] || { text: '未知状态', color: 'default' }
+
+              return h(
+                Tag,
+                { color: state.color,bordered:false },
+                () => state.text
+              )
+
+            }
           }
         }
       },

@@ -48,6 +48,7 @@ const props = defineProps({
       includeNestFiles: true,
       includeNestParts: true,
       includePartMaster: true,
+      includePlanMaster: true,
     },
   },
   //开启复选框
@@ -73,12 +74,17 @@ const props = defineProps({
   gridEvents:{
     type: Object,
     default: null,
-  }
+  },
+
+  checkboxConfig:{
+    type: Object,
+    default: null,
+  },
 })
 const {
   height,
   columnsSchema, mode, loadPlan,queryParameters,gridEvents,
-  enableCheckbox,enableServerSideSorting,showSearchForm,
+  enableCheckbox,enableServerSideSorting,showSearchForm,checkboxConfig,
 } = props;
 const groupSortOrderRecord:Record<string, string> = {
 
@@ -95,7 +101,7 @@ const fieldRegisterParams = {
         // 触发事件用 setSortByEvent
       $table.setSortByEvent(e, sortConfs, true)
     }
-  }
+  },
 }
 const FIELD_REGISTRY = useFieldRegistry(fieldRegisterParams);
 const DEFAULT_SCHEMA: SimpleColumnSchema[] = Object.keys(FIELD_REGISTRY).map(key => FIELD_REGISTRY[key]);
@@ -314,6 +320,8 @@ const [Grid, gridApi] = useVbenVxeGrid({
   showSearchForm: showSearchForm,
   gridEvents:gridEvents,
   gridOptions: {
+    checkboxConfig,
+    showOverflow: 'ellipsis',
     sortConfig: {
       remote: enableServerSideSorting,
       multiple: true,

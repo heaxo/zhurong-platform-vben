@@ -7,6 +7,15 @@ async function requestSyncReportedStatus(params:any) {
   });
 }
 
+/**
+ * 批量锁定
+ * @param data
+ */
+async function requestBatchLocking(data: { recIds:number[] }) {
+  return requestClient.put<boolean>(`${CUSTOM_BASE_PREFIX}/disNestNest00000100/batch_locking`, data);
+}
+
 export {
   requestSyncReportedStatus,
+  requestBatchLocking,
 }
