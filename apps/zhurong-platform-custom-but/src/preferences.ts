@@ -23,7 +23,7 @@ export const overridesPreferences = defineOverridesPreferences({
   logo: {
     enable: true,
     fit: 'contain',
-    source: isDev ? '/logo.png' : './logo.png',
-    sourceDark: isDev ? '/logo-dark.png' : './logo-dark.png',
+    source: isDev ? '/logo.png' : '/logo.png',
+    sourceDark: isDev ? '/logo-dark.png' : '/logo-dark.png',
   },
 });

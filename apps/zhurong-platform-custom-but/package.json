@@ -54,6 +54,7 @@
     "vue": "catalog:",
     "@iconify/json": "catalog:",
     "@iconify/vue": "catalog:",
+    "qs": "catalog:",
     "vue-router": "catalog:"
   }
 }

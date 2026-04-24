@@ -19,17 +19,18 @@
     }
   },
   "dependencies": {
-    "vue-router": "catalog:",
-    "@vben/request": "workspace:*",
-    "@vben/hooks": "workspace:*",
-    "@vben/preferences": "workspace:*",
-    "@vben/types": "workspace:*",
     "@vben/constants": "workspace:*",
-    "@vben/stores": "workspace:*",
+    "@vben/hooks": "workspace:*",
     "@vben/locales": "workspace:*",
+    "@vben/preferences": "workspace:*",
+    "@vben/request": "workspace:*",
+    "@vben/stores": "workspace:*",
+    "@vben/types": "workspace:*",
     "@vben/utils": "workspace:*",
     "ant-design-vue": "catalog:",
+    "lodash-es": "catalog:",
     "pinia": "catalog:",
-    "lodash-es": "catalog:"
+    "qs": "catalog:",
+    "vue-router": "catalog:"
   }
 }
