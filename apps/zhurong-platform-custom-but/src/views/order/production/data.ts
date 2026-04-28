@@ -7,78 +7,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'belposId',
-      label: $t('order.belposId'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'itemCode',
-      label: $t('order.itemCode'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'coutKey',
-      label: $t('order.coutKey'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'cfccad',
-      label: $t('order.cfccad'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'cfType',
-      label: $t('order.cfType'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'ccad',
-      label: $t('order.ccad'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'itemName',
-      label: $t('order.itemName'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'uznr',
-      label: $t('order.uznr'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'udf1',
-      label: $t('order.udf1'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'aplatzId',
-      label: $t('order.aplatzId'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'mengeVerbrauch',
-      label: $t('order.mengeVerbrauch'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'anfzeit',
-      label: $t('order.anfzeit'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'lieferdatum',
-      label: $t('order.lieferdatum'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'vversion',
-      label: $t('order.vversion'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'icadproduct',
-      label: $t('order.icadproduct'),
+      fieldName: 'company',
+      label: $t('order.company'),
     },
   ];
 }
@@ -89,37 +19,50 @@ export function useColumns<T = VimOrderlVO>(
   return [{
     align: 'left',
     type: 'checkbox',
-    width: 30,
+    width: 50,
   },
+    {
+      field: 'company',
+      title: $t('order.company'),
+      width: 100,
+      sortable: true,
+    },
     {
       field: 'belposId',
       title: $t('order.belposId'),
-      width: 100,
+      width: 200,
+      sortable: true,
     },
     {
       field: 'itemCode',
       title: $t('order.itemCode'),
       width: 120,
+      sortable: true,
     }, {
       field: 'coutKey',
       title: $t('order.coutKey'),
-      width: 100,
+      width: 150,
+      sortable: true,
     }, {
       field: 'cfccad',
       title: $t('order.cfccad'),
       width: 100,
+      sortable: true,
     }, {
       field: 'cfType',
       title: $t('order.cfType'),
       width: 120,
+      sortable: true,
     }, {
       field: 'ccad',
       title: $t('order.ccad'),
       width: 150,
+      sortable: true,
     }, {
       field: 'itemName',
       title: $t('order.itemName'),
       width: 150,
+      sortable: true,
     }, {
       field: 'uznr',
       title: $t('order.uznr'),
@@ -134,26 +77,32 @@ export function useColumns<T = VimOrderlVO>(
       field: 'aplatzId',
       title: $t('order.aplatzId'),
       width: 100,
+      sortable: true,
     }, {
       field: 'mengeVerbrauch',
       title: $t('order.mengeVerbrauch'),
       width: 90,
+      sortable: true,
     }, {
       field: 'anfzeit',
       title: $t('order.anfzeit'),
       width: 120,
+      sortable: true,
     }, {
       field: 'lieferdatum',
       title: $t('order.lieferdatum'),
       width: 120,
+      sortable: true,
     }, {
       field: 'vversion',
       title: $t('order.vversion'),
       width: 100,
+      sortable: true,
     }, {
       field: 'icadproduct',
       title: $t('order.icadproduct'),
       width: 100,
+      sortable: true,
     }
   ];
 }

@@ -13,5 +13,6 @@
   "length":"长度",
   "whsName": "仓库",
   "locName": "库位",
-  "weight":"重量"
+  "weight":"重量",
+  "company":"公司"
 }

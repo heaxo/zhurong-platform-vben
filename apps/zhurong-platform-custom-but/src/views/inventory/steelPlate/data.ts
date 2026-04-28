@@ -7,53 +7,8 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Input',
-      fieldName: 'itemCode',
-      label: $t('inventory.itemCode'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'itemName',
-      label: $t('inventory.itemName'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'uBeasZnr',
-      label: $t('inventory.uBeasZnr'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'uHd',
-      label: $t('inventory.uHd'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'batchNum',
-      label: $t('inventory.batchNum'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'quantity',
-      label: $t('inventory.quantity'),
-    },
-    {
-      component: 'InputNumber',
-      fieldName: 'width',
-      label: $t('inventory.width'),
-    },
-    {
-      component: 'InputNumber',
-      fieldName: 'length',
-      label: $t('inventory.length'),
-    },
-    {
-      component: 'Input',
-      fieldName: 'whsName',
-      label: $t('inventory.whsName'),
-    },
-    {
-      component: 'InputNumber',
-      fieldName: 'weight',
-      label: $t('inventory.weight'),
+      fieldName: 'company',
+      label: $t('inventory.company'),
     },
   ];
 }
@@ -63,12 +18,23 @@ export function useColumns<T = VimOrderlVO>(
   return [{
     align: 'left',
     type: 'checkbox',
-    width: 30,
+    width: 50,
   },
     {
       field: 'itemCode',
       title: $t('inventory.itemCode'),
       width: 300,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
+    },
+    {
+      field: 'company',
+      title: $t('inventory.company'),
+      width: 150,
       filters: [
         { data: '' }
       ],

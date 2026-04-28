@@ -190,6 +190,7 @@ const [Modal, modalApi] = useVbenModal({
     }
   },
   onCancel() {
+    modalApi.setData(null);
     modalApi.close();
   },
   async onConfirm() {
@@ -202,7 +203,10 @@ const [Modal, modalApi] = useVbenModal({
     try {
       modalApi.setState({loading: true});
       modalApi.close();
-      modalApi.setData({selected: result.map((item) => toRaw(item)), values: {...values}});
+      modalApi.setData({
+        selected: result.map((item) => toRaw(item)), values: {...values},
+        submit: true,
+      });
     } finally {
       modalApi.setState({loading: false});
     }

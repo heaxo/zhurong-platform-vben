@@ -17,5 +17,6 @@
   "anfzeit": "开始时间",
   "lieferdatum": "交货期",
   "vversion": "生产计划批注",
-  "icadproduct": "总成内码"
+  "icadproduct": "总成内码",
+  "company": "公司"
 }
