@@ -3,12 +3,27 @@ import {$t} from '#/locales';
 import type {OnActionClickFn, VxeTableGridOptions} from "#/adapter/vxe-table";
 import type {VimOrderlVO} from "#/api/order/typing";
 
+export const CompanyOptions = [{
+  label:"SBUT_ZN",
+  value:"SBUT_ZN",
+},{
+  label:"SBUT",
+  value:"SBUT",
+}];
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
-      component: 'Input',
+      component: 'Select',
       fieldName: 'company',
       label: $t('order.company'),
+      componentProps:{
+        options: CompanyOptions,
+        allowClear: true,
+        class: 'w-full',
+        filterOption(input: string, option: { value: string }) {
+          return option.value.toLowerCase().includes(input.toLowerCase());
+        },
+      }
     },
   ];
 }
@@ -21,6 +36,10 @@ export function useColumns<T = VimOrderlVO>(
     type: 'checkbox',
     width: 50,
   },
+    {
+      width: 70,
+      type: 'seq',
+    },
     {
       field: 'company',
       title: $t('order.company'),

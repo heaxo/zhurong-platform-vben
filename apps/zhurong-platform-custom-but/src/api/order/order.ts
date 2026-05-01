@@ -11,8 +11,13 @@ async function requestGetViPmOrderlList(params: Recordable<any>) {
 async function requestImportToExpert(data: Recordable<any>) {
   return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/erp/vi/pm/orderl/importToExpert`, data);
 }
+async function requestSpecifiedToExpertJob(data: Recordable<any>) {
+  return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/erp/vi/pm/orderl/specifiedToExpertJob`, data);
+}
+
 
 export {
   requestGetViPmOrderlList,
   requestImportToExpert,
+  requestSpecifiedToExpertJob,
 }

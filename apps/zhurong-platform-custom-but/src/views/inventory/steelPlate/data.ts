@@ -2,13 +2,23 @@ import type {VbenFormSchema} from "#/adapter/form";
 import {$t} from '#/locales';
 import type {VxeTableGridOptions} from "#/adapter/vxe-table";
 import type {VimOrderlVO} from "#/api/order/typing";
+import {componentKeys} from "#/router/routes";
+import {CompanyOptions} from "#/views/order/production/data";
 
 export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
-      component: 'Input',
+      component: 'Select',
       fieldName: 'company',
       label: $t('inventory.company'),
+      componentProps:{
+        options:CompanyOptions,
+        allowClear: true,
+        class: 'w-full',
+        filterOption(input: string, option: { value: string }) {
+          return option.value.toLowerCase().includes(input.toLowerCase());
+        },
+      }
     },
   ];
 }
@@ -21,6 +31,10 @@ export function useColumns<T = VimOrderlVO>(
     width: 50,
   },
     {
+      width: 70,
+      type: 'seq',
+    },
+    {
       field: 'itemCode',
       title: $t('inventory.itemCode'),
       width: 300,
@@ -29,7 +43,8 @@ export function useColumns<T = VimOrderlVO>(
       ],
       filterRender: {
         name: 'TableTextFilterInput'
-      }
+      },
+      sortable: true,
     },
     {
       field: 'company',
@@ -40,48 +55,59 @@ export function useColumns<T = VimOrderlVO>(
       ],
       filterRender: {
         name: 'TableTextFilterInput'
-      }
+      },
+      sortable: true,
     },
     {
       field: 'itemName',
       title: $t('inventory.itemName'),
       width: 180,
+      sortable: true,
     }, {
       field: 'ubeasZnr',
       title: $t('inventory.ubeasZnr'),
       width: 120,
+      sortable: true,
     }, {
       field: 'uhd',
       title: $t('inventory.uhd'),
       width: 100,
+      sortable: true,
     }, {
       field: 'batchNum',
       title: $t('inventory.batchNum'),
       width: 150,
+      sortable: true,
     }, {
       field: 'quantity',
       title: $t('inventory.quantity'),
       width: 90,
+      sortable: true,
     }, {
       field: 'width',
       title: $t('inventory.width'),
       width: 100,
+      sortable: true,
     }, {
       field: 'length',
       title: $t('inventory.length'),
       width: 100,
+      sortable: true,
     }, {
       field: 'whsName',
       title: $t('inventory.whsName'),
       width: 150,
+      sortable: true,
     }, {
       field: 'locName',
       title: $t('inventory.locName'),
       width: 150,
+      sortable: true,
     }, {
       field: 'weight',
       title: $t('inventory.weight'),
       width: 100,
+      sortable: true,
     }
   ];
 }
