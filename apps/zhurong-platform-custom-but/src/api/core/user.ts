@@ -1,7 +1,6 @@
 import type { UserInfo } from '@vben/types';
 
-import { requestClient } from '#/api/request';
-import {AUTH_BASE_PRIFIX} from "#/api";
+import { requestClient,AUTH_BASE_PRIFIX } from '#/api/request';
 
 /**
  * 获取用户信息

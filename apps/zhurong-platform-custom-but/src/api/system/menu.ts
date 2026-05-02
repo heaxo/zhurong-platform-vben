@@ -1,6 +1,5 @@
 import type { Recordable } from '@vben/types';
-import { AUTH_BASE_PRIFIX } from '#/api';
-import { requestClient } from '#/api/request';
+import { requestClient,AUTH_BASE_PRIFIX } from '#/api/request';
 
 export namespace SystemMenuApi {
   /** 徽标颜色集合 */

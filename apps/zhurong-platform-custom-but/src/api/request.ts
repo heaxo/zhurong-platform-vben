@@ -20,8 +20,9 @@ import { useAuthStore } from '#/store';
 import { refreshTokenApi } from './core';
 
 const { apiURL } = useAppConfig(import.meta.env, import.meta.env.PROD);
-export const CORE_BASE_PREFIX = "/api/core";
-export const CUSTOM_BASE_PREFIX = "/api/custom";
+export const AUTH_BASE_PRIFIX = '/auth';
+export const CORE_BASE_PREFIX = "/core";
+export const CUSTOM_BASE_PREFIX = "/custom";
 function createRequestClient(baseURL: string, options?: RequestClientOptions) {
   const client = new RequestClient({
     ...options,

@@ -1,4 +1,5 @@
-import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
+import {type VxeTableGridOptions} from '@vben/plugins/vxe-table';
+import {VxeUIAll} from '@vben/plugins/vxe-table';
 import type { Recordable } from '@vben/types';
 
 import type { ComponentType } from './component';
@@ -67,6 +68,12 @@ setupVbenVxeTable({
         const { props } = renderOpts;
         const { column, row } = params;
         return h(Image, { src: row[column.field], ...props });
+      },
+    });
+    vxeUI.renderer.add('VxeImage', {
+      renderTableDefault(_renderOpts, params) {
+        const { column, row } = params;
+        return h(VxeUIAll.VxeImage, { src: row[column.field] });
       },
     });
 

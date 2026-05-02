@@ -1,5 +1,4 @@
-import { AUTH_BASE_PRIFIX } from '#/api';
-import { requestClient } from '#/api/request';
+import { requestClient, AUTH_BASE_PRIFIX } from '#/api/request';
 
 export namespace SystemDeptApi {
   export interface SystemDept {

@@ -1,7 +1,6 @@
 import type { RouteRecordStringComponent } from '@vben/types';
 
-import { AUTH_BASE_PRIFIX } from '#/api';
-import { requestClient } from '#/api/request';
+import { requestClient, AUTH_BASE_PRIFIX } from '#/api/request';
 
 /**
  * 获取用户所有菜单

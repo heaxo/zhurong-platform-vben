@@ -1,5 +1,4 @@
-import { AUTH_BASE_PRIFIX } from '#/api';
-import { baseRequestClient, requestClient } from '#/api/request';
+import { baseRequestClient, requestClient, AUTH_BASE_PRIFIX } from '#/api/request';
 
 export namespace AuthApi {
   /** 登录接口参数 */
