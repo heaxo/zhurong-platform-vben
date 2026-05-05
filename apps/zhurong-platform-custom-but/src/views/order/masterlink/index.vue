@@ -7,7 +7,7 @@ import {
 import {ref,nextTick} from 'vue';
 import {useColumns, useGridFormSchema} from "./data";
 import type {VimOrderlVO} from "#/api/order";
-import {requestGetMmnnMmoo00000300PageList} from "@zhurong/api";
+import {requestGetReleaseItem} from "#/api";
 import {requestSpecifiedToExpertJob} from "#/api/order";
 import {Button, message, Space} from 'ant-design-vue';
 import {ExportOutlined} from '@ant-design/icons-vue';
@@ -102,11 +102,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
     keepSource: true,
     pagerConfig: {
       enabled: true,
+      pageSize: 200,
     },
     proxyConfig: {
       ajax: {
         query: async ({page}, formValues) => {
-          const data = await requestGetMmnnMmoo00000300PageList({
+          const data = await requestGetReleaseItem({
             page: page.currentPage,
             pageSize: page.pageSize,
             queryRelease: true,
@@ -150,14 +151,14 @@ const [JobBrowserSelecterModal, jobBrowserSelecterModalApi] = useVbenModal({
       if (isEmpty(selectedRows.value)) {
         return message.warn("请选择要指定的生产订单");
       }
-      const succeed = await requestSpecifiedToExpertJob({
+      const msg = await requestSpecifiedToExpertJob({
         recIds: selectedRows.value.map(it => it.recID),
         dis_JobRef:jobRef,
         ...values,
       })
-      if (succeed) {
+      if (msg) {
         gridApi.reload();
-        return message.success("指定成功");
+        return message.success(msg || "指定成功");
       }
     } finally {
       gridApi.setGridOptions({
@@ -210,5 +211,8 @@ function importToExpert() {
   padding: 8px 0;
   color: #666;
   font-size: 13px;
+}
+:deep(.dark .vxe-cell--checkbox){
+  color: white !important;
 }
 </style>

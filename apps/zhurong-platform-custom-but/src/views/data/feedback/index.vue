@@ -180,4 +180,7 @@ const checkboxConfig = {
 
 <style scoped>
 
+:deep(.dark .vxe-cell--checkbox){
+  color: white !important;
+}
 </style>

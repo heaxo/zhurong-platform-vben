@@ -98,9 +98,12 @@ async function importToExpert() {
     gridApi.setGridOptions({
       loading: true,
     });
-    await requestImportInventory({
+    const msg = await requestImportInventory({
       itemCodes,
     });
+    if (msg){
+      message.success(msg || "导入成功");
+    }
   } finally {
     gridApi.setGridOptions({
       loading: false,
@@ -136,5 +139,7 @@ const tableDataCount = ref();
 </template>
 
 <style scoped>
-
+:deep(.dark .vxe-cell--checkbox){
+  color: white !important;
+}
 </style>

@@ -78,6 +78,40 @@ export function useColumns<T = VimOrderlVO>(
     {
       width: 70,
       type: 'seq',
+    },{
+      field: 'mnORef',
+      title: "订单编号",
+      width: 220,
+      sortable: true,
+    },{
+      field: 'cusName',
+      title: "物料编号",
+      width: 220,
+      sortable: true,
+    },{
+      field: 'a',
+      title: "SAP分厂",
+      width: 100,
+      sortable: true,
+      formatter(){
+        return '0'
+      },
+    },{
+      field: 'b',
+      title: "总成图号",
+      width: 100,
+      sortable: true,
+      formatter(){
+        return '0'
+      },
+    },{
+      field: 'c',
+      title: "总长型号",
+      width: 100,
+      sortable: true,
+      formatter(){
+        return '0'
+      },
     },
     {
       field: 'prdRef',
@@ -86,9 +120,9 @@ export function useColumns<T = VimOrderlVO>(
       sortable: true,
     },
     {
-      field: 'wrkRef',
-      title: "机床",
-      width: 150,
+      field: 'prdNameDst',
+      title: "零件名称",
+      width: 200,
       sortable: true,
     },
     {
@@ -101,22 +135,33 @@ export function useColumns<T = VimOrderlVO>(
       title: "厚度",
       width: 90,
       sortable: true,
+    },
+    {
+      field: 'wrkRef',
+      title: "机床",
+      width: 150,
+      sortable: true,
     }, {
-      field: 'quantity',
+      field: 'aq',
       title: "数量",
       width: 100,
       sortable: true,
+    },   {
+      field: 'rdate',
+      title: "交货期",
+      width: 160,
+      sortable: true,
     }, {
-      field: 'mnORef',
-      title: "订单编号",
-      width: 220,
+      field: 'cusRef',
+      title: "版本号",
+      width: 150,
       sortable: true,
     }, {
       field: 'ordRef',
       title: "总成内码",
       width: 150,
       sortable: true,
-    },{
+    }, {
       field: 'descrip',
       title: "公司",
       width: 150,

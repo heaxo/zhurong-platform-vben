@@ -821,4 +821,7 @@ function getSplitPrdRef(record: SplitRecord) {
 :deep(.split-result-row--active td:first-child) {
   box-shadow: inset 2px 0 0 hsl(var(--primary));
 }
+:deep(.dark .vxe-cell--checkbox){
+  color: white !important;
+}
 </style>

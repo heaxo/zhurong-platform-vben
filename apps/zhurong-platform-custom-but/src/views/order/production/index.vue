@@ -148,14 +148,14 @@ const [JobBrowserSelecterModal, jobBrowserSelecterModalApi] = useVbenModal({
       if (isEmpty(selectedRows.value)) {
         return message.warn("请选择要导入的生产订单");
       }
-      const succeed = await requestImportToExpert({
+      const msg = await requestImportToExpert({
         belposIds: selectedRows.value.map(it => it.belposId),
         jobRef,
         ...values,
       })
-      if (succeed) {
+      if (msg) {
         gridApi.reload();
-        return message.success("导入成功");
+        return message.success(msg || "导入成功");
       }
     } finally {
       gridApi.setGridOptions({
@@ -212,5 +212,8 @@ const tableDataCount = ref();
   padding: 8px 0;
   color: #666;
   font-size: 13px;
+}
+:deep(.dark .vxe-cell--checkbox){
+  color: white !important;
 }
 </style>

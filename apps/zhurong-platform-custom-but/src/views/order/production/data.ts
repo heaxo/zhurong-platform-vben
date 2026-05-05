@@ -7,8 +7,8 @@ export const CompanyOptions = [{
   label:"SBUT_ZN",
   value:"SBUT_ZN",
 },{
-  label:"SBUT",
-  value:"SBUT",
+  label:"BUT",
+  value:"BUT",
 }];
 export function useGridFormSchema(): VbenFormSchema[] {
   return [

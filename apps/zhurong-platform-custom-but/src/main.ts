@@ -10,6 +10,7 @@ import mdi from '@iconify/json/json/mdi.json';
 import fileIcons from '@iconify/json/json/file-icons.json';
 import epIcons from '@iconify/json/json/ep.json';
 import fluentMdl2Icons from '@iconify/json/json/fluent-mdl2.json';
+import './global.less';
 import { addCollection } from '@iconify/vue';
 addCollection(carbon);
 addCollection(antDesign);
