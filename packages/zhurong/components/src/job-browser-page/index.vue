@@ -236,13 +236,13 @@ onMounted(() => {
 
         <!-- 工具栏 -->
         <Space class="ml-2 mt-2">
-          <Tooltip title="展开所有">
+<!--          <Tooltip title="展开所有">
             <Button size="small" @click="expandAll">
               <template #icon>
                 <PlusSquareOutlined/>
               </template>
             </Button>
-          </Tooltip>
+          </Tooltip>-->
           <Tooltip title="收起所有">
             <Button size="small" @click="collapseAll">
               <template #icon>

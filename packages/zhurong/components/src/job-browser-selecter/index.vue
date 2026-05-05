@@ -299,12 +299,12 @@ function expandSelected() {
             展开选中
           </Button>
 
-          <Button size="small" @click="expandAll">
+<!--          <Button size="small" @click="expandAll">
             <template #icon>
               <PlusSquareOutlined/>
             </template>
             展开全部
-          </Button>
+          </Button>-->
 
           <Button size="small" @click="collapseAll">
             <template #icon>
