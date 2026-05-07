@@ -63,51 +63,136 @@ export function useColumns<T = VimOrderlVO>(
       title: $t('inventory.itemName'),
       width: 180,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'ubeasZnr',
       title: $t('inventory.ubeasZnr'),
       width: 120,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'uhd',
       title: $t('inventory.uhd'),
-      width: 100,
+      width: 130,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     }, {
       field: 'batchNum',
       title: $t('inventory.batchNum'),
       width: 150,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'quantity',
       title: $t('inventory.quantity'),
       width: 90,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     }, {
       field: 'width',
       title: $t('inventory.width'),
       width: 100,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     }, {
       field: 'length',
       title: $t('inventory.length'),
       width: 100,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     }, {
       field: 'whsName',
       title: $t('inventory.whsName'),
       width: 150,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'locName',
       title: $t('inventory.locName'),
       width: 150,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'weight',
       title: $t('inventory.weight'),
       width: 100,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     }
   ];
 }

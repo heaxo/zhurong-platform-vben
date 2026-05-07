@@ -20,7 +20,8 @@ import { Button, Image, Popconfirm, Switch, Tag } from 'ant-design-vue';
 import { $t } from '#/locales';
 
 import { useVbenForm } from './form';
-import {registerTableTextFilterInput} from "@zhurong/components";
+import {registerTableTextFilterInput,registerTableNumberRangeFilter,
+  registerTableSelectFilter} from "@zhurong/components";
 
 setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
@@ -286,6 +287,8 @@ setupVbenVxeTable({
       },
     });
     registerTableTextFilterInput(vxeUI);
+    registerTableNumberRangeFilter(vxeUI);
+    registerTableSelectFilter(vxeUI);
 
     // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
     // vxeUI.formats.add

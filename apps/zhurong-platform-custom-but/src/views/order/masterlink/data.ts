@@ -83,32 +83,62 @@ export function useColumns<T = VimOrderlVO>(
       title: "订单编号",
       width: 220,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     },{
       field: 'cusName',
       title: "物料编号",
       width: 220,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     },{
       field: 'a',
       title: "SAP分厂",
       width: 100,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
       formatter(){
         return '0'
       },
     },{
       field: 'b',
       title: "总成图号",
-      width: 100,
+      width: 130,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
       formatter(){
         return '0'
       },
     },{
       field: 'c',
       title: "总长型号",
-      width: 100,
+      width: 130,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
       formatter(){
         return '0'
       },
@@ -118,34 +148,83 @@ export function useColumns<T = VimOrderlVO>(
       title: "零件编号",
       width: 200,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     },
     {
       field: 'prdNameDst',
       title: "零件名称",
       width: 200,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     },
     {
       field: 'dis_MatRef',
       title: "材质",
       width: 120,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'dis_Thickness',
       title: "厚度",
       width: 90,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     },
     {
       field: 'wrkRef',
       title: "机床",
       width: 150,
       sortable: true,
+      filters: [
+        {
+          data: null,
+        },
+      ],
+      filterRender: {
+        name: 'TableSelectFilter',
+        source: 'column',
+      },
     }, {
       field: 'aq',
       title: "数量",
       width: 100,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     },   {
       field: 'rdate',
       title: "交货期",
@@ -153,19 +232,40 @@ export function useColumns<T = VimOrderlVO>(
       sortable: true,
     }, {
       field: 'cusRef',
-      title: "版本号",
+      title: "生产计划批注",
       width: 150,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'ordRef',
       title: "总成内码",
       width: 150,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }, {
       field: 'descrip',
       title: "公司",
       width: 150,
       sortable: true,
+      filters: [
+        {
+          data: null,
+        },
+      ],
+      filterRender: {
+        name: 'TableSelectFilter',
+        source: 'column',
+      },
     },
   ]
 }

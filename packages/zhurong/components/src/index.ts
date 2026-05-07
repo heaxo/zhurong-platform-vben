@@ -7,6 +7,7 @@ export * from './table-column-data-filter';
 //按需加载组件
 export const setupVxeTable = (app) => {
   app.use(VxeUIAll.VxeInput);
+  app.use(VxeUIAll.VxeSelect);
   app.use(VxeUIAll.VxeImage);
   app.use(VxeUIAll.VxeButton);
 };

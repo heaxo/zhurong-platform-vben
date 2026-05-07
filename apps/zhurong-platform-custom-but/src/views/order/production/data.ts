@@ -45,18 +45,50 @@ export function useColumns<T = VimOrderlVO>(
       title: $t('order.company'),
       width: 100,
       sortable: true,
+      filters: [
+        {
+          data: null,
+        },
+      ],
+      filterRender: {
+        name: 'TableSelectFilter',
+        source: 'column',
+      },
+    },{
+      field: 'vversion',
+      title: $t('order.vversion'),
+      width: 150,
+      sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     },
     {
       field: 'belposId',
       title: $t('order.belposId'),
       width: 200,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     },
     {
       field: 'itemCode',
       title: $t('order.itemCode'),
       width: 120,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     }, {
       field: 'coutKey',
       title: $t('order.coutKey'),
@@ -65,43 +97,104 @@ export function useColumns<T = VimOrderlVO>(
     }, {
       field: 'cfccad',
       title: $t('order.cfccad'),
-      width: 100,
+      width: 130,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     }, {
       field: 'cfType',
       title: $t('order.cfType'),
       width: 120,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     }, {
       field: 'ccad',
       title: $t('order.ccad'),
       width: 150,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     }, {
       field: 'itemName',
       title: $t('order.itemName'),
       width: 150,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     }, {
       field: 'uznr',
       title: $t('order.uznr'),
       width: 90,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      }
     }, {
       field: 'udf1',
       title: $t('order.udf1'),
       width: 80,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     }, {
       field: 'aplatzId',
       title: $t('order.aplatzId'),
       width: 100,
       sortable: true,
+      filters: [
+        {
+          data: null,
+        },
+      ],
+      filterRender: {
+        name: 'TableSelectFilter',
+        source: 'column',
+      },
     }, {
       field: 'mengeVerbrauch',
       title: $t('order.mengeVerbrauch'),
       width: 90,
       sortable: true,
+      filters: [
+        {
+          data: {
+            min: null,
+            max: null,
+          },
+        },
+      ],
+      filterRender: {
+        name: 'TableNumberRangeFilter',
+      },
     }, {
       field: 'anfzeit',
       title: $t('order.anfzeit'),
@@ -112,16 +205,17 @@ export function useColumns<T = VimOrderlVO>(
       title: $t('order.lieferdatum'),
       width: 120,
       sortable: true,
-    }, {
-      field: 'vversion',
-      title: $t('order.vversion'),
-      width: 100,
-      sortable: true,
-    }, {
+    },  {
       field: 'icadproduct',
       title: $t('order.icadproduct'),
-      width: 100,
+      width: 130,
       sortable: true,
+      filters: [
+        { data: '' }
+      ],
+      filterRender: {
+        name: 'TableTextFilterInput'
+      },
     }
   ];
 }
