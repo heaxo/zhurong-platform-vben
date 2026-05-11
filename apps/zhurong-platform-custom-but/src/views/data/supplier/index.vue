@@ -39,6 +39,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
     checkboxAll: handleSelectionChange,
   },
   gridOptions: {
+    id: "supplierGridTable",
+    customConfig:{
+      storage: true,
+    },
     virtualYConfig: {
       enabled: true,   // 开启纵向虚拟滚动
       gt: 50,

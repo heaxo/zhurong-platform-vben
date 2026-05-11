@@ -320,6 +320,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
   showSearchForm: showSearchForm,
   gridEvents:gridEvents,
   gridOptions: {
+    id: "nestingDataGridTable",
+    customConfig:{
+      storage: true,
+    },
     checkboxConfig,
     showOverflow: 'ellipsis',
     sortConfig: {

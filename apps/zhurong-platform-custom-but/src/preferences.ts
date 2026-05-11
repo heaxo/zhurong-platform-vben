@@ -14,7 +14,7 @@ export const overridesPreferences = defineOverridesPreferences({
     defaultHomePath: '/order',
   },
   theme: {
-    colorPrimary: '#fdcc06',
+    colorPrimary: '#FFC500',
     builtinType: 'yellow',
   },
   transition: {
