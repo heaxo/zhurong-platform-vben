@@ -38,6 +38,9 @@ async function requestBatchRemoveZhurongButSupplierinfo(data: number[]) {
 async function requestSyncSupplierinfo(data: ZhurongButSupplierinfoDTO) {
   return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/zhurongButSupplierinfo/sync`, data);
 }
+async function requestUpdateUdata(data: ZhurongButSupplierinfoDTO) {
+  return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/zhurongButSupplierinfo/updateUdata`, data);
+}
 
 export {
   requestGetZhurongButSupplierinfoPage,
@@ -48,4 +51,5 @@ export {
   requestBatchRemoveZhurongButSupplierinfo,
 
   requestSyncSupplierinfo,
+  requestUpdateUdata,
 };

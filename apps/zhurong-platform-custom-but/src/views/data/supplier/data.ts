@@ -64,6 +64,24 @@ export function useGridFormSchema(): VbenFormSchema[] {
       label: '位置',
     },
     {
+      component: 'Select',
+      fieldName: 'isRead',
+      label: '更新状态',
+      componentProps:{
+        options:[{
+          label:"全部",
+          value: null,
+        },{
+          label:"已更新",
+          value: true,
+        },{
+          label:"未更新",
+          value: false,
+        }]
+      },
+      defaultValue: false
+    },
+    {
       component: 'Input',
       fieldName: 'shtRef',
       label: '钢板编码',

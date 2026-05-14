@@ -58,6 +58,7 @@ export interface ZhurongButSupplierinfoVO {
 }
 
 export interface ZhurongButSupplierinfoDTO {
+  ids?:string[];
   /**
    *
    */

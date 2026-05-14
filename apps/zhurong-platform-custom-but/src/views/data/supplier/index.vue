@@ -5,7 +5,10 @@ import {
   type VxeTableGridOptions
 } from "#/adapter/vxe-table";
 import {useColumns, useGridFormSchema} from "./data";
-import {requestGetZhurongButSupplierinfoPage, requestSyncSupplierinfo, requestSyncReportedStatus} from "#/api";
+import {
+  requestGetZhurongButSupplierinfoPage, requestSyncSupplierinfo, requestSyncReportedStatus,
+  requestUpdateUdata
+} from "#/api";
 import type {ZhurongButSupplierinfoVO} from "#/api";
 
 import {Page, useVbenDrawer} from '@vben/common-ui';
@@ -29,9 +32,10 @@ function handleSelectionChange({records}) {
 }
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
+    wrapperClass:'grid-cols-4',
     fieldMappingTime: [['createTime', ['startTime', 'endTime']]],
     schema: useGridFormSchema(),
-    submitOnChange: true,
+    submitOnChange: false,
     collapsed: true,
   },
   gridEvents: {
@@ -112,6 +116,20 @@ async function onSyncSupplier() {
     syncSupplierLoading.value = false;
   }
 }
+async function onUpdateUdata() {
+  try{
+    syncSupplierLoading.value = true;
+    const ids = selectedRows.value.map(it => it.id);
+    const response = await requestUpdateUdata({
+      ids
+    });
+    if (response){
+      successHandler();
+    }
+  } finally {
+    syncSupplierLoading.value = false;
+  }
+}
 async function onSyncReportedStatus() {
   try{
     syncSupplierLoading.value = true;
@@ -138,6 +156,10 @@ async function onSyncReportedStatus() {
           <Button type="primary" @click="onSyncSupplier" :loading="syncSupplierLoading">
             <CloudSyncOutlined />
             同步供应商
+          </Button>
+          <Button type="default" @click="onUpdateUdata" :loading="syncSupplierLoading" :disabled="!selectedRows.length">
+            <CloudSyncOutlined />
+            更新到套料软件
           </Button>
           <Button type="default" @click="onSyncReportedStatus" :loading="syncSupplierLoading">
             <CloudSyncOutlined />
