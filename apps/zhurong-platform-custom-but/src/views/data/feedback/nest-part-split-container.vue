@@ -789,7 +789,7 @@ function getSplitPrdRef(record: SplitRecord) {
       <div class="flex w-full items-center justify-between text-sm">
         <div>
           <span class="font-bold">程序号：</span>
-          <span class="text-muted-foreground">
+          <span class="text-muted-fordeground">
            {{propsData.cnc}}
         </span>
         </div>

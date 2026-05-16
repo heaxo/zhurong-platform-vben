@@ -44,7 +44,7 @@ const gridEvents = {
         const changedNestParts = data.items;
         for (let i = 0; i < param.row.nestParts.length; i++) {
           const part = param.row.nestParts[i];
-          nestParts.push({...part,ordRef: part.workOrder?.ordRef});
+          nestParts.push({...part,ordRef: part.mnORef});
         }
 
         splitContainerApi
@@ -83,7 +83,7 @@ const [SplitContainer, splitContainerApi] = useVbenDrawer({
         oprId: it.oprID??it.oprId,
         quantity: it.quantity,
         remark: it.remark,
-        ordRef: it.ordRef,
+        ordRef: it.mnORef??it.mnoRef,
         recId: it.recID??it.recId,
       }))
       const succeed = await requestSplitRecordsOverwrite({
