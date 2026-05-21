@@ -102,7 +102,7 @@ const orderOptions = computed(() => {
 const finalSourceNestParts = computed<NestPartItem[]>(() => {
   return sourceRows.value.map((sourceRow) => ({
     ...cloneDeep(sourceRow.__rawSourceItem),
-    ordRef: sourceRow.__originOrdRef,
+    mnORef: sourceRow.__originOrdRef,
     quantity: sourceRow.quantity,
     recID: sourceRow.recID,
     remark: sourceRow.__rawSourceItem.remark,
@@ -121,7 +121,7 @@ const finalSplitNestParts = computed<NestPartItem[]>(() => {
       console.log("rawSplitBase",rawSplitBase);
       return {
         ...cloneDeep(rawSplitBase),
-        ordRef: record.splitOrdRef,
+        mnORef: record.splitOrdRef,
         quantity: record.quantity,
         recID: sourceRow.recID,
         remark: record.remark,
