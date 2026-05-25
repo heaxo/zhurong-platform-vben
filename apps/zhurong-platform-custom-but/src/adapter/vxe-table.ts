@@ -29,13 +29,23 @@ setupVbenVxeTable({
       grid: {
         align: 'center',
         border: false,
+        checkboxConfig:{
+          highlight: true,
+        },
+        rowConfig:{
+          isCurrent:true,
+        },
         columnConfig: {
           resizable: true,
+          isCurrent: true,
         },
 
         formConfig: {
           // 全局禁用vxe-table的表单配置，使用formOptions
           enabled: false,
+        },
+        sortConfig:{
+          multiple: true,
         },
         minHeight: 180,
         proxyConfig: {

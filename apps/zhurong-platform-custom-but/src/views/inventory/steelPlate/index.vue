@@ -99,9 +99,9 @@ async function importToExpert() {
   const itemCodes = selectedRows.value.map(it => it.itemCode);
   try {
     importLoading.value = true;
-    gridApi.setGridOptions({
-      loading: true,
-    });
+    // gridApi.setGridOptions({
+    //   loading: true,
+    // });
     const msg = await requestImportInventory({
       itemCodes,
     });
@@ -109,9 +109,9 @@ async function importToExpert() {
       message.success(msg || "导入成功");
     }
   } finally {
-    gridApi.setGridOptions({
-      loading: false,
-    });
+    // gridApi.setGridOptions({
+    //   loading: false,
+    // });
     importLoading.value = false;
   }
 }

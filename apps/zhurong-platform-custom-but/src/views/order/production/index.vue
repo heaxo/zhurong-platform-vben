@@ -143,9 +143,9 @@ const [JobBrowserSelecterModal, jobBrowserSelecterModalApi] = useVbenModal({
       if (!data || !data.submit) {
         return;
       }
-      gridApi.setGridOptions({
-        loading: true,
-      });
+      // gridApi.setGridOptions({
+      //   loading: true,
+      // });
       importLoading.value = true;
       const jobRef = data.selected[0].id;
       const values = data.values;
@@ -162,9 +162,9 @@ const [JobBrowserSelecterModal, jobBrowserSelecterModalApi] = useVbenModal({
         return message.success(msg || "导入成功");
       }
     } finally {
-      gridApi.setGridOptions({
-        loading: false,
-      });
+      // gridApi.setGridOptions({
+      //   loading: false,
+      // });
       importLoading.value = false;
     }
   }

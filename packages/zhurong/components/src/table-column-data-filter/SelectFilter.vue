@@ -40,7 +40,6 @@ function hasValue(value: unknown) {
 
 function buildOptionsFromColumn(): SelectOption[] {
   const { renderParams, renderOpts } = props;
-
   if (!renderParams) {
     return [];
   }
