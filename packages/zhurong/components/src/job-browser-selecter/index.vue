@@ -136,6 +136,9 @@ const [OptionForm, optionFormApi] = useVbenForm({
       component: 'ApiSelect',
       componentProps: {
         api: requestGetWwccWwcc00000100PageList,
+        params:{
+          pageSize:-1,
+        },
         allowClear: true,
         labelField: 'wrkRef',
         valueField: 'wrkRef',
@@ -152,6 +155,9 @@ const [OptionForm, optionFormApi] = useVbenForm({
       component: 'ApiSelect',
       componentProps: {
         api: requestGetDisMmttMmtt00000100PageList,
+        params:{
+          pageSize:-1,
+        },
         allowClear: true,
         labelField: 'matRef',
         valueField: 'matRef',
