@@ -41,6 +41,9 @@ async function requestSyncSupplierinfo(data: ZhurongButSupplierinfoDTO) {
 async function requestUpdateUdata(data: ZhurongButSupplierinfoDTO) {
   return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/zhurongButSupplierinfo/updateUdata`, data);
 }
+async function requestClearExistingInventory() {
+  return requestClient.put<boolean>(`${CUSTOM_BASE_PREFIX}/zhurongButSupplierinfo/ClearExistingInventory`);
+}
 
 export {
   requestGetZhurongButSupplierinfoPage,
@@ -52,4 +55,5 @@ export {
 
   requestSyncSupplierinfo,
   requestUpdateUdata,
+  requestClearExistingInventory,
 };

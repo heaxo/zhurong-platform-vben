@@ -161,7 +161,7 @@ const [JobBrowserSelecterModal, jobBrowserSelecterModalApi] = useVbenModal({
         ...values,
       })
       if (msg) {
-        gridApi.reload();
+        gridApi.query();
         return message.success(msg || "指定成功");
       }
     } finally {

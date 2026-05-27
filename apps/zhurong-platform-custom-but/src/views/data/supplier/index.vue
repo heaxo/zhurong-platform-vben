@@ -7,14 +7,14 @@ import {
 import {useColumns, useGridFormSchema} from "./data";
 import {
   requestGetZhurongButSupplierinfoPage, requestSyncSupplierinfo, requestSyncReportedStatus,
-  requestUpdateUdata
+  requestUpdateUdata, requestClearExistingInventory
 } from "#/api";
 import type {ZhurongButSupplierinfoVO} from "#/api";
 
 import {Page, useVbenDrawer} from '@vben/common-ui';
-import {Button,Input, Space,message} from "ant-design-vue";
+import {Button,Modal, Space,message} from "ant-design-vue";
 import {isEmpty} from 'lodash-es';
-import {CloudSyncOutlined} from "@ant-design/icons-vue";
+import {CloudSyncOutlined,ClearOutlined} from "@ant-design/icons-vue";
 import {Plus} from '@vben/icons';
 import Form from './modules/form.vue';
 import {ref} from "vue";
@@ -130,6 +130,25 @@ async function onUpdateUdata() {
     syncSupplierLoading.value = false;
   }
 }
+async function onClearExistingInventory() {
+  Modal.confirm({
+    title:"清除整板库存信息",
+    content:"确定清除现有整板库存的数量、用户数据信息吗？",
+    onOk:async () => {
+      try{
+        syncSupplierLoading.value = true;
+        const response = await requestClearExistingInventory({
+        });
+        if (response){
+          message.success("整板库存清除成功");
+        }
+      } finally {
+        syncSupplierLoading.value = false;
+      }
+    }
+  })
+
+}
 async function onSyncReportedStatus() {
   try{
     syncSupplierLoading.value = true;
@@ -153,6 +172,10 @@ async function onSyncReportedStatus() {
 <!--          {{ $t('ui.actionTitle.create') }}-->
 <!--        </Button>-->
         <Space>
+          <Button type="default" @click="onClearExistingInventory" :loading="syncSupplierLoading">
+            <ClearOutlined />
+            清空现有整板库存
+          </Button>
           <Button type="primary" @click="onSyncSupplier" :loading="syncSupplierLoading">
             <CloudSyncOutlined />
             同步供应商
