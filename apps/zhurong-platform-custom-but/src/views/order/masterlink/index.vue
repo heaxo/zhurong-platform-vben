@@ -159,6 +159,7 @@ const [JobBrowserSelecterModal, jobBrowserSelecterModalApi] = useVbenModal({
         recIds: selectedRows.value.map(it => it.recID),
         dis_JobRef:jobRef,
         ...values,
+        DIS_MatRef: values.matRef,
       })
       if (msg) {
         gridApi.query();
