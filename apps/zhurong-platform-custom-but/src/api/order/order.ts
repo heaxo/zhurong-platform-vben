@@ -8,6 +8,11 @@ async function requestGetViPmOrderlList(params: Recordable<any>) {
   });
 }
 
+async function requestGetDetachableParts(params: Recordable<any>) {
+  return requestClient.get<Array<any>>(`${CUSTOM_BASE_PREFIX}/erp/vi/pm/orderl/getDetachableParts`, {
+    params,
+  });
+}
 async function requestImportToExpert(data: Recordable<any>) {
   return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/erp/vi/pm/orderl/importToExpert`, data);
 }
@@ -26,4 +31,6 @@ export {
   requestImportToExpert,
   requestSpecifiedToExpertJob,
   requestGetReleaseItem,
+
+  requestGetDetachableParts,
 }

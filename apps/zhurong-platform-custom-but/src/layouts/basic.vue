@@ -23,7 +23,7 @@ import { useAuthStore } from '#/store';
 import LoginForm from '#/views/_core/authentication/login.vue';
 
 const notifications = ref<NotificationItem[]>([
-  {
+  /*{
     id: 1,
     avatar: 'https://avatar.vercel.sh/vercel.svg?text=VB',
     date: '3小时前',
@@ -72,7 +72,7 @@ const notifications = ref<NotificationItem[]>([
     message: '描述信息描述信息描述信息',
     title: '跳转外部链接示例',
     link: 'https://doc.vben.pro',
-  },
+  },*/
 ]);
 
 const router = useRouter();

@@ -1,15 +1,15 @@
 <script lang="ts" setup>
-import {JobBrowserPage, NestingDataTable} from '@zhurong/components';
-import {Page, useVbenDrawer} from "@vben/common-ui";
-import {reactive, ref, useTemplateRef} from "vue";
-import {Button, Space,Modal , Tooltip,message} from 'ant-design-vue';
-import {SendOutlined} from '@ant-design/icons-vue';
-import NestPartSplit from './nest-part-split-container.vue'
+import { JobBrowserPage, NestingDataTable } from '@zhurong/components';
+import { Page, useVbenDrawer } from '@vben/common-ui';
+import { reactive, ref, useTemplateRef } from 'vue';
+import { Button, Space, Modal, Tooltip, message } from 'ant-design-vue';
+import { SendOutlined } from '@ant-design/icons-vue';
+import NestPartSplit from './nest-part-split-container.vue';
 import {
   requestBatchLocking,
   requestGetZhurongButNestingPartsSplitRecordsPage,
-  requestSplitRecordsOverwrite
-} from "#/api";
+  requestSplitRecordsOverwrite,
+} from '#/api';
 
 const queryParameters = reactive({
   jobRef: null,
@@ -24,18 +24,18 @@ function handleSelect(jobRefs: string[]) {
 
 const selectedRows = ref([]);
 const gridEvents = {
-  checkboxChange: ({records}) => {
+  checkboxChange: ({ records }) => {
     selectedRows.value = records;
   },
-  checkboxAll: ({records}) => {
+  checkboxAll: ({ records }) => {
     selectedRows.value = records;
   },
-  cellClick:async (param) => {
+  cellClick: async (param) => {
     if (param.column.field === 'cnc') {
-      try{
+      try {
         gridRef.value._gridApi.setGridOptions({
           loading: true,
-        })
+        });
         const nestParts = [];
         const data = await requestGetZhurongButNestingPartsSplitRecordsPage({
           pageSize: -1,
@@ -44,7 +44,7 @@ const gridEvents = {
         const changedNestParts = data.items;
         for (let i = 0; i < param.row.nestParts.length; i++) {
           const part = param.row.nestParts[i];
-          nestParts.push({...part,ordRef: part.mnORef});
+          nestParts.push({ ...part, mnORef: part.mnORef ?? part.ordRef });
         }
 
         splitContainerApi
@@ -52,78 +52,79 @@ const gridEvents = {
             nestParts,
             changedNestParts,
             cnc: param.row.cnc,
+            nstRef: param.row.nstRef,
           })
-          .setState({title: '套料零件拆分'})
+          .setState({ title: '套料零件拆分' })
           .open();
-      }catch (e){
+      } catch (e) {
         console.error(e);
-      }finally{
+      } finally {
         gridRef.value._gridApi.setGridOptions({
           loading: false,
-        })
+        });
       }
     }
   },
-}
-const gridRef = useTemplateRef("gridRef");
-
+};
+const gridRef = useTemplateRef('gridRef');
 
 const [SplitContainer, splitContainerApi] = useVbenDrawer({
   connectedComponent: NestPartSplit,
   onBeforeClose: async () => {
     try {
       const data = splitContainerApi.getData();
-      if (!data.submit){
+      if (!data.submit) {
         return true;
       }
       const changedNestParts = data.changedNestParts;
-      const records = changedNestParts.map(it => ({
+      const records = changedNestParts.map((it) => ({
         nstRef: it.nstRef,
-        mnoRef: it.mnORef??it.mnoRef,
-        oprId: it.oprID??it.oprId,
+        mnoRef: it.mnORef ?? it.mnoRef,
+        oprId: it.oprID ?? it.oprId,
         quantity: it.quantity,
         remark: it.remark,
-        ordRef: it.mnORef??it.mnoRef,
-        recId: it.recID??it.recId,
-      }))
+        ordRef: it.mnORef ?? it.mnoRef,
+        recId: it.recID ?? it.recId,
+      }));
       const succeed = await requestSplitRecordsOverwrite({
-        records
+        nstRef: data.nstRef,
+        records,
       });
-      console.log(records,succeed);
+      console.log(records, succeed);
       return succeed;
     } finally {
       splitContainerApi.unlock();
     }
-  }
+  },
 });
 async function onDataFeedback() {
-  if (!selectedRows.value || !selectedRows.value.length){
-    return message.warn("请选择要回传的套料程序");
+  if (!selectedRows.value || !selectedRows.value.length) {
+    return message.warn('请选择要回传的套料程序');
   }
   Modal.confirm({
-    title:"数据回传",
-    content:"确定回传当前选中套料程序吗？",
-    onOk:async () => {
-      try{
+    title: '数据回传',
+    content: '确定回传当前选中套料程序吗？',
+    onOk: async () => {
+      try {
         gridRef.value._gridApi.setGridOptions({
           loading: true,
-        })
-        const recIds = selectedRows.value.map(it => it.recID);
+        });
+        const recIds = selectedRows.value.map((it) => it.recID);
         const succeed = await requestBatchLocking({
           recIds,
         });
-        if (succeed){
+        if (succeed) {
           await clearTableState();
           gridRef.value._gridApi.query();
         }
-      }finally{
+      } finally {
         gridRef.value._gridApi.setGridOptions({
           loading: false,
-        })
+        });
         return true;
       }
-    }
-  })
+    },
+  });
 }
 async function clearTableState() {
   // 清除选中（checkbox）
@@ -140,18 +141,16 @@ async function clearTableState() {
   await gridRef.value._gridApi.grid.clearAll();
 }
 const checkboxConfig = {
-  checkMethod({ row }){
-    return row.mstate !== 40 && row.mstate !== 90
-  }
-}
+  checkMethod({ row }) {
+    return row.mstate !== 40 && row.mstate !== 90;
+  },
+};
 </script>
 
 <template>
-  <JobBrowserPage
-    @select="handleSelect"
-  >
+  <JobBrowserPage @select="handleSelect">
     <Page auto-content-height contentClass="p-2">
-      <SplitContainer/>
+      <SplitContainer />
       <NestingDataTable
         ref="gridRef"
         :gridEvents="gridEvents"
@@ -163,11 +162,13 @@ const checkboxConfig = {
         <template #toolbar-actions>
           <Space>
             <Tooltip title="数据回传">
-              <Button :disabled="!selectedRows || !selectedRows.length" shape="circle"
-              @click="onDataFeedback"
+              <Button
+                :disabled="!selectedRows || !selectedRows.length"
+                shape="circle"
+                @click="onDataFeedback"
               >
                 <template #icon>
-                  <SendOutlined/>
+                  <SendOutlined />
                 </template>
               </Button>
             </Tooltip>
@@ -179,8 +180,7 @@ const checkboxConfig = {
 </template>
 
 <style scoped>
-
-:deep(.dark .vxe-cell--checkbox){
+:deep(.dark .vxe-cell--checkbox) {
   color: white !important;
 }
 </style>

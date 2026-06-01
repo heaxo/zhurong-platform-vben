@@ -117,17 +117,31 @@ async function onSyncSupplier() {
   }
 }
 async function onUpdateUdata() {
-  try{
-    syncSupplierLoading.value = true;
-    const ids = selectedRows.value.map(it => it.id);
-    const response = await requestUpdateUdata({
-      ids
-    });
-    if (response){
-      successHandler();
+  const ids = selectedRows.value.map(it => it.id);
+  if (!ids || !ids.length){
+    Modal.confirm({
+      title:"更新提示",
+      content:"未勾选指定数据会更新所有可更新的板材数据，确定更新吗？",
+      onOk:async () => {
+        await request(null);
+      }
+    })
+    return;
+  }
+  await request(ids);
+  async function request(ids?) {
+    try{
+      syncSupplierLoading.value = true;
+      const count = await requestUpdateUdata({
+        ids
+      });
+      if (count){
+        successHandler();
+        message.success(`更新条数：${count}`);
+      }
+    } finally {
+      syncSupplierLoading.value = false;
     }
-  } finally {
-    syncSupplierLoading.value = false;
   }
 }
 async function onClearExistingInventory() {
@@ -180,7 +194,7 @@ async function onSyncReportedStatus() {
             <CloudSyncOutlined />
             同步供应商
           </Button>
-          <Button type="default" @click="onUpdateUdata" :loading="syncSupplierLoading" :disabled="!selectedRows.length">
+          <Button type="default" @click="onUpdateUdata" :loading="syncSupplierLoading" >
             <CloudSyncOutlined />
             更新到套料软件
           </Button>
