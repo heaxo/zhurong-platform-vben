@@ -46,6 +46,7 @@ setupVbenVxeTable({
         },
         sortConfig:{
           multiple: true,
+          chronological: true,
         },
         minHeight: 180,
         proxyConfig: {
