@@ -42,7 +42,7 @@ async function requestUpdateUdata(data: ZhurongButSupplierinfoDTO) {
   return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/zhurongButSupplierinfo/updateUdata`, data);
 }
 async function requestClearExistingInventory() {
-  return requestClient.put<boolean>(`${CUSTOM_BASE_PREFIX}/zhurongButSupplierinfo/ClearExistingInventory`);
+  return requestClient.put<boolean>(`${CUSTOM_BASE_PREFIX}/zhurongButSupplierinfo/clearExistingInventory`);
 }
 
 export {
