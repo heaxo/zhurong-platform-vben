@@ -1,6 +1,7 @@
 {
   "title": "订单管理",
   "masterlink": "Masterlink",
+  "split": "订单拆分",
   "production": {
     "title": "生产订单"
   },
@@ -15,6 +16,7 @@
   "udf1": "厚度",
   "aplatzId": "机床",
   "mengeVerbrauch": "数量",
+  "originQuantity": "原始数量",
   "anfzeit": "开始时间",
   "lieferdatum": "交货期",
   "vversion": "生产计划批注",

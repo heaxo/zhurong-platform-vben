@@ -28,7 +28,7 @@ type SplitMode = 'manual';
 
 export interface NestPartItem {
   mnORef: string;
-  ordRef?: string;
+  orgMnoRef: string;
   prdRefDst: string;
   nstRef: string;
   quantity: number;
@@ -56,7 +56,7 @@ export interface OpenPayload {
 interface DetachablePartItem {
   mnORef?: string;
   mnoRef?: string;
-  ordRef?: string;
+  orgMnoRef?: string;
   prdRef?: string;
   prdRefDst?: string;
   rq?: number;
@@ -296,7 +296,7 @@ function normalizeSuffix(value?: string) {
 }
 
 function getMnORef(item: Record<string, any>) {
-  return String(item.mnORef ?? item.mnoRef ?? item.ordRef ?? '').trim();
+  return String(item.mnORef ?? item.mnoRef ?? '').trim();
 }
 
 function getPrdRef(item: Record<string, any>) {
