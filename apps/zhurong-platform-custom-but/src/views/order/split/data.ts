@@ -7,6 +7,8 @@ import {
   requestGetWwccWwcc00000100PageList
 } from "@zhurong/api";
 import type {ZhurongButNestingPartsSplitRecordsVO} from "#/api";
+import {h} from "vue";
+import {Tag} from "ant-design-vue";
 
 export const CompanyOptions = [{
   label:"SBUT_ZN",
@@ -19,7 +21,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
   return [
     {
       component: 'Select',
-      fieldName: 'company',
+      fieldName: 'Descrip',
       label: $t('order.company'),
       componentProps:{
         options: CompanyOptions,
@@ -70,8 +72,27 @@ export function useGridFormSchema(): VbenFormSchema[] {
           width: '200px',
         }
       },
-      fieldName: 'matRef',
+      fieldName: 'DIS_MatRef',
       label: $t('lantek.matRef'),
+    },
+    {
+      component: 'Select',
+      defaultValue: null,
+      componentProps: {
+        options: [{
+          label:"已拆分",
+          value: true
+        },{
+          label:"未拆分",
+          value:false,
+        }],
+        allowClear: true,
+        style: {
+          width: '200px',
+        }
+      },
+      fieldName: 'splitted',
+      label: "拆分状态",
     },
   ];
 }
@@ -151,6 +172,27 @@ export function useColumns<T = VimOrderlVO>(
       title: $t('order.icadproduct'),
       width: 180,
       sortable: true,
+    },{
+      field: 'lq',
+      title: "拆分状态",
+      width: 120,
+      fixed: 'right',
+      slots:{
+        default({ row }){
+          console.log(row);
+          const stateMap = {
+            true: { text: '已拆分', color: 'success' },
+            false: { text: '未拆分', color: 'geekblue' }
+          }
+          const state = stateMap[row.lq > 0]
+
+          return h(
+            Tag,
+            { color: state.color,bordered:false },
+            () => state.text
+          )
+        }
+      },
     },
     {
       align: 'center',
@@ -187,6 +229,15 @@ export function useNestingPartsSplitRecordColumns<T = ZhurongButNestingPartsSpli
     {
       field: 'nstRef',
       title: '套料编码',
+      width: 200,
+      filters: [{ data: '' }],
+      filterRender: {
+        name: 'TableTextFilterInput',
+      }
+    },
+    {
+      field: 'cnc',
+      title: 'CNC',
       width: 200,
       filters: [{ data: '' }],
       filterRender: {
