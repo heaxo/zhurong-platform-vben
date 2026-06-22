@@ -245,6 +245,11 @@ export function useNestingPartsSplitRecordColumns<T = ZhurongButNestingPartsSpli
       }
     },
     {
+      field: 'cncDate',
+      title: '套料创建时间',
+      width: 200,
+    },
+    {
       field: 'mnoRef',
       title: '订单号',
       width: 200,
