@@ -1,452 +1,344 @@
 <script lang="ts" setup>
-import type {VbenFormSchema} from '@vben/common-ui';
+import type { VbenFormSchema } from '@vben/common-ui';
 
-import {computed, markRaw} from 'vue';
-import {AuthenticationLogin, SliderCaptcha, z} from '@vben/common-ui';
-import {useAuthStore} from '#/store';
+import { computed } from 'vue';
 
-defineOptions({name: 'Login'});
+import { AuthenticationLogin, z } from '@vben/common-ui';
+import { preferences } from '@vben/preferences';
+
+import { useAuthStore } from '#/store';
+
+defineOptions({ name: 'Login' });
 
 const authStore = useAuthStore();
+
+const appName = computed(() => preferences.app.name);
+const logoSource = computed(
+  () => preferences.logo.source || preferences.logo.sourceDark || '/log.png',
+);
 
 const formSchema = computed((): VbenFormSchema[] => [
   {
     component: 'VbenInput',
     componentProps: {
-      placeholder: '用户名',
+      autocomplete: 'username',
+      placeholder: '请输入用户名',
     },
     fieldName: 'username',
+    rules: z.string().min(1, { message: '请输入用户名' }),
   },
   {
     component: 'VbenInputPassword',
     componentProps: {
-      placeholder: '密码',
+      autocomplete: 'current-password',
+      placeholder: '请输入密码',
     },
     fieldName: 'password',
+    rules: z.string().min(1, { message: '请输入密码' }),
   },
 ]);
 </script>
 
 <template>
-  <div class="login-root">
-    <!-- 动态背景 -->
-    <div class="bg-grid"></div>
-    <div class="bg-gradient"></div>
+  <div class="template-login">
+    <section class="template-login__visual">
+      <span class="brand-line brand-line--top" aria-hidden="true"></span>
+      <span class="brand-line brand-line--bottom" aria-hidden="true"></span>
 
-    <!-- 主体 -->
-    <div class="login-wrapper">
-      <!-- 左侧品牌区 -->
-      <div class="login-left">
-        <h1 class="logo">iPlant</h1>
-        <p class="desc">专注于液压控制，结构力学，仿真模拟，金属热处理，智能制造等专业领域</p>
-
-        <div class="scan-line"></div>
+      <div class="brand-content">
+        <img :src="logoSource" alt="" class="brand-logo" />
+        <p class="brand-kicker">统一认证中心</p>
+        <h1 class="brand-title">{{ appName }}</h1>
+        <p class="brand-copy">安全、稳定、高效的业务系统访问入口</p>
       </div>
+    </section>
 
-      <!-- 右侧登录 -->
-      <div class="login-panel">
-
-        <div class="panel-inner">
-          <h2>LOGIN</h2>
-
-          <AuthenticationLogin
-            :form-schema="formSchema"
-            :loading="authStore.loginLoading"
-            @submit="authStore.authLogin"
-            title="iPlant车间下料平台"
-            :showRegister="false"
-            :showRememberMe="false"
-            :showThirdPartyLogin="false"
-            :showForgetPassword="false"
-            :showQrcodeLogin="false"
-            :showCodeLogin="false"
-          />
+    <main class="template-login__main">
+      <section class="login-card">
+        <div class="login-card__brand">
+          <img :src="logoSource" alt="" />
+          <span>{{ appName }}</span>
         </div>
-      </div>
-    </div>
+
+        <AuthenticationLogin
+          :form-schema="formSchema"
+          :loading="authStore.loginLoading"
+          :show-code-login="false"
+          :show-forget-password="false"
+          :show-qrcode-login="false"
+          :show-register="false"
+          :show-remember-me="false"
+          :show-third-party-login="false"
+          sub-title="请输入账号密码访问系统"
+          title="欢迎登录"
+          @submit="authStore.authLogin"
+        />
+      </section>
+    </main>
   </div>
 </template>
 
 <style scoped>
-::v-deep(.text-foreground){
-  color: hsl(0 0% 95%);
-}
-/* ================= 背景 ================= */
+.template-login {
+  --login-primary: #f97316;
+  --login-primary-strong: #c2410c;
+  --login-accent: #ffc500;
+  --login-danger: #dc2626;
+  --login-ink: #1f2937;
+  --login-muted: #64748b;
+  --login-line: rgb(15 23 42 / 10%);
+  --login-surface: rgb(255 255 255 / 92%);
 
-.login-root {
-  height: 100vh;
-  overflow: hidden;
-  position: relative;
-  background: radial-gradient(circle at 20% 30%, rgba(253, 204, 6, 0.08), transparent 40%),
-  #050505;
+  display: grid;
+  grid-template-columns: minmax(420px, 0.95fr) minmax(440px, 1.05fr);
+  min-height: 100vh;
+  overflow: auto;
+  color: var(--login-ink);
+  background:
+    linear-gradient(135deg, rgb(255 247 237 / 92%) 0%, #fff 46%, #f8fafc 100%),
+    linear-gradient(180deg, transparent 54%, rgb(255 237 213 / 42%) 100%), #fff;
 }
 
-/* 网格 */
-.bg-grid {
-  position: absolute;
+.template-login::before {
+  position: fixed;
   inset: 0;
-
-  background-image:
-    linear-gradient(rgba(253, 204, 6, 0.08) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(253, 204, 6, 0.08) 1px, transparent 1px);
-
-  background-size: 60px 60px;
-
-  /* 👇 初始位置 */
-  background-position: 0 0;
-
-  animation: moveGrid 20s linear infinite;
-}
-.bg-grid::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(
-    to bottom,
-    rgba(0, 0, 0, 0.6),
-    transparent 40%
-  );
-
   pointer-events: none;
-}
-@keyframes moveGrid {
-  0% {
-    background-position: 0 0;
-  }
-  100% {
-    background-position: 60px 60px;
-  }
-}
-
-/* 渐变光 */
-.bg-gradient {
-  position: absolute;
-  width: 1000px;
-  height: 1000px;
-  background: radial-gradient(circle, #fdcc06 0%, transparent 60%);
-  filter: blur(150px);
-  opacity: 0.15;
-  top: -200px;
-  left: -200px;
-}
-
-/* ================= 布局 ================= */
-
-.login-wrapper {
-  display: flex;
-  height: 100%;
-  position: relative;
-  z-index: 2;
-  justify-content: center;
-}
-
-/* 左侧 */
-.login-left {
-  flex: 0.9;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  padding-left: 120px;
-  position: relative;
-}
-
-.logo {
-  font-size: 80px;
-  color: #fdcc06;
-  letter-spacing: 8px;
-  text-shadow: 0 0 20px rgba(253, 204, 6, 0.6);
-}
-
-.desc {
-  color: #888;
-  margin-top: 20px;
-}
-
-.scan-line {
-  position: absolute;
-  top: 50%;
-  left: 0;
-
-  width: 100%;
-  height: 2px;
-
-  transform: translateY(calc(-50% + 50px));
-  pointer-events: none;
-  overflow: hidden;
-}
-
-.scan-line::before {
   content: '';
-  position: absolute;
-  top: 50%;
-  left: -20%;
+  background:
+    linear-gradient(135deg, rgb(249 115 22 / 5%) 0 1px, transparent 1px 100%),
+    linear-gradient(
+      108deg,
+      transparent 14%,
+      rgb(255 197 0 / 9%) 46%,
+      transparent 76%
+    );
+  background-size:
+    34px 34px,
+    auto;
+}
 
-  width: 120px;
-  height: 2px;
-
-  transform: translateY(-50%);
-
-  /* 核心：细光线 + 渐变头尾 */
+.template-login::after {
+  position: fixed;
+  top: 29%;
+  left: -8%;
+  width: 116%;
+  height: 1px;
+  pointer-events: none;
+  content: '';
   background: linear-gradient(
     90deg,
     transparent,
-    rgba(253, 204, 6, 0.9),
+    rgb(249 115 22 / 18%),
     transparent
   );
-
-  /* 光晕 */
-  box-shadow: 0 0 8px rgba(253, 204, 6, 0.8),
-  0 0 20px rgba(253, 204, 6, 0.4);
-
-  animation: scanMove 4s linear infinite;
+  transform: rotate(-10deg);
 }
 
-@keyframes scanMove {
-  0% {
-    left: -20%;
-    opacity: 0;
-  }
-  10% {
-    opacity: 1;
-  }
-  90% {
-    opacity: 1;
-  }
-  100% {
-    left: 120%;
-    opacity: 0;
-  }
-}
-
-.scan-line::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-
-  background: linear-gradient(
-    90deg,
-    transparent,
-    rgba(253, 204, 6, 0.08),
-    transparent
-  );
-}
-
-/* ================= 登录面板 ================= */
-
-.login-panel {
-  width: 420px;
-
-  height: auto;
-
+.template-login__visual {
+  position: relative;
   display: flex;
   align-items: center;
-  justify-content: center;
-
-  position: relative;
-}
-
-/* 内部 */
-.panel-inner {
-  width: 100%;
-  padding: 42px 36px;
-  border-radius: 18px;
-  position: relative;
+  min-height: 100vh;
+  padding: clamp(40px, 6vw, 88px);
   overflow: hidden;
-
-  /* 真毛玻璃核心 */
-  background: rgba(255, 255, 255, 0.04);
-
-  backdrop-filter: blur(24px) saturate(140%);
-  -webkit-backdrop-filter: blur(24px) saturate(140%);
-
-  /* 边缘高光（关键） */
-  border: 1px solid rgba(255, 255, 255, 0.08);
-
-  /* 空间感 */
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.8),
-  inset 0 0 20px rgba(255, 255, 255, 0.03);
 }
 
-.panel-inner::before {
-  content: '';
+.brand-line {
   position: absolute;
-  inset: -1px;
-  border-radius: 18px;
-
-  background: conic-gradient(
-    from 0deg,
-    transparent,
-    rgba(253, 204, 6, 0.12),
-    transparent 25%
-  );
-
-  animation: rotateBorder 8s linear infinite;
-
-  -webkit-mask: linear-gradient(#000 0 0) content-box,
-  linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-
-  padding: 1px;
-  opacity: 0.4; /* 👈 更隐约 */
+  width: min(46vw, 560px);
+  height: 1px;
   pointer-events: none;
-}
-
-.panel-inner::after {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-
-  /* 模拟玻璃反光 */
   background: linear-gradient(
-    120deg,
-    rgba(255, 255, 255, 0.12),
-    rgba(255, 255, 255, 0.02) 30%,
-    transparent 60%
+    90deg,
+    transparent,
+    rgb(249 115 22 / 42%),
+    transparent
   );
-
-  opacity: 0.6;
-  pointer-events: none;
 }
 
-.panel-inner h2 {
-  color: #fdcc06;
-  margin-bottom: 20px;
-  letter-spacing: 2px;
+.brand-line--top {
+  top: 22%;
+  right: -6%;
+  transform: rotate(-12deg);
 }
 
-/* ================= 表单增强 ================= */
-
-:deep(.vben-input),
-:deep(.vben-select) {
-  background: #111 !important;
-  border: 1px solid rgba(253, 204, 6, 0.3);
-  color: #fff;
+.brand-line--bottom {
+  bottom: 20%;
+  left: -8%;
+  transform: rotate(-12deg);
 }
 
-/* 按钮（重点） */
-:deep(.vben-button) {
-  background: linear-gradient(90deg, #fdcc06, #ffe45e);
-  color: #000;
-  font-weight: bold;
-  box-shadow: 0 0 20px rgba(253, 204, 6, 0.6);
-  border: none;
-  transition: all 0.3s;
+.brand-content {
+  position: relative;
+  z-index: 1;
+  width: min(100%, 560px);
 }
 
-:deep(.vben-button:hover) {
-  transform: translateY(-2px);
-  box-shadow: 0 0 30px rgba(253, 204, 6, 1);
+.brand-logo {
+  width: 96px;
+  height: 96px;
+  margin-bottom: 28px;
+  object-fit: contain;
+  filter: drop-shadow(0 18px 34px rgb(249 115 22 / 20%));
 }
 
-/* ================= 左侧品牌（升级） ================= */
+.brand-kicker {
+  margin: 0 0 14px;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--login-primary-strong);
+}
 
-.logo {
-  font-size: 88px;
+.brand-title {
+  max-width: 560px;
+  margin: 0;
+  font-size: clamp(40px, 5vw, 64px);
   font-weight: 800;
-  letter-spacing: 10px;
-  color: #fdcc06;
-  text-shadow: 0 0 10px rgba(253, 204, 6, 0.6),
-  0 0 30px rgba(253, 204, 6, 0.4),
-  0 0 60px rgba(253, 204, 6, 0.2);
+  line-height: 1.08;
+  color: var(--login-ink);
 }
 
-/* ================= 登录面板（重做） ================= */
+.brand-copy {
+  max-width: 420px;
+  margin: 24px 0 0;
+  font-size: 16px;
+  line-height: 1.8;
+  color: var(--login-muted);
+}
 
-.login-panel {
-  width: 420px;
+.template-login__main {
   position: relative;
   display: flex;
   align-items: center;
   justify-content: center;
+  min-height: 100vh;
+  padding: clamp(28px, 5vw, 72px);
+  overflow: hidden;
 }
 
-.panel-inner {
-  width: 100%;
-  padding: 42px 36px;
-  border-radius: 18px;
+.login-card {
   position: relative;
-
-  background: rgba(15, 15, 15, 0.85);
-  backdrop-filter: blur(20px);
-
-  box-shadow: inset 0 0 40px rgba(253, 204, 6, 0.05),
-  0 20px 60px rgba(0, 0, 0, 0.8);
+  z-index: 1;
+  width: min(100%, 432px);
+  padding: 40px;
+  background: var(--login-surface);
+  border: 1px solid rgb(15 23 42 / 8%);
+  border-radius: 8px;
+  box-shadow: 0 24px 70px rgb(15 23 42 / 12%);
+  backdrop-filter: blur(18px);
 }
 
-/* ✨ 渐变边框（移到这里） */
-.panel-inner::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  border-radius: 18px;
-  padding: 1px;
+.login-card__brand {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  margin-bottom: 28px;
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--login-ink);
+}
 
+.login-card__brand img {
+  width: 38px;
+  height: 38px;
+  object-fit: contain;
+}
+
+:deep(.text-foreground) {
+  color: var(--login-ink);
+}
+
+:deep(.text-muted-foreground) {
+  color: var(--login-muted);
+}
+
+:deep(input) {
+  min-height: 44px;
+  color: var(--login-ink);
+  background: #fff;
+  border-color: rgb(15 23 42 / 12%);
+  border-radius: 8px;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+:deep(input:focus),
+:deep(input:focus-visible) {
+  border-color: var(--login-primary);
+  box-shadow: 0 0 0 3px rgb(249 115 22 / 14%);
+}
+
+:deep(button[aria-label='login']) {
+  min-height: 44px;
+  font-weight: 700;
+  color: #fff;
   background: linear-gradient(
     135deg,
-    rgba(253, 204, 6, 0.4),
-    rgba(253, 204, 6, 0.2),
-    transparent
+    var(--login-primary),
+    var(--login-danger)
   );
-
-  -webkit-mask: linear-gradient(#000 0 0) content-box,
-  linear-gradient(#000 0 0);
-  -webkit-mask-composite: xor;
-  mask-composite: exclude;
-
-  pointer-events: none;
-}
-
-/* 标题 */
-.panel-inner h2 {
-  color: #fdcc06;
-  margin-bottom: 24px;
-  letter-spacing: 4px;
-  font-weight: 600;
-}
-
-/* ================= 表单优化 ================= */
-
-/* 输入框（更细腻） */
-:deep(.vben-input),
-:deep(.vben-select) {
-  background: rgba(20, 20, 20, 0.9) !important;
-  border: 1px solid rgba(253, 204, 6, 0.2);
-  color: #fff;
-  transition: all 0.3s;
-}
-
-/* focus效果（关键细节） */
-:deep(.vben-input:focus),
-:deep(.vben-select:focus) {
-  border-color: #fdcc06;
-  box-shadow: 0 0 0 2px rgba(253, 204, 6, 0.2);
-}
-
-/* ================= 按钮（升级为CTA） ================= */
-
-:deep(.vben-button) {
-  background: linear-gradient(90deg, #fdcc06, #ffe45e);
-  color: #000;
-  font-weight: 700;
-  letter-spacing: 1px;
-
   border: none;
-  border-radius: 10px;
-
-  /* 发光更真实 */
-  box-shadow: 0 0 10px rgba(253, 204, 6, 0.6),
-  0 0 30px rgba(253, 204, 6, 0.3);
-
-  transition: all 0.25s ease;
+  border-radius: 8px;
+  box-shadow: 0 12px 28px rgb(249 115 22 / 24%);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    filter 0.2s ease;
 }
 
-/* hover 动效 */
-:deep(.vben-button:hover) {
-  transform: translateY(-2px) scale(1.01);
+:deep(button[aria-label='login']:hover) {
+  box-shadow: 0 16px 34px rgb(249 115 22 / 30%);
+  filter: brightness(1.03);
+  transform: translateY(-1px);
+}
 
-  box-shadow: 0 0 20px rgba(253, 204, 6, 0.9),
-  0 0 40px rgba(253, 204, 6, 0.5);
+:deep(button[aria-label='login']:disabled) {
+  transform: none;
+}
+
+@media (max-width: 960px) {
+  .template-login {
+    grid-template-columns: 1fr;
+  }
+
+  .template-login__visual {
+    min-height: auto;
+    padding: 32px 24px 20px;
+    border-right: 0;
+  }
+
+  .brand-line {
+    display: none;
+  }
+
+  .brand-logo {
+    width: 64px;
+    height: 64px;
+    margin-bottom: 18px;
+  }
+
+  .brand-title {
+    font-size: 30px;
+  }
+
+  .brand-copy {
+    display: none;
+  }
+
+  .template-login__main {
+    align-items: start;
+    min-height: auto;
+    padding: 24px;
+  }
+
+  .login-card {
+    padding: 28px 24px;
+    box-shadow: 0 18px 46px rgb(15 23 42 / 10%);
+  }
+
+  .login-card__brand {
+    display: none;
+  }
 }
 </style>

@@ -1,6 +1,5 @@
-import { defineOverridesPreferences } from '@vben/preferences';
+import {defineOverridesPreferences} from '@vben/preferences';
 
-const isDev = process.env.NODE_ENV === 'development';
 /**
  * @description 项目配置文件
  * 只需要覆盖项目中的一部分配置，不需要的配置不用覆盖，会自动使用默认配置
@@ -12,18 +11,36 @@ export const overridesPreferences = defineOverridesPreferences({
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
     defaultHomePath: '/order',
-  },
-  theme: {
-    colorPrimary: '#FFC500',
-    builtinType: 'yellow',
+    defaultAvatar: '/log.png'
   },
   transition: {
-    name: 'fade-down'
+    name: 'fade-down',
   },
   logo: {
     enable: true,
     fit: 'contain',
-    source: isDev ? '/logo.png' : '/logo.png',
-    sourceDark: isDev ? '/logo-dark.png' : '/logo-dark.png',
+    source: '/log.png',
+    sourceDark: '/logo-dark.png',
+  },
+  breadcrumb: {
+    styleType: "background",
+  },
+  footer: {
+    enable: true,
+  },
+  tabbar: {
+    styleType: "brisk",
+  },
+  theme: {
+    colorPrimary: '#f97316',
+    builtinType: 'orange',
+    mode: "light",
+    radius: "1",
+    semiDarkSidebar: true,
+  },
+  widget: {
+    globalSearch: false,
+    lockScreen: false,
+    notification: false,
   },
 });
