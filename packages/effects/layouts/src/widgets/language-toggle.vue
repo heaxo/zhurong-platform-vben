@@ -32,7 +32,9 @@ async function handleUpdate(value: string | undefined) {
       @update:model-value="handleUpdate"
     >
       <VbenIconButton class="hover:animate-[shrink_0.3s_ease-in-out]">
-        <Languages class="text-foreground size-4" />
+        <slot name="icon">
+          <Languages class="text-foreground size-4" />
+        </slot>
       </VbenIconButton>
     </VbenDropdownRadioMenu>
   </div>

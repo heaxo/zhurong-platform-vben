@@ -1,6 +1,8 @@
 <script lang="ts" setup>
 import type { ThemeModeType } from '@vben/types';
 
+import { useSlots } from 'vue';
+
 import { MoonStar, Sun, SunMoon } from '@vben/icons';
 import { $t } from '@vben/locales';
 import {
@@ -32,6 +34,7 @@ function handleChange(isDark: boolean | undefined) {
 }
 
 const { isDark } = usePreferences();
+const slots = useSlots();
 
 const PRESETS = [
   {
@@ -59,7 +62,11 @@ const PRESETS = [
           :model-value="isDark"
           type="icon"
           @update:model-value="handleChange"
-        />
+        >
+          <template v-if="slots.icon" #icon="{ isDark: currentDark, theme }">
+            <slot name="icon" :is-dark="currentDark" :theme="theme"></slot>
+          </template>
+        </ThemeButton>
       </template>
       <ToggleGroup
         :model-value="preferences.theme.mode"

@@ -24,6 +24,7 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   breadcrumb: {
     styleType: "background",
+    showHome: true
   },
   footer: {
     enable: true,
@@ -38,9 +39,27 @@ export const overridesPreferences = defineOverridesPreferences({
     radius: "1",
     semiDarkSidebar: true,
   },
+  navigation: {
+    accordion: false,
+    styleType: "plain"
+  },
   widget: {
     globalSearch: false,
-    lockScreen: false,
+    lockScreen: true,
     notification: false,
+    languageToggle: false,
+    timezone: false,
   },
+  copyright: {
+    companyName: 'custom-template',
+    companySiteLink: 'http://localhost',
+    date: '2026',
+    enable: true,
+    icp: '',
+    icpLink: '',
+    settingShow: true,
+  },
+  footer: {
+    fixed: true
+  }
 });

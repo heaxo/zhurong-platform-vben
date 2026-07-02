@@ -136,9 +136,11 @@ onMounted(() => {
       class="md:bg-accent group flex h-8 cursor-pointer items-center gap-3 rounded-2xl border-none bg-none px-2 py-0.5 outline-none"
       @click="toggleOpen()"
     >
-      <Search
-        class="text-muted-foreground group-hover:text-foreground size-4 group-hover:opacity-100"
-      />
+      <slot name="trigger-icon">
+        <Search
+          class="text-muted-foreground group-hover:text-foreground size-4 group-hover:opacity-100"
+        />
+      </slot>
       <span
         class="text-muted-foreground group-hover:text-foreground hidden text-xs duration-300 md:block"
       >

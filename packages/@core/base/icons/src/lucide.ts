@@ -38,6 +38,8 @@ export {
   InspectionPanel,
   Languages,
   LayoutGrid,
+  Lightbulb,
+  LightbulbOff,
   LoaderCircle,
   LockKeyhole,
   LogOut,
@@ -67,5 +69,6 @@ export {
   SunMoon,
   SwatchBook,
   UserRoundPen,
+  Wrench,
   X,
 } from 'lucide-vue-next';

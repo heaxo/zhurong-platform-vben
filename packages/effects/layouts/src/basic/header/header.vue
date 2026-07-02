@@ -2,11 +2,23 @@
 import { computed, useSlots } from 'vue';
 
 import { useRefresh } from '@vben/hooks';
-import { RotateCw } from '@vben/icons';
+import {
+  ArrowRightLeft,
+  BookOpenText,
+  createIconifyIcon,
+  Expand,
+  Grid,
+  Lightbulb,
+  LightbulbOff,
+  Shrink,
+  Wrench,
+} from '@vben/icons';
 import { preferences, usePreferences } from '@vben/preferences';
 import { useAccessStore } from '@vben/stores';
 
-import { VbenFullScreen, VbenIconButton } from '@vben-core/shadcn-ui';
+import { VbenIconButton } from '@vben-core/shadcn-ui';
+
+import { useFullscreen } from '@vueuse/core';
 
 import {
   GlobalSearch,
@@ -39,25 +51,28 @@ const accessStore = useAccessStore();
 const { globalSearchShortcutKey, preferencesButtonPosition } = usePreferences();
 const slots = useSlots();
 const { refresh } = useRefresh();
+const { isFullscreen, toggle: toggleFullscreen } = useFullscreen();
+
+const HeaderTimezoneIcon = createIconifyIcon('lucide:alarm-clock');
 
 const rightSlots = computed(() => {
   const list = [{ index: REFERENCE_VALUE + 100, name: 'user-dropdown' }];
   if (preferences.widget.globalSearch) {
     list.push({
-      index: REFERENCE_VALUE,
+      index: REFERENCE_VALUE + 60,
       name: 'global-search',
     });
   }
 
   if (preferencesButtonPosition.value.header) {
     list.push({
-      index: REFERENCE_VALUE + 10,
+      index: REFERENCE_VALUE + 50,
       name: 'preferences',
     });
   }
   if (preferences.widget.themeToggle) {
     list.push({
-      index: REFERENCE_VALUE + 20,
+      index: REFERENCE_VALUE,
       name: 'theme-toggle',
     });
   }
@@ -75,7 +90,7 @@ const rightSlots = computed(() => {
   }
   if (preferences.widget.fullscreen) {
     list.push({
-      index: REFERENCE_VALUE + 50,
+      index: REFERENCE_VALUE + 20,
       name: 'fullscreen',
     });
   }
@@ -127,7 +142,7 @@ function clearPreferencesAndLogout() {
     <slot :name="slot.name">
       <template v-if="slot.name === 'refresh'">
         <VbenIconButton class="my-0 mr-1 rounded-md" @click="refresh">
-          <RotateCw class="size-4" />
+          <ArrowRightLeft class="size-4" />
         </VbenIconButton>
       </template>
     </slot>
@@ -155,26 +170,55 @@ function clearPreferencesAndLogout() {
             :enable-shortcut-key="globalSearchShortcutKey"
             :menus="accessStore.accessMenus"
             class="mr-1 sm:mr-4"
-          />
+          >
+            <template #trigger-icon>
+              <Grid
+                class="text-muted-foreground group-hover:text-foreground size-4 group-hover:opacity-100"
+              />
+            </template>
+          </GlobalSearch>
         </template>
 
         <template v-else-if="slot.name === 'preferences'">
           <PreferencesButton
             class="mr-1"
             @clear-preferences-and-logout="clearPreferencesAndLogout"
-          />
+          >
+            <template #icon>
+              <Wrench class="text-foreground size-4" />
+            </template>
+          </PreferencesButton>
         </template>
         <template v-else-if="slot.name === 'theme-toggle'">
-          <ThemeToggle class="mr-1 mt-[2px]" />
+          <ThemeToggle class="mr-1 mt-[2px]">
+            <template #icon="{ isDark }">
+              <LightbulbOff v-if="isDark" class="text-foreground size-4" />
+              <Lightbulb v-else class="text-foreground size-4" />
+            </template>
+          </ThemeToggle>
         </template>
         <template v-else-if="slot.name === 'language-toggle'">
-          <LanguageToggle class="mr-1" />
+          <LanguageToggle class="mr-1">
+            <template #icon>
+              <BookOpenText class="text-foreground size-4" />
+            </template>
+          </LanguageToggle>
         </template>
         <template v-else-if="slot.name === 'fullscreen'">
-          <VbenFullScreen class="mr-1" />
+          <VbenIconButton
+            class="mr-1 hover:animate-[shrink_0.3s_ease-in-out]"
+            @click="toggleFullscreen"
+          >
+            <Shrink v-if="isFullscreen" class="text-foreground size-4" />
+            <Expand v-else class="text-foreground size-4" />
+          </VbenIconButton>
         </template>
         <template v-else-if="slot.name === 'timezone'">
-          <TimezoneButton class="mr-1 mt-[2px]" />
+          <TimezoneButton class="mr-1 mt-[2px]">
+            <template #icon>
+              <HeaderTimezoneIcon class="text-foreground size-4" />
+            </template>
+          </TimezoneButton>
         </template>
       </slot>
     </template>
