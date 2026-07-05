@@ -106,15 +106,7 @@ function columnSort({column},events) {
   })
 }
 export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSchema> {
-  const {sortEvent} = params??{};
-  function sort(params) {
-    const {column} = params;
-    return columnSort(params,{
-      onClick: (e) => {
-        sortEvent && sortEvent(column.field, column.order,e)
-      }
-    })
-  }
+
   return {
       image: {
         type: 'field',
@@ -142,7 +134,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         resizable: true,
         // showOverflow: false,
         slots:{
-          sort,
           default: (param) => {
             return [
               h(
@@ -170,7 +161,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         resizable: true,
         // showOverflow: false,
         slots:{
-          sort,
         }
       }
     },
@@ -184,7 +174,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         resizable: true,
         // showOverflow: false,
         slots:{
-          sort,
         }
       }
     },
@@ -198,7 +187,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         resizable: true,
         // showOverflow: false,
         slots:{
-          sort,
         }
       }
     },
@@ -211,7 +199,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         resizable: true,
         // showOverflow: false,
         slots:{
-          sort,
         }
       }
     },
@@ -224,7 +211,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         resizable: true,
         // showOverflow: false,
         slots:{
-          sort,
         }
       }
     },
@@ -239,7 +225,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
         sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -253,7 +238,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
         sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -267,7 +251,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
         sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -282,7 +265,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         resizable: true,
         sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -296,7 +278,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -310,7 +291,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -324,7 +304,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -338,7 +317,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -352,7 +330,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -366,7 +343,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -380,7 +356,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -394,7 +369,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         // showOverflow: false,
           sortable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -406,7 +380,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
         width: 120,
         resizable: true,
         slots:{
-          sort,
         }
       }
     },
@@ -421,7 +394,6 @@ export function useFieldRegistry(params?:any): Record<FieldKey, SimpleColumnSche
           resizable: true,
           sortable: true,
           slots:{
-            sort,
           }
         }
       },

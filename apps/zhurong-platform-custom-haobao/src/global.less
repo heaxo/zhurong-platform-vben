@@ -1,0 +1,118 @@
+.dark {
+  .vxe-cell--checkbox {
+    .vxe-checkbox--icon {
+      color: unset !important;
+    }
+  }
+}
+
+:root[data-theme='custom'] {
+  --background: 210 33% 98%;
+  --background-deep: 210 38% 95%;
+  --foreground: 214 42% 18%;
+  --card: 0 0% 100%;
+  --card-foreground: 214 42% 18%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 214 42% 18%;
+  --muted: 209 38% 94%;
+  --muted-foreground: 214 16% 42%;
+  --secondary: 209 42% 94%;
+  --secondary-foreground: 214 42% 18%;
+  --accent: 209 72% 93%;
+  --accent-dark: 209 48% 89%;
+  --accent-darker: 209 42% 84%;
+  --accent-lighter: 206 60% 97%;
+  --accent-hover: 209 64% 88%;
+  --accent-foreground: 207 100% 33%;
+  --heavy: 209 46% 87%;
+  --heavy-foreground: 207 100% 33%;
+  --border: 212 31% 88%;
+  --input: 212 34% 88%;
+  --input-background: 0 0% 100%;
+  --info: 209 79% 41%;
+  --info-foreground: 210 40% 98%;
+  --sidebar: 0 0% 100%;
+  --sidebar-deep: 210 38% 96%;
+  --menu: var(--sidebar);
+  --header: 0 0% 100%;
+}
+
+:root.dark[data-theme='custom'] {
+  --background: 214 42% 8%;
+  --background-deep: 216 47% 6%;
+  --foreground: 210 40% 96%;
+  --card: 214 36% 11%;
+  --card-foreground: 210 40% 96%;
+  --popover: 214 32% 13%;
+  --popover-foreground: 210 40% 96%;
+  --muted: 213 27% 17%;
+  --muted-foreground: 212 14% 70%;
+  --secondary: 213 28% 16%;
+  --secondary-foreground: 210 40% 96%;
+  --accent: 209 52% 20%;
+  --accent-dark: 209 50% 18%;
+  --accent-darker: 209 44% 15%;
+  --accent-lighter: 214 30% 13%;
+  --accent-hover: 209 48% 24%;
+  --accent-foreground: 210 40% 98%;
+  --heavy: 209 40% 23%;
+  --heavy-foreground: 210 40% 98%;
+  --border: 213 28% 22%;
+  --input: 213 28% 22%;
+  --input-background: 213 30% 14%;
+  --info: 209 79% 41%;
+  --info-foreground: 210 40% 98%;
+  --sidebar: 213 49% 12%;
+  --sidebar-deep: 216 57% 8%;
+  --menu: var(--sidebar);
+  --header: 213 49% 12%;
+}
+
+body {
+  background: hsl(var(--background-deep));
+}
+
+header.dark,
+.dark.bg-sidebar,
+.dark.bg-sidebar-deep {
+  --foreground: 0 0% 100%;
+  --muted-foreground: 240 5% 64.9%;
+  --accent: 216 5% 19%;
+  --accent-hover: 216 5% 24%;
+  --accent-foreground: 0 0% 100%;
+  --border: 240 3.7% 22%;
+}
+
+header.dark {
+  --header: 222.34deg 10.43% 12.27%;
+}
+
+.dark.bg-sidebar {
+  --sidebar: 222.34deg 10.43% 12.27%;
+  --menu: var(--sidebar);
+}
+
+.dark.bg-sidebar-deep {
+  --sidebar-deep: 220deg 13.06% 9%;
+  --menu: var(--sidebar-deep);
+}
+
+.vben-menu.is-dark {
+  --menu-item-color: rgb(255 255 255 / 82%);
+  --menu-item-hover-color: #fff;
+  --menu-item-hover-background-color: hsl(var(--accent));
+  --menu-item-active-color: hsl(var(--primary));
+  --menu-item-active-background-color: hsl(var(--primary) / 16%);
+  --menu-submenu-hover-color: #fff;
+  --menu-submenu-hover-background-color: hsl(var(--accent));
+  --menu-submenu-active-color: hsl(var(--primary));
+  --menu-submenu-active-background-color: hsl(var(--primary) / 12%);
+}
+
+:root .vxe-grid {
+  --vxe-ui-table-row-checkbox-checked-background-color: #fde4c7 !important;
+}
+
+:root.dark .vxe-grid {
+  --vxe-ui-table-row-checkbox-checked-background-color: #704414 !important;
+}

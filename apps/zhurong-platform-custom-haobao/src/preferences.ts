@@ -1,4 +1,4 @@
-import {defineOverridesPreferences} from '@vben/preferences';
+import { defineOverridesPreferences } from '@vben/preferences';
 
 /**
  * @description 项目配置文件
@@ -10,8 +10,8 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
-    defaultHomePath: '/order',
-    defaultAvatar: '/log.png'
+    defaultHomePath: '/nest/program',
+    defaultAvatar: '/log.png',
   },
   transition: {
     name: 'fade-down',
@@ -23,26 +23,30 @@ export const overridesPreferences = defineOverridesPreferences({
     sourceDark: '/logo-dark.png',
   },
   breadcrumb: {
-    styleType: "background",
-    showHome: true
+    styleType: 'normal',
+    showHome: true,
   },
   footer: {
-    enable: true,
-    fixed: true
+    enable: false,
+    fixed: false,
   },
   tabbar: {
-    styleType: "brisk",
+    styleType: 'brisk',
   },
   theme: {
-    colorPrimary: '#f97316',
-    builtinType: 'orange',
-    mode: "light",
-    radius: "1",
+    colorPrimary: '#166cbd',
+    colorSuccess: '#16a34a',
+    colorWarning: '#f08519',
+    colorDestructive: '#dc2626',
+    builtinType: 'custom',
+    mode: 'light',
+    radius: '1',
+    semiDarkHeader: false,
     semiDarkSidebar: true,
   },
   navigation: {
     accordion: false,
-    styleType: "plain"
+    styleType: 'plain',
   },
   widget: {
     globalSearch: false,
@@ -52,7 +56,7 @@ export const overridesPreferences = defineOverridesPreferences({
     timezone: false,
   },
   copyright: {
-    companyName: 'custom-template',
+    companyName: 'haobao',
     companySiteLink: 'http://localhost',
     date: '2026',
     enable: true,

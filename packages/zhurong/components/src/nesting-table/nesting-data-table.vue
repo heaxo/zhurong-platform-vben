@@ -1,24 +1,22 @@
 <script lang="ts" setup>
 import {h, type PropType, watch} from 'vue';
 import {useVbenVxeGrid,} from '#/adapter/vxe-table';
-import {
-  Space
-} from 'ant-design-vue';
-import {
-  merge
-} from 'lodash-es';
+import {Space} from 'ant-design-vue';
+import {merge} from 'lodash-es';
 import {
   getImageResourcesBaseURL,
-  requestGetDisMmttMmtt00000100PageList, requestGetWwccWwcc00000100PageList,
+  requestGetDisMmttMmtt00000100PageList,
+  requestGetWwccWwcc00000100PageList,
   requestPageNestOverview,
 } from "@zhurong/api";
 import {AttributeCell, type QueryOptions, type SimpleColumnSchema} from "#/nesting-table/index";
 import {
   type DataTableColumnSchema,
-  useFieldRegistry,
-  type GroupColumnSchema
+  type GroupColumnSchema,
+  useFieldRegistry
 } from "#/nesting-table/data";
 import {$t} from "@vben/locales";
+import {VxeButton} from "vxe-pc-ui";
 
 const props = defineProps({
   //表高度
@@ -52,58 +50,80 @@ const props = defineProps({
     },
   },
   //开启复选框
-  enableCheckbox:{
+  enableCheckbox: {
     type: Boolean,
     default: false,
   },
   //开启服务端排序
-  enableServerSideSorting:{
+  enableServerSideSorting: {
     type: Boolean,
     default: false,
   },
   //显示搜索表格
-  showSearchForm:{
+  showSearchForm: {
     type: Boolean,
     default: false,
   },
   //查询参数
-  queryParameters:{
+  queryParameters: {
     type: Object,
     default: {},
   },
-  gridEvents:{
+  gridEvents: {
     type: Object,
     default: null,
   },
 
-  checkboxConfig:{
+  checkboxConfig: {
     type: Object,
     default: null,
   },
 })
 const {
   height,
-  columnsSchema, mode, loadPlan,queryParameters,gridEvents,
-  enableCheckbox,enableServerSideSorting,showSearchForm,checkboxConfig,
+  columnsSchema, mode, loadPlan, queryParameters, gridEvents,
+  enableCheckbox, enableServerSideSorting, showSearchForm, checkboxConfig,
 } = props;
-const groupSortOrderRecord:Record<string, string> = {
-
-}
+const groupSortOrderRecord: Record<string, string> = {}
 const fieldRegisterParams = {
-  sortEvent:(field: string, order: string | null,e) => {
+  sortEvent: (field: string, order: string | null, e) => {
     const $table = gridApi.grid
     if ($table) {
       const sortConfs = {
         field,
-          order: order === 'desc' ? 'asc' : (order === 'asc' ? null : 'desc')
+        order: order === 'desc' ? 'asc' : (order === 'asc' ? null : 'desc')
       }
+      console.log("排序",field,sortConfs.order)
       groupSortOrderRecord[field] = sortConfs.order;
-        // 触发事件用 setSortByEvent
+      // 触发事件用 setSortByEvent
       $table.setSortByEvent(e, sortConfs, true)
     }
   },
 }
-const FIELD_REGISTRY = useFieldRegistry(fieldRegisterParams);
+
+function columnSort({column}, events) {
+  return h(VxeButton, {
+    mode: 'text',
+    title: '点击排序',
+    status: column.order ? 'primary' : '',
+    icon:
+      column.order === 'desc'
+        ? 'vxe-icon-sort-alpha-desc'
+        : 'vxe-icon-sort-alpha-asc',
+    ...(events ?? {}),
+  })
+}
+
+function sort(params) {
+  const {column} = params;
+  return columnSort(params, {
+    onClick: (e) => {
+      fieldRegisterParams.sortEvent && fieldRegisterParams.sortEvent(column.field, column.order, e)
+    }
+  })
+}
+
+const FIELD_REGISTRY = useFieldRegistry();
 const DEFAULT_SCHEMA: SimpleColumnSchema[] = Object.keys(FIELD_REGISTRY).map(key => FIELD_REGISTRY[key]);
 const DEFAULT_GROUP_SCHEMA: DataTableColumnSchema[] = [
   // 图片列
@@ -114,7 +134,7 @@ const DEFAULT_GROUP_SCHEMA: DataTableColumnSchema[] = [
     title: '套料信息',
     width: 220,
     schemas: [FIELD_REGISTRY.nstRef, FIELD_REGISTRY.crtDate, FIELD_REGISTRY.crtUser],
-    override:{
+    override: {
       field: 'nstRef',
       sortable: true,
     }
@@ -158,7 +178,7 @@ const DEFAULT_GROUP_SCHEMA: DataTableColumnSchema[] = [
     title: '重量信息',
     width: 220,
     schemas: [FIELD_REGISTRY.sWeight, FIELD_REGISTRY.suWeight, FIELD_REGISTRY.partWeight],
-    override:{
+    override: {
       field: 'wrkRef',
       sortable: true,
     }
@@ -172,6 +192,7 @@ const DEFAULT_GROUP_SCHEMA: DataTableColumnSchema[] = [
     schemas: [FIELD_REGISTRY.sProfit, FIELD_REGISTRY.sProfitS]
   },
 ];
+
 function resolveColumn(meta: any, override?: any) {
   return {
     field: meta.field,
@@ -182,6 +203,19 @@ function resolveColumn(meta: any, override?: any) {
 }
 
 function buildColumns(schema: DataTableColumnSchema[], mode: 'group' | 'flat') {
+
+  //赋予排序能力
+  for (let i = 0; i < schema.length; i++) {
+    const scm = schema[i];
+    scm.override = {
+      ...merge(scm.override, {
+        slots: {
+          sort,
+        }
+      })
+    };
+  }
+
   const columns = schema.flatMap((col) => {
 
     // -----------------------
@@ -203,6 +237,7 @@ function buildColumns(schema: DataTableColumnSchema[], mode: 'group' | 'flat') {
     if (mode === 'flat') {
       return metas.map(meta => resolveColumn(meta));
     }
+
     function groupSort(schemas) {
       return (params) => {
         const children = schemas.filter(schema => !!schema?.override?.slots?.sort)
@@ -212,9 +247,10 @@ function buildColumns(schema: DataTableColumnSchema[], mode: 'group' | 'flat') {
               order: groupSortOrderRecord[schema.field],
             }
           }));
-        return h(Space,children);
+        return h(Space, children);
       }
     }
+
     const override = merge({
       slots: {
         sort: g.override?.sortable ? groupSort(metas) : null,
@@ -222,7 +258,7 @@ function buildColumns(schema: DataTableColumnSchema[], mode: 'group' | 'flat') {
           return h(AttributeCell, buildAttributeProps(metas, row));
         },
       }
-    },g.override)
+    }, g.override)
     // group模式
     const groupColumn: any = {
       title: g.title,
@@ -233,20 +269,20 @@ function buildColumns(schema: DataTableColumnSchema[], mode: 'group' | 'flat') {
 
     const resultColumns = [{
       ...groupColumn,
-    },...metas.filter(schema => schema.field !== groupColumn.field).flatMap(schema => ({
+    }, ...metas.filter(schema => schema.field !== groupColumn.field).flatMap(schema => ({
       ...resolveColumn(schema),
-      sortable:true,
+      sortable: true,
       //隐藏这列，只为排序用
-      visible:false,
+      visible: false,
     }))];
     console.log(resultColumns);
     return resultColumns;
   });
-  return enableCheckbox ?[{
+  return enableCheckbox ? [{
     align: 'left',
     type: 'checkbox',
     width: 30,
-  },...columns] : columns;
+  }, ...columns] : columns;
 }
 
 function buildAttributeProps(metas, row) {
@@ -263,7 +299,7 @@ function buildAttributeProps(metas, row) {
 
 
 const [Grid, gridApi] = useVbenVxeGrid({
-  formOptions:{
+  formOptions: {
     wrapperClass: 'grid-cols-3',
     schema: [
       {
@@ -285,8 +321,8 @@ const [Grid, gridApi] = useVbenVxeGrid({
           valueField: 'wrkRef',
           resultField: 'items',
           showSearch: true,
-          style:{
-            width:'100%',
+          style: {
+            width: '100%',
           }
         },
         fieldName: 'wrkRef',
@@ -301,8 +337,8 @@ const [Grid, gridApi] = useVbenVxeGrid({
           valueField: 'matRef',
           resultField: 'items',
           showSearch: true,
-          style:{
-            width:'100%',
+          style: {
+            width: '100%',
           }
         },
         fieldName: 'matRef',
@@ -318,10 +354,10 @@ const [Grid, gridApi] = useVbenVxeGrid({
     collapsed: true,
   },
   showSearchForm: showSearchForm,
-  gridEvents:gridEvents,
+  gridEvents: gridEvents,
   gridOptions: {
     id: "nestingDataGridTable",
-    customConfig:{
+    customConfig: {
       storage: true,
     },
     checkboxConfig,
@@ -339,15 +375,16 @@ const [Grid, gridApi] = useVbenVxeGrid({
     proxyConfig: {
       sort: true,
       ajax: {
-        query: async ({page,sorts}, formValues) => {
+        query: async ({page, sorts}, formValues) => {
           const data = await requestPageNestOverview({
             page: page.currentPage,
             pageSize: page.pageSize,
             ...formValues,
             ...queryParameters,
-            sortRules: sorts.map(sort => ({property: sort.field,direction:sort.order})),
+            sortRules: sorts.map(sort => ({property: sort.field, direction: sort.order})),
             loadPlan,
           });
+          console.log(data);
           data.items?.forEach((it: any, index: number) => {
             if (it.nestingDocument) {
               it.image = getImageResourcesBaseURL(it.nestingDocument.imgb);
@@ -371,7 +408,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
     },
   },
 });
-watch(() => columnsSchema,(columnsSchema) => {
+watch(() => columnsSchema, (columnsSchema) => {
   console.log(columnsSchema);
   gridApi.setGridOptions({
     columns: buildColumns(
@@ -380,7 +417,7 @@ watch(() => columnsSchema,(columnsSchema) => {
     )
   })
 })
-watch(() => enableServerSideSorting,(enableServerSideSorting) => {
+watch(() => enableServerSideSorting, (enableServerSideSorting) => {
   console.log(enableServerSideSorting);
   gridApi.setGridOptions({
     sortConfig: {
@@ -389,10 +426,10 @@ watch(() => enableServerSideSorting,(enableServerSideSorting) => {
   })
 })
 
-watch(() => props.queryParameters,(queryParameters) => {
+watch(() => props.queryParameters, (queryParameters) => {
   console.log(queryParameters);
   gridApi.query();
-},{
+}, {
   deep: true
 })
 
@@ -410,7 +447,7 @@ defineExpose({
 </template>
 
 <style scoped>
-:deep(.dark .vxe-cell--checkbox){
+:deep(.dark .vxe-cell--checkbox) {
   color: white !important;
 }
 </style>
