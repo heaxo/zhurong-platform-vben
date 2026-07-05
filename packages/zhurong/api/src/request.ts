@@ -114,3 +114,13 @@ export const requestClient = createRequestClient(apiURL, {
 });
 
 export const baseRequestClient = new RequestClient({ baseURL: apiURL });
+
+baseRequestClient.addRequestInterceptor({
+  fulfilled: async (config) => {
+    const accessStore = useAccessStore();
+    const token = accessStore.accessToken;
+    config.headers.Authorization = token ? `Bearer ${token}` : null;
+    config.headers['Accept-Language'] = preferences.app.locale;
+    return config;
+  },
+});

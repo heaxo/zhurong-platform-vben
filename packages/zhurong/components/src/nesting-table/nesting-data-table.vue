@@ -1,6 +1,10 @@
 <script lang="ts" setup>
-import {h, type PropType, watch} from 'vue';
-import {useVbenVxeGrid,} from '#/adapter/vxe-table';
+import {defineComponent, h, type PropType, ref, watch} from 'vue';
+import {
+  type VxeGridListeners,
+  type VxeGridProps,
+  useVbenVxeGrid,
+} from '#/adapter/vxe-table';
 import {Space} from 'ant-design-vue';
 import {merge} from 'lodash-es';
 import {
@@ -73,18 +77,79 @@ const props = defineProps({
     type: Object,
     default: null,
   },
+  nestPartsGridEvents: {
+    type: Object as PropType<Partial<VxeGridListeners>>,
+    default: null,
+  },
 
   checkboxConfig: {
     type: Object,
     default: null,
   },
+  nestPartsCheckboxConfig: {
+    type: Object,
+    default: null,
+  },
+  enableNestPartsCheckbox: {
+    type: Boolean,
+    default: true,
+  },
 })
+const emit = defineEmits<{
+  nestPartCheckboxAll: [params: NestPartSelectionEventParams];
+  nestPartCheckboxChange: [params: NestPartSelectionEventParams];
+}>();
 const {
   height,
   columnsSchema, mode, loadPlan, queryParameters, gridEvents,
   enableCheckbox, enableServerSideSorting, showSearchForm, checkboxConfig,
 } = props;
+type NestPartSelectionEventParams = {
+  allRecIDs: any[];
+  allRecIds: any[];
+  allRecords: any[];
+  params: any;
+  recIDs: any[];
+  recIds: any[];
+  records: any[];
+  row: any;
+};
+
+const NEST_PART_EXPAND_SLOT = 'nestPartsExpand';
+const nestPartSelectedRecordMap = ref(new Map<any, any[]>());
+
 const groupSortOrderRecord: Record<string, string> = {}
+const NestPartsSubTable = defineComponent({
+  name: 'NestPartsSubTable',
+  props: {
+    gridOptions: {
+      type: Object as PropType<VxeGridProps>,
+      required: true,
+    },
+  },
+  emits: ['checkboxAll', 'checkboxChange'],
+  setup(subProps, {emit}) {
+    const [SubGrid, subGridApi] = useVbenVxeGrid({
+      gridEvents: {
+        checkboxAll: (params: any) => emit('checkboxAll', params),
+        checkboxChange: (params: any) => emit('checkboxChange', params),
+      },
+      gridOptions: subProps.gridOptions,
+    });
+
+    watch(
+      () => subProps.gridOptions,
+      (gridOptions) => {
+        subGridApi.setGridOptions(gridOptions ?? {});
+      },
+      {
+        deep: true,
+      },
+    );
+
+    return () => h(SubGrid);
+  },
+});
 const fieldRegisterParams = {
   sortEvent: (field: string, order: string | null, e) => {
     const $table = gridApi.grid
@@ -99,6 +164,154 @@ const fieldRegisterParams = {
       $table.setSortByEvent(e, sortConfs, true)
     }
   },
+}
+
+function getNestParts(row: any) {
+  return Array.isArray(row?.nestParts) ? row.nestParts : [];
+}
+
+function hasNestParts(row: any) {
+  return getNestParts(row).length > 0;
+}
+
+function getNestPartRecID(row: any) {
+  return row?.recID ?? row?.recId;
+}
+
+function getParentRowKey(row: any) {
+  return row?.recID ?? row?.recId ?? row?.nstRef;
+}
+
+function getRecIDs(records: any[]) {
+  return records.map(getNestPartRecID).filter((recID) => recID !== undefined && recID !== null);
+}
+
+function getAllNestPartSelectedRecords() {
+  return [...nestPartSelectedRecordMap.value.values()].flat();
+}
+
+function getNestPartCheckboxConfig(row: any) {
+  const selectedRecords = nestPartSelectedRecordMap.value.get(getParentRowKey(row)) ?? [];
+  return {
+    ...props.nestPartsCheckboxConfig,
+    checkRowKeys: getRecIDs(selectedRecords),
+  };
+}
+
+function getNestPartGridOptions(row: any): VxeGridProps {
+  return {
+    border: true,
+    checkboxConfig: props.enableNestPartsCheckbox ? getNestPartCheckboxConfig(row) : undefined,
+    columns: buildNestPartColumns(),
+    data: getNestParts(row),
+    maxHeight: 320,
+    pagerConfig: {
+      enabled: false,
+    },
+    rowConfig: {
+      keyField: 'recID',
+    },
+    showOverflow: 'ellipsis',
+    size: 'mini',
+    toolbarConfig: {
+      enabled: false,
+    },
+  } as VxeGridProps;
+}
+
+function buildNestPartColumns() {
+  const checkboxColumn = props.enableNestPartsCheckbox
+    ? [{
+      align: 'left',
+      type: 'checkbox',
+      width: 40,
+    }]
+    : [];
+
+  return [
+    ...checkboxColumn,
+    {
+      field: 'prdRefDst',
+      title: '零件编码',
+      minWidth: 140,
+    },
+    {
+      field: 'mnORef',
+      title: '工单编码',
+      minWidth: 160,
+    },
+    {
+      field: 'quantity',
+      title: '套料数量',
+      minWidth: 100,
+    },
+    {
+      field: 'workOrder.rq',
+      title: '计划数量',
+      minWidth: 100,
+    },
+    {
+      field: 'nstRef',
+      title: '套料编码',
+      minWidth: 180,
+    },
+  ] as any[];
+}
+
+function buildNestPartSelectionParams(row: any, params: any): NestPartSelectionEventParams {
+  const records = params?.records ?? [];
+  const allRecords = getAllNestPartSelectedRecords();
+  const recIDs = getRecIDs(records);
+  const allRecIDs = getRecIDs(allRecords);
+
+  return {
+    allRecIDs,
+    allRecIds: allRecIDs,
+    allRecords,
+    params,
+    recIDs,
+    recIds: recIDs,
+    records,
+    row,
+  };
+}
+
+function triggerNestPartCheckboxEvent(
+  eventName: 'checkboxAll' | 'checkboxChange',
+  row: any,
+  params: any,
+) {
+  const parentKey = getParentRowKey(row);
+  const records = params?.records ?? [];
+  const nextMap = new Map(nestPartSelectedRecordMap.value);
+
+  if (records.length) {
+    nextMap.set(parentKey, records);
+  } else {
+    nextMap.delete(parentKey);
+  }
+  nestPartSelectedRecordMap.value = nextMap;
+
+  const eventParams = buildNestPartSelectionParams(row, params);
+  (props.nestPartsGridEvents?.[eventName] as any)?.(eventParams);
+
+  if (eventName === 'checkboxAll') {
+    emit('nestPartCheckboxAll', eventParams);
+  } else {
+    emit('nestPartCheckboxChange', eventParams);
+  }
+}
+
+function onNestPartCheckboxChange(row: any, params: any) {
+  triggerNestPartCheckboxEvent('checkboxChange', row, params);
+}
+
+function onNestPartCheckboxAll(row: any, params: any) {
+  triggerNestPartCheckboxEvent('checkboxAll', row, params);
+}
+
+function clearNestPartSelection() {
+  nestPartSelectedRecordMap.value = new Map();
 }
 
 function columnSort({column}, events) {
@@ -278,11 +491,19 @@ function buildColumns(schema: DataTableColumnSchema[], mode: 'group' | 'flat') {
     console.log(resultColumns);
     return resultColumns;
   });
-  return enableCheckbox ? [{
+  const result = enableCheckbox ? [{
     align: 'left',
     type: 'checkbox',
     width: 30,
   }, ...columns] : columns;
+
+  return [{
+    slots: {
+      content: NEST_PART_EXPAND_SLOT,
+    },
+    type: 'expand',
+    width: 40,
+  }, ...result];
 }
 
 function buildAttributeProps(metas, row) {
@@ -361,6 +582,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
       storage: true,
     },
     checkboxConfig,
+    expandConfig: {
+      visibleMethod: ({row}: any) => hasNestParts(row),
+    },
     showOverflow: 'ellipsis',
     sortConfig: {
       remote: enableServerSideSorting,
@@ -376,6 +600,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({page, sorts}, formValues) => {
+          clearNestPartSelection();
           const data = await requestPageNestOverview({
             page: page.currentPage,
             pageSize: page.pageSize,
@@ -434,12 +659,24 @@ watch(() => props.queryParameters, (queryParameters) => {
 })
 
 defineExpose({
+  clearNestPartSelection,
+  getNestPartSelectedRecords: getAllNestPartSelectedRecords,
   _gridApi: gridApi,
 });
 </script>
 
 <template>
   <Grid>
+    <template #nestPartsExpand="{ row }">
+      <div class="nest-parts-sub-table">
+        <NestPartsSubTable
+          v-if="hasNestParts(row)"
+          :grid-options="getNestPartGridOptions(row)"
+          @checkbox-all="onNestPartCheckboxAll(row, $event)"
+          @checkbox-change="onNestPartCheckboxChange(row, $event)"
+        />
+      </div>
+    </template>
     <template #toolbar-actions>
       <slot name="toolbar-actions"></slot>
     </template>
@@ -447,6 +684,10 @@ defineExpose({
 </template>
 
 <style scoped>
+.nest-parts-sub-table {
+  padding: 8px 12px 12px 48px;
+}
+
 :deep(.dark .vxe-cell--checkbox) {
   color: white !important;
 }

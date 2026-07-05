@@ -27,6 +27,11 @@
     "#/*": "./src/*"
   },
   "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
+    "@iconify/json": "catalog:",
+    "@iconify/vue": "catalog:",
+    "@vben-core/menu-ui": "workspace:*",
+    "@vben-core/shadcn-ui": "workspace:*",
     "@vben/access": "workspace:*",
     "@vben/common-ui": "workspace:*",
     "@vben/constants": "workspace:*",
@@ -41,20 +46,21 @@
     "@vben/styles": "workspace:*",
     "@vben/types": "workspace:*",
     "@vben/utils": "workspace:*",
-    "@vben-core/menu-ui": "workspace:*",
-    "@vben-core/shadcn-ui": "workspace:*",
-    "@zhurong/components": "workspace:*",
-    "@zhurong/api": "workspace:*",
     "@vueuse/core": "catalog:",
+    "@zhurong/api": "workspace:*",
+    "@zhurong/components": "workspace:*",
     "ant-design-vue": "catalog:",
-    "@ant-design/icons-vue": "catalog:",
-    "lodash-es": "catalog:",
     "dayjs": "catalog:",
+    "jspdf": "^4.2.1",
+    "lodash-es": "catalog:",
     "pinia": "catalog:",
-    "vue": "catalog:",
-    "@iconify/json": "catalog:",
-    "@iconify/vue": "catalog:",
+    "qrcode": "catalog:",
     "qs": "catalog:",
+    "svg2pdf.js": "^2.7.0",
+    "vue": "catalog:",
     "vue-router": "catalog:"
+  },
+  "devDependencies": {
+    "@types/qrcode": "catalog:"
   }
 }
