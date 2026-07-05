@@ -14,6 +14,7 @@ const authStore = useAuthStore();
 const { isDark } = usePreferences();
 
 const appName = computed(() => preferences.app.name);
+
 const logoSource = computed(
   () =>
     (isDark.value ? preferences.logo.sourceDark : preferences.logo.source) ||
@@ -27,7 +28,7 @@ const formSchema = computed((): VbenFormSchema[] => [
     component: 'VbenInput',
     componentProps: {
       autocomplete: 'username',
-      placeholder: '请输入用户名',
+      placeholder: '用户名',
     },
     fieldName: 'username',
     rules: z.string().min(1, { message: '请输入用户名' }),
@@ -36,7 +37,7 @@ const formSchema = computed((): VbenFormSchema[] => [
     component: 'VbenInputPassword',
     componentProps: {
       autocomplete: 'current-password',
-      placeholder: '请输入密码',
+      placeholder: '密码',
     },
     fieldName: 'password',
     rules: z.string().min(1, { message: '请输入密码' }),
@@ -45,24 +46,35 @@ const formSchema = computed((): VbenFormSchema[] => [
 </script>
 
 <template>
-  <div class="haobao-login">
-    <span class="login-shape login-shape--blue" aria-hidden="true"></span>
-    <span class="login-shape login-shape--orange" aria-hidden="true"></span>
-    <span class="login-grid" aria-hidden="true"></span>
+  <div class="login-page">
+    <!-- 左侧背景图片 -->
+    <div class="login-visual" aria-hidden="true">
+      <img
+        class="login-visual__image"
+        src="/images/login-tech-visual.png"
+        alt=""
+      />
+    </div>
 
-    <main class="haobao-login__main">
+    <!-- 左上角品牌 -->
+    <header class="login-brand">
+      <img :src="logoSource" alt="" />
+      <span>{{ appName }}</span>
+    </header>
+
+    <!-- 登录区域 -->
+    <main class="login-main">
       <section class="login-card">
-        <div class="login-card__brand">
-          <img :src="logoSource" alt="" />
-          <span>{{ appName }}</span>
-        </div>
-
-        <div class="login-card__heading">
-          <p>统一认证中心</p>
-          <h1>欢迎登录</h1>
+        <div class="login-card__header">
+          <img
+            class="login-card__title"
+            src="/title.png"
+            alt="浩博技术"
+          />
         </div>
 
         <AuthenticationLogin
+          class="login-form"
           :form-schema="formSchema"
           :loading="authStore.loginLoading"
           :show-code-login="false"
@@ -71,9 +83,9 @@ const formSchema = computed((): VbenFormSchema[] => [
           :show-register="false"
           :show-remember-me="false"
           :show-third-party-login="false"
-          submit-button-text="登录系统"
-          sub-title="请输入账号密码访问系统"
-          title=""
+          submit-button-text="登录"
+          sub-title="请输入您的账户信息以开始管理您的项目"
+          title="欢迎登录"
           @submit="authStore.authLogin"
         />
       </section>
@@ -82,234 +94,336 @@ const formSchema = computed((): VbenFormSchema[] => [
 </template>
 
 <style scoped>
-.haobao-login {
-  --login-blue: hsl(var(--primary));
-  --login-blue-deep: hsl(var(--sidebar-deep));
-  --login-blue-dark: hsl(var(--foreground));
-  --login-orange: hsl(var(--warning));
-  --login-orange-deep: #ef692a;
-  --login-ink: hsl(var(--foreground));
+.login-page {
+  --login-primary: hsl(var(--primary));
+  --login-primary-hover: hsl(var(--primary) / 88%);
+  --login-dark: #0e1929;
+  --login-background: #edf3f8;
+  --login-card: hsl(var(--card));
+  --login-text: hsl(var(--foreground));
   --login-muted: hsl(var(--muted-foreground));
-  --login-border: hsl(var(--border) / 80%);
-  --login-surface: hsl(var(--card) / 94%);
-  --login-page-bg: hsl(var(--background));
-  --login-page-bg-deep: hsl(var(--background-deep));
 
   position: relative;
-  display: flex;
-  align-items: center;
-  justify-content: center;
   min-height: 100vh;
-  padding: 32px;
+  min-height: 100dvh;
   overflow: hidden;
-  color: var(--login-ink);
+  color: var(--login-text);
   background:
-    linear-gradient(135deg, hsl(var(--primary) / 14%), transparent 36%),
-    linear-gradient(315deg, hsl(var(--warning) / 14%), transparent 34%),
-    var(--login-page-bg-deep);
+    radial-gradient(
+      circle at 79% 47%,
+      rgb(255 255 255 / 95%),
+      transparent 33%
+    ),
+    linear-gradient(135deg, #f7fafc, var(--login-background));
 }
 
-.haobao-login__main {
-  position: relative;
-  z-index: 2;
-  width: min(100%, 440px);
-}
+/* 左侧图片区域 */
 
-.login-card {
-  position: relative;
-  width: 100%;
-  padding: 42px 40px;
-  overflow: hidden;
-  background: var(--login-surface);
-  border: 1px solid var(--login-border);
-  border-radius: 8px;
-  box-shadow: 0 28px 80px hsl(var(--foreground) / 10%);
-  backdrop-filter: blur(18px);
-}
-
-.login-card::before {
+.login-visual {
   position: absolute;
-  inset: 0 0 auto;
-  height: 6px;
+  inset: 0 38% 0 0;
+  overflow: hidden;
+  background: var(--login-dark);
+  clip-path: polygon(0 0, 88% 0, 100% 50%, 88% 100%, 0 100%);
+}
+
+.login-visual::after {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
   content: '';
-  background: linear-gradient(90deg, var(--login-blue), var(--login-orange));
+  background:
+    linear-gradient(
+      180deg,
+      rgb(7 18 34 / 28%) 0%,
+      transparent 28%,
+      transparent 72%,
+      rgb(7 18 34 / 24%) 100%
+    ),
+    linear-gradient(
+      90deg,
+      rgb(7 18 34 / 16%),
+      transparent 46%,
+      rgb(7 18 34 / 8%)
+    );
 }
 
-.login-card__brand {
+.login-visual__image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  transform: scale(1.015);
+}
+
+/* 左上角品牌 */
+
+.login-brand {
+  position: absolute;
+  top: 42px;
+  left: 52px;
+  z-index: 3;
   display: flex;
-  gap: 12px;
+  gap: 13px;
   align-items: center;
-  min-width: 0;
-  margin-bottom: 30px;
-  font-size: 16px;
-  font-weight: 700;
-  color: var(--login-blue-dark);
+  max-width: 380px;
+  color: #fff;
 }
 
-.login-card__brand img {
+.login-brand img {
   width: 42px;
   height: 42px;
   object-fit: contain;
 }
 
-.login-card__brand span {
+.login-brand span {
   overflow: hidden;
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: 0.01em;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-shadow: 0 2px 12px rgb(0 0 0 / 24%);
 }
 
-.login-card__heading {
-  margin-bottom: 28px;
+/* 登录区域 */
+
+.login-main {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  min-height: 100vh;
+  min-height: 100dvh;
+  padding: 48px clamp(56px, 8vw, 150px) 48px 48px;
 }
 
-.login-card__heading p {
-  margin: 0 0 8px;
-  font-size: 14px;
-  font-weight: 700;
-  color: var(--login-orange);
-  letter-spacing: 0;
+.login-card {
+  position: relative;
+  width: min(100%, 420px);
+  padding: 44px 42px 38px;
+  background: rgb(255 255 255 / 97%);
+  border: 1px solid rgb(218 227 237 / 82%);
+  border-radius: 14px;
+  box-shadow:
+    0 34px 86px rgb(41 65 91 / 16%),
+    0 10px 28px rgb(41 65 91 / 8%);
+  backdrop-filter: blur(12px);
 }
 
-.login-card__heading h1 {
-  margin: 0;
-  font-size: 30px;
-  font-weight: 800;
-  line-height: 1.2;
-  color: var(--login-blue-dark);
+.login-card__header {
+  margin-bottom: 26px;
 }
 
-.login-shape,
-.login-grid {
-  position: absolute;
-  pointer-events: none;
+.login-card__title {
+  display: block;
+  width: min(100%, 300px);
+  height: auto;
+  object-fit: contain;
 }
 
-.login-shape {
-  border-radius: 8px;
-  transform: rotate(-12deg);
-}
-
-.login-shape--blue {
-  top: -90px;
-  left: -80px;
-  width: min(44vw, 520px);
-  height: min(44vw, 520px);
-  background: linear-gradient(
-    135deg,
-    hsl(var(--primary) / 24%),
-    hsl(var(--primary) / 4%)
-  );
-}
-
-.login-shape--orange {
-  right: -120px;
-  bottom: -150px;
-  width: min(38vw, 420px);
-  height: min(38vw, 420px);
-  background: linear-gradient(
-    135deg,
-    hsl(var(--warning) / 24%),
-    hsl(var(--warning) / 6%)
-  );
-}
-
-.login-grid {
-  inset: 0;
-  background:
-    linear-gradient(
-      90deg,
-      hsl(var(--primary) / 7%) 0 1px,
-      transparent 1px 100%
-    ),
-    linear-gradient(
-      180deg,
-      hsl(var(--primary) / 6%) 0 1px,
-      transparent 1px 100%
-    );
-  background-size: 40px 40px;
-  mask-image: radial-gradient(circle at center, #000 0%, transparent 72%);
-}
+/* Vben 表单文字 */
 
 :deep(.text-foreground) {
-  color: var(--login-blue-dark);
+  color: var(--login-text);
 }
 
 :deep(.text-muted-foreground) {
   color: var(--login-muted);
 }
 
-:deep(input) {
-  min-height: 46px;
-  color: var(--login-ink);
-  background: hsl(var(--input-background));
-  border-color: hsl(var(--input));
+/* 登录标题 */
+
+.login-form :deep(h2) {
+  font-size: 28px;
+  font-weight: 700;
+  line-height: 1.25;
+  color: #162a43;
+  letter-spacing: -0.02em;
+}
+
+.login-form :deep(p) {
+  font-size: 13px;
+  color: #748399;
+}
+
+/* 输入框 */
+
+.login-form :deep(input) {
+  min-height: 50px;
+  padding-right: 15px;
+  padding-left: 15px;
+  color: #15263c;
+  background: #eaf2ff;
+  border: 1px solid #dce7f5;
   border-radius: 8px;
+  box-shadow: none;
   transition:
+    background-color 0.2s ease,
     border-color 0.2s ease,
     box-shadow 0.2s ease;
 }
 
-:deep(input:focus),
-:deep(input:focus-visible) {
-  border-color: var(--login-blue);
-  box-shadow: 0 0 0 3px hsl(var(--primary) / 14%);
+.login-form :deep(input::placeholder) {
+  color: #8190a4;
 }
 
-:deep(button[aria-label='login']) {
-  min-height: 46px;
-  font-weight: 700;
+.login-form :deep(input:hover) {
+  border-color: hsl(var(--primary) / 42%);
+}
+
+.login-form :deep(input:focus),
+.login-form :deep(input:focus-visible) {
+  background: #f4f8ff;
+  border-color: var(--login-primary);
+  box-shadow: 0 0 0 3px hsl(var(--primary) / 10%);
+  outline: none;
+}
+
+/* 浏览器自动填充 */
+
+.login-form :deep(input:-webkit-autofill),
+.login-form :deep(input:-webkit-autofill:hover),
+.login-form :deep(input:-webkit-autofill:focus) {
+  -webkit-text-fill-color: #15263c;
+  box-shadow: 0 0 0 1000px #eaf2ff inset;
+}
+
+/* 登录按钮 */
+
+.login-form :deep(button[aria-label='login']),
+.login-form :deep(form button[type='submit']) {
+  min-height: 50px;
+  margin-top: 8px;
+  font-size: 14px;
+  font-weight: 650;
   color: #fff;
-  background: linear-gradient(
-    135deg,
-    var(--login-orange),
-    var(--login-orange-deep)
-  );
+  background: var(--login-primary);
   border: none;
-  border-radius: 999px;
-  box-shadow: 0 14px 28px hsl(var(--warning) / 24%);
+  border-radius: 8px;
+  box-shadow: 0 12px 25px hsl(var(--primary) / 21%);
   transition:
-    transform 0.2s ease,
+    background-color 0.2s ease,
     box-shadow 0.2s ease,
-    filter 0.2s ease;
+    transform 0.2s ease;
 }
 
-:deep(button[aria-label='login']:hover) {
-  box-shadow: 0 18px 36px hsl(var(--warning) / 30%);
-  filter: brightness(1.03);
+.login-form :deep(button[aria-label='login']:hover),
+.login-form :deep(form button[type='submit']:hover) {
+  background: var(--login-primary-hover);
+  box-shadow: 0 15px 30px hsl(var(--primary) / 27%);
   transform: translateY(-1px);
 }
 
-:deep(button[aria-label='login']:disabled) {
+.login-form :deep(button[aria-label='login']:active),
+.login-form :deep(form button[type='submit']:active) {
+  transform: translateY(0);
+}
+
+.login-form :deep(button[aria-label='login']:disabled),
+.login-form :deep(form button[type='submit']:disabled) {
+  box-shadow: none;
+  opacity: 0.6;
   transform: none;
 }
 
-@media (max-width: 640px) {
-  .haobao-login {
-    align-items: flex-start;
-    padding: 24px;
-    overflow: auto;
+/* 中等尺寸 */
+
+@media (max-width: 1100px) {
+  .login-visual {
+    right: 43%;
   }
 
-  .haobao-login__main {
-    margin-top: 24px;
+  .login-brand {
+    left: 36px;
   }
 
-  .login-shape--blue {
-    width: 280px;
-    height: 280px;
-  }
-
-  .login-shape--orange {
-    width: 240px;
-    height: 240px;
+  .login-main {
+    padding-right: 42px;
   }
 
   .login-card {
-    padding: 32px 24px;
+    width: min(100%, 400px);
+  }
+}
+
+/* 移动端 */
+
+@media (max-width: 760px) {
+  .login-page {
+    background:
+      linear-gradient(
+        180deg,
+        var(--login-dark) 0,
+        var(--login-dark) 180px,
+        var(--login-background) 180px
+      );
   }
 
-  .login-card__heading h1 {
-    font-size: 24px;
+  .login-visual {
+    top: 0;
+    right: 0;
+    bottom: auto;
+    height: 180px;
+    clip-path: none;
+    opacity: 0.42;
+  }
+
+  .login-visual__image {
+    object-position: center 47%;
+  }
+
+  .login-visual::after {
+    background: linear-gradient(
+      180deg,
+      rgb(7 18 34 / 18%),
+      var(--login-dark)
+    );
+  }
+
+  .login-brand {
+    top: 28px;
+    left: 24px;
+  }
+
+  .login-brand img {
+    width: 38px;
+    height: 38px;
+  }
+
+  .login-brand span {
+    font-size: 16px;
+  }
+
+  .login-main {
+    align-items: flex-start;
+    justify-content: center;
+    padding: 122px 18px 28px;
+  }
+
+  .login-card {
+    padding: 38px 28px 32px;
+    border-radius: 12px;
+  }
+
+  .login-card__title {
+    width: min(100%, 280px);
+  }
+}
+
+@media (max-width: 420px) {
+  .login-card {
+    padding-right: 22px;
+    padding-left: 22px;
+  }
+
+  .login-card__title {
+    width: min(100%, 250px);
+  }
+
+  .login-form :deep(h2) {
+    font-size: 25px;
   }
 }
 </style>
