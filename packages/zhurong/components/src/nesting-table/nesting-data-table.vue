@@ -417,16 +417,21 @@ function resolveColumn(meta: any, override?: any) {
 
 function buildColumns(schema: DataTableColumnSchema[], mode: 'group' | 'flat') {
 
-  //赋予排序能力
+   //赋予排序能力
   for (let i = 0; i < schema.length; i++) {
     const scm = schema[i];
-    scm.override = {
-      ...merge(scm.override, {
-        slots: {
-          sort,
+    if (scm.schemas && scm.schemas.length){
+      for (let i = 0; i < scm.schemas.length; i++) {
+        const scm2 = scm.schemas[i];
+        scm2.override = {
+          ...merge(scm2.override, {
+            slots: {
+              sort,
+            }
+          })
         }
-      })
-    };
+      }
+    }
   }
 
   const columns = schema.flatMap((col) => {

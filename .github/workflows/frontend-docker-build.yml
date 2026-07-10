@@ -1,0 +1,180 @@
+name: Build Frontend Docker Images
+
+on:
+  workflow_dispatch:
+    inputs:
+      app:
+        description: Frontend app to build Docker image for
+        required: true
+        default: all
+        type: choice
+        options:
+          - all
+          - but
+          - haobao
+
+permissions:
+  contents: write
+
+concurrency:
+  group: frontend-docker-build-${{ github.ref_name }}
+  cancel-in-progress: false
+
+jobs:
+  frontend-docker-build:
+    name: Build frontend Docker image
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+        with:
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - name: Setup Node
+        uses: ./.github/actions/setup-node
+
+      - name: Bump selected app versions
+        shell: bash
+        run: |
+          bump_patch_version() {
+            local version="$1"
+            IFS='.' read -r major minor patch <<< "${version}"
+
+            if [ -z "${major}" ] || [ -z "${minor}" ] || [ -z "${patch}" ]; then
+              echo "Unsupported version format: ${version}" >&2
+              exit 1
+            fi
+
+            echo "${major}.${minor}.$((patch + 1))"
+          }
+
+          bump_app() {
+            local app_dir="$1"
+            local package_json="${app_dir}/package.json"
+            local current_version
+            local next_version
+
+            current_version="$(node -p "require('./${package_json}').version")"
+            next_version="$(bump_patch_version "${current_version}")"
+
+            pnpm exec npm pkg set version="${next_version}" --prefix "${app_dir}"
+            echo "${app_dir}: ${current_version} -> ${next_version}"
+          }
+
+          case "${{ inputs.app }}" in
+            all)
+              bump_app apps/zhurong-platform-custom-but
+              bump_app apps/zhurong-platform-custom-haobao
+              ;;
+            but)
+              bump_app apps/zhurong-platform-custom-but
+              ;;
+            haobao)
+              bump_app apps/zhurong-platform-custom-haobao
+              ;;
+          esac
+
+      - name: Build frontend app
+        shell: bash
+        run: |
+          case "${{ inputs.app }}" in
+            all)
+              pnpm -F @zhurong-platform/custom-but run build
+              pnpm -F @zhurong-platform/custom-haobao run build
+              ;;
+            but)
+              pnpm -F @zhurong-platform/custom-but run build
+              ;;
+            haobao)
+              pnpm -F @zhurong-platform/custom-haobao run build
+              ;;
+          esac
+
+      - name: Build Docker image
+        shell: bash
+        run: |
+          build_image() {
+            local app_dir="$1"
+            local image="$2"
+
+            docker build \
+              -f "${app_dir}/deploy/Dockerfile" \
+              -t "${image}" \
+              "${app_dir}"
+          }
+
+          case "${{ inputs.app }}" in
+            all)
+              build_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx
+              build_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx
+              ;;
+            but)
+              build_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx
+              ;;
+            haobao)
+              build_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx
+              ;;
+          esac
+
+      - name: List built images
+        run: docker images "zhurong-platform/*"
+
+      - name: Login to Aliyun Container Registry
+        run: echo "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}" | docker login crpi-8o01gg1zrswkepyk.cn-shenzhen.personal.cr.aliyuncs.com --username "${{ secrets.ALIYUN_REGISTRY_USERNAME }}" --password-stdin
+
+      - name: Tag and push Aliyun images
+        shell: bash
+        run: |
+          get_app_version() {
+            local app_dir="$1"
+            node -p "require('./${app_dir}/package.json').version"
+          }
+
+          publish_image() {
+            local app_dir="$1"
+            local local_image="$2"
+            local remote_repo="$3"
+            local version
+            local remote_image
+
+            version="$(get_app_version "${app_dir}")"
+            remote_image="crpi-8o01gg1zrswkepyk.cn-shenzhen.personal.cr.aliyuncs.com/nbaliyun/${remote_repo}:${version}"
+
+            echo "Publishing ${local_image}:latest to ${remote_image}"
+            docker tag "${local_image}:latest" "${remote_image}"
+            docker push "${remote_image}"
+          }
+
+          case "${{ inputs.app }}" in
+            all)
+              publish_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx zhurong-platform-but-nginx
+              publish_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx zhurong-platform-custom-haobao-nginx
+              ;;
+            but)
+              publish_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx zhurong-platform-but-nginx
+              ;;
+            haobao)
+              publish_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx zhurong-platform-custom-haobao-nginx
+              ;;
+          esac
+
+      - name: Commit bumped versions
+        shell: bash
+        run: |
+          if git diff --quiet -- \
+            apps/zhurong-platform-custom-but/package.json \
+            apps/zhurong-platform-custom-haobao/package.json; then
+            echo "No version changes to commit."
+            exit 0
+          fi
+
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
+          git add \
+            apps/zhurong-platform-custom-but/package.json \
+            apps/zhurong-platform-custom-haobao/package.json
+          git commit -m "Bump frontend Docker image versions"
+          git push
