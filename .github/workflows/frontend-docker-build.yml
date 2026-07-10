@@ -81,14 +81,14 @@ jobs:
         run: |
           case "${{ inputs.app }}" in
             all)
-              pnpm -F @zhurong-platform/custom-but run build
-              pnpm -F @zhurong-platform/custom-haobao run build
+              pnpm exec turbo build --filter=@zhurong-platform/custom-but
+              pnpm exec turbo build --filter=@zhurong-platform/custom-haobao
               ;;
             but)
-              pnpm -F @zhurong-platform/custom-but run build
+              pnpm exec turbo build --filter=@zhurong-platform/custom-but
               ;;
             haobao)
-              pnpm -F @zhurong-platform/custom-haobao run build
+              pnpm exec turbo build --filter=@zhurong-platform/custom-haobao
               ;;
           esac
 
