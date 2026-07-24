@@ -2,7 +2,12 @@ import { defineConfig } from '@vben/vite-config';
 
 export default defineConfig(async () => {
   return {
-    application: {},
+    application: {
+      archiverPluginOptions: {
+        name: 'html',
+        outputDir: '.',
+      },
+    },
     vite: {
       server: {
         proxy: {
