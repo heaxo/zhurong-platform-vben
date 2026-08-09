@@ -11,7 +11,8 @@ export const overridesPreferences = defineOverridesPreferences({
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
     defaultHomePath: '/order',
-    defaultAvatar: '/log.png'
+    defaultAvatar: '/log.png',
+    enablePreferences: false
   },
   transition: {
     name: 'fade-down',

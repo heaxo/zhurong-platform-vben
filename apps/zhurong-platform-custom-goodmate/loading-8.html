@@ -129,75 +129,66 @@
       justify-content: center;
     }
 
-    /*  begin folding css */
+    /*  begin cubes css */
 
-    .folding {
-      margin: 20px auto;
+    .cubes {
       width: 40px;
       height: 40px;
-      position: relative;
-      transform: rotateZ(45deg);
+      margin: 100px auto;
     }
 
-    .folding .sk-cube {
-      float: left;
-      width: 50%;
-      height: 50%;
-      position: relative;
-      transform: scale(1.1);
-    }
-
-    .folding .sk-cube:before {
-      content: '';
-      position: absolute;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
+    .cubes .sk-cube {
+      width: 33%;
+      height: 33%;
       background-color: var(--colorPrimary);
-      animation: sk-foldCubeAngle 2.4s infinite linear both;
-      transform-origin: 100% 100%;
+      float: left;
+      animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
     }
 
-    .folding .sk-cube2 {
-      transform: scale(1.1) rotateZ(90deg);
+    .cubes .sk-cube1 {
+      animation-delay: 0.2s;
     }
 
-    .folding .sk-cube3 {
-      transform: scale(1.1) rotateZ(180deg);
-    }
-
-    .folding .sk-cube4 {
-      transform: scale(1.1) rotateZ(270deg);
-    }
-
-    .folding .sk-cube2:before {
+    .cubes .sk-cube2 {
       animation-delay: 0.3s;
     }
 
-    .folding .sk-cube3:before {
-      animation-delay: 0.6s;
+    .cubes .sk-cube3 {
+      animation-delay: 0.4s;
     }
 
-    .folding .sk-cube4:before {
-      animation-delay: 0.9s;
+    .cubes .sk-cube4 {
+      animation-delay: 0.1s;
     }
 
-    @keyframes sk-foldCubeAngle {
+    .cubes .sk-cube5 {
+      animation-delay: 0.2s;
+    }
+
+    .cubes .sk-cube6 {
+      animation-delay: 0.3s;
+    }
+
+    .cubes .sk-cube7 {
+      animation-delay: 0s;
+    }
+
+    .cubes .sk-cube8 {
+      animation-delay: 0.1s;
+    }
+
+    .cubes .sk-cube9 {
+      animation-delay: 0.2s;
+    }
+
+    @keyframes sk-cubeGridScaleDelay {
       0%,
-      10% {
-        transform: perspective(140px) rotateX(-180deg);
-        opacity: 0;
-      }
-      25%,
-      75% {
-        transform: perspective(140px) rotateX(0deg);
-        opacity: 1;
-      }
-      90%,
+      70%,
       100% {
-        transform: perspective(140px) rotateY(180deg);
-        opacity: 0;
+        transform: scale3D(1, 1, 1);
+      }
+      35% {
+        transform: scale3D(0, 0, 1);
       }
     }
 
@@ -205,12 +196,20 @@
 </head>
 <body>
 <div id="__app-loading__">
-  <!-- begin folding modal -->
-  <div class="folding">
-    <div class="sk-cube1 sk-cube"></div>
-    <div class="sk-cube2 sk-cube"></div>
-    <div class="sk-cube4 sk-cube"></div>
-    <div class="sk-cube3 sk-cube"></div>
+  <div>
+    <!-- begin cubes modal -->
+    <div class="cubes">
+      <div class="sk-cube sk-cube1"></div>
+      <div class="sk-cube sk-cube2"></div>
+      <div class="sk-cube sk-cube3"></div>
+      <div class="sk-cube sk-cube4"></div>
+      <div class="sk-cube sk-cube5"></div>
+      <div class="sk-cube sk-cube6"></div>
+      <div class="sk-cube sk-cube7"></div>
+      <div class="sk-cube sk-cube8"></div>
+      <div class="sk-cube sk-cube9"></div>
+    </div>
+
   </div>
 </div>
 </body>

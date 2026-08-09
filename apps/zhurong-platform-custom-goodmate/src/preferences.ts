@@ -11,7 +11,8 @@ export const overridesPreferences = defineOverridesPreferences({
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
     defaultHomePath: '/inventory/sync',
-    defaultAvatar: '/goodmate-logo.png'
+    defaultAvatar: '/goodmate-logo.png',
+    enablePreferences: false
   },
   transition: {
     name: 'fade-down',
@@ -58,6 +59,6 @@ export const overridesPreferences = defineOverridesPreferences({
     enable: true,
     icp: '',
     icpLink: '',
-    settingShow: true,
+    settingShow: false,
   }
 });
