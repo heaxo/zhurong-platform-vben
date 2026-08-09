@@ -28,6 +28,7 @@
     "build": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build",
     "build:zhurongCustom:but": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build --filter=@zhurong-platform/custom-but",
     "build:zhurongCustom:haobao": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build --filter=@zhurong-platform/custom-haobao",
+    "build:zhurongCustom:goodmate": "cross-env NODE_OPTIONS=--max-old-space-size=8192 turbo build --filter=@zhurong-platform/custom-goodmate",
     "build:analyze": "turbo build:analyze",
     "build:antd": "pnpm run build --filter=@vben/web-antd",
     "build:docker": "./scripts/deploy/build-local-docker-image.sh",
