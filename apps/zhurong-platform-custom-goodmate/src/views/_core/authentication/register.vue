@@ -214,7 +214,7 @@ async function handleSubmit(value: Recordable<any>) {
   padding: 118px clamp(44px, 6vw, 88px) 68px;
   overflow: hidden;
   background: var(--goodmate-blue-deep);
-  clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+  clip-path: polygon(0 0, 88% 0, 100% 100%, 0 100%);
 }
 
 .goodmate-register__visual::after {
@@ -230,6 +230,28 @@ async function handleSubmit(value: Recordable<any>) {
       rgb(70 175 50 / 32%) 100%
     ),
     linear-gradient(180deg, rgb(0 0 0 / 16%), rgb(0 0 0 / 24%));
+}
+
+.goodmate-register__visual::before {
+  position: absolute;
+  top: -12%;
+  right: 5.5%;
+  z-index: 2;
+  width: 2px;
+  height: 124%;
+  pointer-events: none;
+  content: '';
+  background: linear-gradient(
+    180deg,
+    transparent,
+    rgb(255 255 255 / 62%) 18%,
+    rgb(70 175 50 / 58%) 54%,
+    rgb(5 111 175 / 50%) 78%,
+    transparent
+  );
+  box-shadow: 0 0 32px rgb(70 175 50 / 26%);
+  transform: rotate(-6.8deg);
+  transform-origin: center;
 }
 
 .goodmate-register__visual img {

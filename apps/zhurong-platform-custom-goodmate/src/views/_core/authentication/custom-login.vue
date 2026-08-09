@@ -183,7 +183,7 @@ const metrics = [
   padding: 118px clamp(44px, 6vw, 88px) 68px;
   overflow: hidden;
   background: var(--goodmate-blue-deep);
-  clip-path: polygon(0 0, 92% 0, 100% 50%, 92% 100%, 0 100%);
+  clip-path: polygon(0 0, 88% 0, 100% 100%, 0 100%);
 }
 
 .goodmate-login__visual::before {
@@ -204,20 +204,24 @@ const metrics = [
 
 .goodmate-login__visual::after {
   position: absolute;
-  right: -120px;
-  bottom: 12%;
+  top: -12%;
+  right: 5.5%;
   z-index: 2;
-  width: 520px;
-  height: 1px;
+  width: 2px;
+  height: 124%;
   pointer-events: none;
   content: '';
   background: linear-gradient(
-    90deg,
+    180deg,
     transparent,
-    rgb(255 255 255 / 70%),
+    rgb(255 255 255 / 62%) 18%,
+    rgb(70 175 50 / 58%) 54%,
+    rgb(5 111 175 / 50%) 78%,
     transparent
   );
-  transform: rotate(-19deg);
+  box-shadow: 0 0 32px rgb(70 175 50 / 26%);
+  transform: rotate(-6.8deg);
+  transform-origin: center;
 }
 
 .visual-media {

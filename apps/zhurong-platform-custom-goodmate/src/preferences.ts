@@ -10,7 +10,7 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
-    defaultHomePath: '/',
+    defaultHomePath: '/inventory/sync',
     defaultAvatar: '/goodmate-logo.png'
   },
   transition: {
@@ -34,7 +34,7 @@ export const overridesPreferences = defineOverridesPreferences({
     styleType: "brisk",
   },
   theme: {
-    colorPrimary: '#056faf',
+    colorPrimary: '#46af32',
     builtinType: 'deep-blue',
     mode: "light",
     radius: "1",
@@ -53,7 +53,7 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   copyright: {
     companyName: 'custom-goodmate',
-    companySiteLink: 'http://localhost',
+    companySiteLink: 'https://www.szgoodmate.com/',
     date: '2026',
     enable: true,
     icp: '',
