@@ -114,13 +114,7 @@
         transform: scale(1.2, 1);
       }
     }
-    #__app-loading__.hidden {
-      pointer-events: none;
-      visibility: hidden;
-      opacity: 0;
-      transition: all 1s ease-out;
-    }
-    #__app-loading__ {
+    #__app-loading__{
       position: fixed;
       inset: 0;
 
@@ -128,89 +122,50 @@
       align-items: center;
       justify-content: center;
     }
-
-    /*  begin cubes css */
-
-    .cubes {
-      width: 40px;
-      height: 40px;
-      margin: 100px auto;
+    #__app-loading__.hidden {
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 1s ease-out;
     }
 
-    .cubes .sk-cube {
-      width: 33%;
-      height: 33%;
-      background-color: var(--colorPrimary);
-      float: left;
-      animation: sk-cubeGridScaleDelay 1.3s infinite ease-in-out;
-    }
+    .loading-11  {
+      position: relative;
 
-    .cubes .sk-cube1 {
-      animation-delay: 0.2s;
+      width: 85px;
+      perspective: 200px;
     }
-
-    .cubes .sk-cube2 {
-      animation-delay: 0.3s;
+    .loading-11:before,.loading-11:after  {
+      position: absolute;
+      width: 30px;
+      height: 30px;
+      content: "";
+      animation: loading-11 0.5s infinite alternate;
+      background: var(--colorPrimary);
     }
-
-    .cubes .sk-cube3 {
-      animation-delay: 0.4s;
+    .loading-11:before  {
+      left: 0;
     }
-
-    .cubes .sk-cube4 {
-      animation-delay: 0.1s;
+    .loading-11:after  {
+      right: 0;
+      animation-delay: 0.15s;
     }
-
-    .cubes .sk-cube5 {
-      animation-delay: 0.2s;
-    }
-
-    .cubes .sk-cube6 {
-      animation-delay: 0.3s;
-    }
-
-    .cubes .sk-cube7 {
-      animation-delay: 0s;
-    }
-
-    .cubes .sk-cube8 {
-      animation-delay: 0.1s;
-    }
-
-    .cubes .sk-cube9 {
-      animation-delay: 0.2s;
-    }
-
-    @keyframes sk-cubeGridScaleDelay {
-      0%,
-      70%,
-      100% {
-        transform: scale3D(1, 1, 1);
+    @keyframes loading-11  {
+      0%  {
+        transform: scale(1) translateY(0) rotateX(0);
+        box-shadow: 0 0 var(--colorPrimary);
       }
-      35% {
-        transform: scale3D(0, 0, 1);
+      to  {
+        transform: scale(1.2) translateY(-25px) rotateX(45deg);
+        background: var(--colorPrimary);
+        box-shadow: 0 25px 40px var(--colorPrimary);
       }
     }
-
   </style>
 </head>
 <body>
 <div id="__app-loading__">
-  <div>
-    <!-- begin cubes modal -->
-    <div class="cubes">
-      <div class="sk-cube sk-cube1"></div>
-      <div class="sk-cube sk-cube2"></div>
-      <div class="sk-cube sk-cube3"></div>
-      <div class="sk-cube sk-cube4"></div>
-      <div class="sk-cube sk-cube5"></div>
-      <div class="sk-cube sk-cube6"></div>
-      <div class="sk-cube sk-cube7"></div>
-      <div class="sk-cube sk-cube8"></div>
-      <div class="sk-cube sk-cube9"></div>
-    </div>
-
-  </div>
+  <div class="loading-11"></div>
 </div>
 </body>
 <script>
