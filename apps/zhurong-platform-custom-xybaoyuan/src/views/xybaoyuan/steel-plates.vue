@@ -1,52 +1,185 @@
 <script setup lang="ts">
-import { Page } from '@vben/common-ui';
-import { Button, Card, Form, FormItem, Input, message, Modal, Space, Table, Tag } from 'ant-design-vue';
-import { onMounted, reactive, ref } from 'vue';
-
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 import type { SteelPlate } from '#/api/xybaoyuan';
-import { deleteSteelPlates, exportSteelPlates, importSteelPlates, pageSteelPlates, syncErpSteelPlates } from '#/api/xybaoyuan';
 
-const loading = ref(false); const actionLoading = ref(false); const rows = ref<SteelPlate[]>([]); const selectedKeys = ref<number[]>([]); const total = ref(0);
-const pager = reactive({ current: 1, pageSize: 20 }); const query = reactive({ lotNumber: '', matRef: '', prdRef: '', stockName: '' });
-const columns = [
-  { dataIndex: 'prdRef', title: '钢板编号', width: 260 }, { dataIndex: 'prdName', title: '名称', width: 160 },
-  { dataIndex: 'matRef', title: '材质', width: 100 }, { dataIndex: 'stockName', title: '仓库', width: 120 },
-  { dataIndex: 'thickness', title: '厚度', width: 80 }, { dataIndex: 'width', title: '宽度', width: 90 },
-  { dataIndex: 'length', title: '长度', width: 90 }, { dataIndex: 'quantity', title: '数量', width: 80 },
-  { dataIndex: 'tons', title: '吨数', width: 90 }, { dataIndex: 'sendState', title: '导入状态', width: 110 },
-  { dataIndex: 'task', title: '任务', width: 180 },
+import { ref } from 'vue';
+
+import { Page } from '@vben/common-ui';
+
+import { Button, message, Popconfirm, Space, Tag } from 'ant-design-vue';
+
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import {
+  deleteSteelPlates,
+  exportSteelPlates,
+  importSteelPlates,
+  pageSteelPlates,
+  syncErpSteelPlates,
+} from '#/api/xybaoyuan';
+
+const selectedRows = ref<SteelPlate[]>([]);
+const actionLoading = ref(false);
+
+const searchSchema: VbenFormSchema[] = [
+  { component: 'Input', fieldName: 'prdRef', label: '物料编号' },
+  { component: 'Input', fieldName: 'lotNumber', label: '物料批号' },
+  { component: 'Input', fieldName: 'matRef', label: '材质' },
+  { component: 'Input', fieldName: 'stockName', label: '仓库' },
 ];
-async function load() { loading.value = true; try { const data = await pageSteelPlates({ ...query, page: pager.current, pageSize: pager.pageSize }); rows.value = data.items; total.value = data.total; } finally { loading.value = false; } }
-function search() { pager.current = 1; void load(); }
-function onSelect(keys: (number | string)[]) { selectedKeys.value = keys.map(Number); }
-async function syncErp() { actionLoading.value = true; try { const count = await syncErpSteelPlates(query); message.success(`同步完成，共 ${count} 种钢板`); await load(); } finally { actionLoading.value = false; } }
-async function importSelected(syncTask: boolean) { if (!selectedKeys.value.length) return message.warning('请选择钢板'); actionLoading.value = true; try { const task = await importSteelPlates(selectedKeys.value, syncTask); if (syncTask && task.status !== 'SUCCESS') message.error(task.message || '导入失败'); else message.success(syncTask ? task.message || '导入完成' : `任务 ${task.id} 已创建`); await load(); } finally { actionLoading.value = false; } }
-function removeSelected() { if (!selectedKeys.value.length) return; Modal.confirm({ title: '确认删除所选钢板？', async onOk() { await deleteSteelPlates(selectedKeys.value); selectedKeys.value = []; await load(); } }); }
-onMounted(load);
+
+const gridOptions: VxeTableGridOptions<SteelPlate> = {
+  checkboxConfig: { highlight: true, range: true },
+  columns: [
+    { type: 'checkbox', width: 48 },
+    { field: 'prdRef', minWidth: 260, title: '钢板编号' },
+    { field: 'prdName', minWidth: 160, title: '名称' },
+    { field: 'matRef', minWidth: 100, title: '材质' },
+    { field: 'stockName', minWidth: 120, title: '仓库' },
+    { field: 'thickness', title: '厚度', width: 80 },
+    { field: 'width', title: '宽度', width: 90 },
+    { field: 'length', title: '长度', width: 90 },
+    { field: 'quantity', title: '数量', width: 80 },
+    { field: 'tons', title: '吨数', width: 90 },
+    {
+      field: 'sendState',
+      slots: { default: 'sendState' },
+      title: '导入状态',
+      width: 110,
+    },
+    {
+      field: 'task',
+      minWidth: 180,
+      slots: { default: 'task' },
+      title: '最近导入结果',
+    },
+  ],
+  height: 'auto',
+  pagerConfig: {},
+  proxyConfig: {
+    ajax: {
+      async query({ page }, formValues) {
+        const result = await pageSteelPlates({
+          ...formValues,
+          page: page.currentPage,
+          pageSize: page.pageSize,
+        });
+        return { ...result, total: Number(result.total) };
+      },
+    },
+  },
+  rowConfig: { keyField: 'id' },
+  toolbarConfig: {
+    custom: true,
+    refresh: { code: 'query' },
+    search: true,
+    zoom: true,
+  },
+};
+
+const [Grid, gridApi] = useVbenVxeGrid<SteelPlate>({
+  formOptions: {
+    collapsed: false,
+    schema: searchSchema,
+    submitOnChange: false,
+  },
+  gridEvents: {
+    checkboxAll: handleSelectionChange,
+    checkboxChange: handleSelectionChange,
+    checkboxRangeEnd: handleSelectionChange,
+  },
+  gridOptions,
+});
+
+function handleSelectionChange({ records }: { records: SteelPlate[] }) {
+  selectedRows.value = records;
+}
+
+async function refreshGrid() {
+  selectedRows.value = [];
+  await gridApi.grid.clearCheckboxRow();
+  await gridApi.query();
+}
+
+async function syncErp() {
+  actionLoading.value = true;
+  try {
+    const count = await syncErpSteelPlates(await gridApi.formApi.getValues());
+    message.success(`同步完成，共 ${count} 种钢板`);
+    await refreshGrid();
+  } finally {
+    actionLoading.value = false;
+  }
+}
+
+async function importSelected() {
+  if (selectedRows.value.length === 0) return message.warning('请选择钢板');
+  actionLoading.value = true;
+  try {
+    const result = await importSteelPlates(
+      selectedRows.value.map((row) => row.id),
+    );
+    if (result.status === 'SUCCESS') {
+      message.success(result.message || '导入成功');
+    } else {
+      message.error(result.message || '导入失败');
+    }
+    await refreshGrid();
+  } finally {
+    actionLoading.value = false;
+  }
+}
+
+async function removeSelected() {
+  if (selectedRows.value.length === 0) return;
+  await deleteSteelPlates(selectedRows.value.map((row) => row.id));
+  message.success('删除成功');
+  await refreshGrid();
+}
+
+async function exportData() {
+  await exportSteelPlates(await gridApi.formApi.getValues());
+}
 </script>
 
 <template>
-  <Page auto-content-height><Card class="h-full" title="钢板库存">
-    <Form layout="inline" class="mb-4">
-      <FormItem label="物料编号"><Input v-model:value="query.prdRef" allow-clear @press-enter="search" /></FormItem>
-      <FormItem label="物料批号"><Input v-model:value="query.lotNumber" allow-clear @press-enter="search" /></FormItem>
-      <FormItem label="材质"><Input v-model:value="query.matRef" allow-clear /></FormItem>
-      <FormItem label="仓库"><Input v-model:value="query.stockName" allow-clear /></FormItem>
-      <FormItem><Space><Button type="primary" @click="search">查询</Button><Button :loading="actionLoading" @click="syncErp">从 ERP 同步</Button></Space></FormItem>
-    </Form>
-    <Space class="mb-3">
-      <Button type="primary" :disabled="!selectedKeys.length" :loading="actionLoading" @click="importSelected(false)">创建导入任务</Button>
-      <Button :disabled="!selectedKeys.length" :loading="actionLoading" @click="importSelected(true)">立即导入</Button>
-      <Button danger :disabled="!selectedKeys.length" @click="removeSelected">批量删除</Button>
-      <Button @click="exportSteelPlates(query)">导出 CSV</Button>
-    </Space>
-    <Table :columns="columns" :data-source="rows" :loading="loading" :pagination="{ current: pager.current, pageSize: pager.pageSize, total, showSizeChanger: true }"
-           :row-key="(row: SteelPlate) => row.id" :row-selection="{ selectedRowKeys: selectedKeys, onChange: onSelect }" :scroll="{ x: 1400 }"
-           @change="(page: any) => { pager.current = page.current; pager.pageSize = page.pageSize; load(); }">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'sendState'"><Tag :color="record.sendState ? 'green' : 'default'">{{ record.sendState ? '已导入' : '未导入' }}</Tag></template>
-        <template v-else-if="column.dataIndex === 'task'"><Tag v-if="record.task" :color="record.task.status === 'SUCCESS' ? 'green' : record.task.status === 'FAILED' ? 'red' : 'blue'">{{ record.task.status }}</Tag><span class="ml-1">{{ record.task?.message }}</span></template>
+  <Page auto-content-height content-class="!overflow-hidden">
+    <Grid>
+      <template #toolbar-actions>
+        <Space>
+          <Button :loading="actionLoading" @click="syncErp">从 ERP 同步</Button>
+          <Button
+            type="primary"
+            :disabled="selectedRows.length === 0"
+            :loading="actionLoading"
+            @click="importSelected"
+          >
+            导入到套料软件
+          </Button>
+          <Popconfirm title="确认删除所选钢板？" @confirm="removeSelected">
+            <Button danger :disabled="selectedRows.length === 0">
+              批量删除
+            </Button>
+          </Popconfirm>
+          <Button @click="exportData">导出 CSV</Button>
+          <!-- prettier-ignore -->
+          <span class="text-muted-foreground">已选 {{ selectedRows.length }} 条</span>
+        </Space>
       </template>
-    </Table>
-  </Card></Page>
+      <template #sendState="{ row }">
+        <Tag :color="row.sendState ? 'green' : 'default'">
+          {{ row.sendState ? '已导入' : '未导入' }}
+        </Tag>
+      </template>
+      <template #task="{ row }">
+        <Tag
+          v-if="row.task"
+          :color="row.task.status === 'SUCCESS' ? 'green' : 'red'"
+        >
+          {{ row.task.status === 'SUCCESS' ? '成功' : '失败' }}
+        </Tag>
+        <span class="ml-1">{{ row.task?.message }}</span>
+      </template>
+    </Grid>
+  </Page>
 </template>

@@ -1,5 +1,4 @@
-import {type VxeTableGridOptions} from '@vben/plugins/vxe-table';
-import {VxeUIAll} from '@vben/plugins/vxe-table';
+import type { VxeTableGridOptions } from '@vben/plugins/vxe-table';
 import type { Recordable } from '@vben/types';
 
 import type { ComponentType } from './component';
@@ -11,6 +10,7 @@ import { $te } from '@vben/locales';
 import {
   setupVbenVxeTable,
   useVbenVxeGrid as useGrid,
+  VxeUIAll,
 } from '@vben/plugins/vxe-table';
 import { get, isFunction, isString } from '@vben/utils';
 
@@ -20,8 +20,6 @@ import { Button, Image, Popconfirm, Switch, Tag } from 'ant-design-vue';
 import { $t } from '#/locales';
 
 import { useVbenForm } from './form';
-import {registerTableTextFilterInput,registerTableNumberRangeFilter,
-  registerTableSelectFilter} from "@zhurong/components";
 
 setupVbenVxeTable({
   configVxeTable: (vxeUI) => {
@@ -29,11 +27,11 @@ setupVbenVxeTable({
       grid: {
         align: 'center',
         border: false,
-        checkboxConfig:{
+        checkboxConfig: {
           highlight: true,
         },
-        rowConfig:{
-          isCurrent:true,
+        rowConfig: {
+          isCurrent: true,
         },
         columnConfig: {
           resizable: true,
@@ -44,7 +42,7 @@ setupVbenVxeTable({
           // 全局禁用vxe-table的表单配置，使用formOptions
           enabled: false,
         },
-        sortConfig:{
+        sortConfig: {
           multiple: true,
           chronological: true,
         },
@@ -297,10 +295,6 @@ setupVbenVxeTable({
         );
       },
     });
-    registerTableTextFilterInput(vxeUI);
-    registerTableNumberRangeFilter(vxeUI);
-    registerTableSelectFilter(vxeUI);
-
     // 这里可以自行扩展 vxe-table 的全局配置，比如自定义格式化
     // vxeUI.formats.add
   },

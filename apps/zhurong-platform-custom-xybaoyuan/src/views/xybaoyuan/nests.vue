@@ -1,56 +1,227 @@
 <script setup lang="ts">
-import { Page } from '@vben/common-ui';
 import type { Recordable } from '@vben/types';
-import { Button, Card, Checkbox, Form, FormItem, Input, InputNumber, message, Modal, Select, SelectOption, Space, Table, Tag } from 'ant-design-vue';
-import { onMounted, reactive, ref } from 'vue';
 
-import { pageNests, sendNestFeedback, withdrawNestFeedback } from '#/api/xybaoyuan';
+import type { VbenFormSchema } from '#/adapter/form';
+import type { VxeTableGridOptions } from '#/adapter/vxe-table';
 
-const loading = ref(false); const actionLoading = ref(false); const rows = ref<Recordable<any>[]>([]); const selectedKeys = ref<number[]>([]); const total = ref(0);
-const pager = reactive({ current: 1, pageSize: 20 }); const query = reactive({ jobRef: '', mState: undefined as number | undefined, nstRef: '', wrkRef: '' });
-const feedbackVisible = ref(false); const feedback = reactive({ materialReceived: true, productionWorkshopCode: '' });
-const columns = [
-  { dataIndex: 'nstRef', title: '套料编号', width: 160 }, { dataIndex: 'jobRef', title: '作业', width: 150 },
-  { dataIndex: 'wrkRef', title: '设备', width: 110 }, { dataIndex: 'mState', title: '程序状态', width: 100 },
-  { dataIndex: 'matRef', title: '材质', width: 90 }, { dataIndex: 'sThickness', title: '厚度', width: 75 },
-  { dataIndex: 'sLength', title: '板长', width: 90 }, { dataIndex: 'sWidth', title: '板宽', width: 90 },
-  { dataIndex: 'quantity', title: '数量', width: 75 }, { dataIndex: 'sProfit', title: '利用率', width: 90 },
-  { dataIndex: 'feedbackSent', title: '金蝶反馈', width: 110 }, { dataIndex: 'feedbackTime', title: '反馈时间', width: 170 },
+import { ref } from 'vue';
+
+import { Page, useVbenModal } from '@vben/common-ui';
+
+import { Button, message, Popconfirm, Space, Tag } from 'ant-design-vue';
+
+import { useVbenForm } from '#/adapter/form';
+import { useVbenVxeGrid } from '#/adapter/vxe-table';
+import {
+  pageNests,
+  sendNestFeedback,
+  withdrawNestFeedback,
+} from '#/api/xybaoyuan';
+
+type NestRow = Recordable<any>;
+
+const selectedRows = ref<NestRow[]>([]);
+const actionLoading = ref(false);
+
+const searchSchema: VbenFormSchema[] = [
+  { component: 'Input', fieldName: 'nstRef', label: '套料编号' },
+  { component: 'Input', fieldName: 'jobRef', label: '作业' },
+  { component: 'Input', fieldName: 'wrkRef', label: '设备' },
+  {
+    component: 'InputNumber',
+    componentProps: { class: 'w-full', controls: false },
+    fieldName: 'mState',
+    label: '程序状态',
+  },
 ];
-async function load() { loading.value = true; try { const data = await pageNests({ ...query, page: pager.current, pageSize: pager.pageSize }); rows.value = data.items; total.value = data.total; } finally { loading.value = false; } }
-function search() { pager.current = 1; void load(); }
-function onSelect(keys: (number | string)[]) { selectedKeys.value = keys.map(Number); }
-async function send() { if (!feedback.productionWorkshopCode.trim()) return message.warning('生产车间不能为空'); actionLoading.value = true; try { await sendNestFeedback(selectedKeys.value, feedback.productionWorkshopCode.trim(), feedback.materialReceived); feedbackVisible.value = false; message.success('反馈成功'); await load(); } finally { actionLoading.value = false; } }
-function withdraw() { if (!selectedKeys.value.length) return message.warning('请选择套料记录'); Modal.confirm({ title: '确认撤销所选套料反馈？', async onOk() { await withdrawNestFeedback(selectedKeys.value); message.success('撤销成功'); await load(); } }); }
-onMounted(load);
+
+const feedbackSchema: VbenFormSchema[] = [
+  {
+    component: 'Select',
+    componentProps: {
+      options: [
+        { label: '5101-生产制造本部', value: '5101' },
+        { label: '5301-生产制造景泰', value: '5301' },
+        { label: 'WWGB-委外钢板部门', value: 'WWGB' },
+      ],
+      showSearch: true,
+    },
+    fieldName: 'productionWorkshopCode',
+    label: '生产车间',
+    rules: 'selectRequired',
+  },
+  {
+    component: 'Checkbox',
+    defaultValue: true,
+    fieldName: 'materialReceived',
+    label: '领料',
+  },
+];
+
+const [FeedbackForm, feedbackFormApi] = useVbenForm({
+  schema: feedbackSchema,
+  showDefaultActions: false,
+  wrapperClass: 'grid-cols-1',
+});
+
+const [FeedbackModal, feedbackModalApi] = useVbenModal({
+  class: 'w-[560px]',
+  async onConfirm() {
+    const { valid } = await feedbackFormApi.validate();
+    if (!valid) return;
+    const values = await feedbackFormApi.getValues();
+    feedbackModalApi.lock();
+    actionLoading.value = true;
+    try {
+      await sendNestFeedback(
+        selectedRows.value.map((row) => getRowId(row)),
+        values.productionWorkshopCode,
+        Boolean(values.materialReceived),
+      );
+      message.success('反馈成功');
+      await feedbackModalApi.close();
+      await refreshGrid();
+    } finally {
+      actionLoading.value = false;
+      feedbackModalApi.unlock();
+    }
+  },
+  async onOpenChange(open) {
+    if (!open) return;
+    await feedbackFormApi.resetForm();
+    await feedbackFormApi.setValues({ materialReceived: true });
+  },
+  title: '发送套料反馈',
+});
+
+const gridOptions: VxeTableGridOptions<NestRow> = {
+  checkboxConfig: { highlight: true, range: true },
+  columns: [
+    { type: 'checkbox', width: 48 },
+    { field: 'nstRef', minWidth: 160, title: '套料编号' },
+    { field: 'jobRef', minWidth: 150, title: '作业' },
+    { field: 'wrkRef', minWidth: 110, title: '设备' },
+    {
+      field: 'mState',
+      slots: { default: 'mState' },
+      title: '程序状态',
+      width: 100,
+    },
+    { field: 'matRef', minWidth: 90, title: '材质' },
+    { field: 'sThickness', title: '厚度', width: 75 },
+    { field: 'sLength', title: '板长', width: 90 },
+    { field: 'sWidth', title: '板宽', width: 90 },
+    { field: 'quantity', title: '数量', width: 75 },
+    {
+      field: 'sProfit',
+      slots: { default: 'sProfit' },
+      title: '利用率',
+      width: 90,
+    },
+    {
+      field: 'feedbackSent',
+      slots: { default: 'feedbackSent' },
+      title: '金蝶反馈',
+      width: 110,
+    },
+    { field: 'feedbackTime', minWidth: 170, title: '反馈时间' },
+  ],
+  height: 'auto',
+  pagerConfig: {},
+  proxyConfig: {
+    ajax: {
+      async query({ page }, formValues) {
+        const result = await pageNests({
+          ...formValues,
+          page: page.currentPage,
+          pageSize: page.pageSize,
+        });
+        return { ...result, total: Number(result.total) };
+      },
+    },
+  },
+  rowConfig: { keyField: 'recID' },
+  toolbarConfig: {
+    custom: true,
+    refresh: { code: 'query' },
+    search: true,
+    zoom: true,
+  },
+};
+
+const [Grid, gridApi] = useVbenVxeGrid<NestRow>({
+  formOptions: {
+    collapsed: false,
+    schema: searchSchema,
+    submitOnChange: false,
+  },
+  gridEvents: {
+    checkboxAll: handleSelectionChange,
+    checkboxChange: handleSelectionChange,
+    checkboxRangeEnd: handleSelectionChange,
+  },
+  gridOptions,
+});
+
+function handleSelectionChange({ records }: { records: NestRow[] }) {
+  selectedRows.value = records;
+}
+
+function getRowId(row: NestRow) {
+  return String(row.recID ?? row.recId);
+}
+
+async function refreshGrid() {
+  selectedRows.value = [];
+  await gridApi.grid.clearCheckboxRow();
+  await gridApi.query();
+}
+
+async function withdraw() {
+  if (selectedRows.value.length === 0) return;
+  await withdrawNestFeedback(selectedRows.value.map((row) => getRowId(row)));
+  message.success('撤销成功');
+  await refreshGrid();
+}
 </script>
 
 <template>
-  <Page auto-content-height><Card class="h-full" title="套料反馈">
-    <Form layout="inline" class="mb-4">
-      <FormItem label="套料编号"><Input v-model:value="query.nstRef" allow-clear @press-enter="search" /></FormItem>
-      <FormItem label="作业"><Input v-model:value="query.jobRef" allow-clear /></FormItem>
-      <FormItem label="设备"><Input v-model:value="query.wrkRef" allow-clear /></FormItem>
-      <FormItem label="程序状态"><InputNumber v-model:value="query.mState" :controls="false" /></FormItem>
-      <FormItem><Button type="primary" @click="search">查询</Button></FormItem>
-    </Form>
-    <Space class="mb-3">
-      <Button type="primary" :disabled="!selectedKeys.length" @click="feedbackVisible = true">发送金蝶反馈</Button>
-      <Button danger :disabled="!selectedKeys.length" @click="withdraw">撤销反馈</Button>
-      <span class="text-gray-500">仅“已送车间”(MState=40)程序允许反馈</span>
-    </Space>
-    <Table :columns="columns" :data-source="rows" :loading="loading" :pagination="{ current: pager.current, pageSize: pager.pageSize, total, showSizeChanger: true }"
-           :row-key="(row: Recordable<any>) => row.recID" :row-selection="{ selectedRowKeys: selectedKeys, onChange: onSelect }" :scroll="{ x: 1350 }"
-           @change="(page: any) => { pager.current = page.current; pager.pageSize = page.pageSize; load(); }">
-      <template #bodyCell="{ column, record }">
-        <template v-if="column.dataIndex === 'mState'"><Tag :color="record.mState === 40 ? 'green' : 'default'">{{ record.mState === 40 ? '已送车间' : record.mState }}</Tag></template>
-        <template v-else-if="column.dataIndex === 'feedbackSent'"><Tag :color="record.feedbackSent ? 'green' : 'default'">{{ record.feedbackSent ? '已反馈' : '未反馈' }}</Tag></template>
-        <template v-else-if="column.dataIndex === 'sProfit'">{{ record.sProfit == null ? '' : `${(record.sProfit * 100).toFixed(2)}%` }}</template>
+  <Page auto-content-height content-class="!overflow-hidden">
+    <Grid>
+      <template #toolbar-actions>
+        <Space wrap>
+          <Button
+            type="primary"
+            :disabled="selectedRows.length === 0"
+            @click="feedbackModalApi.open()"
+          >
+            发送金蝶反馈
+          </Button>
+          <Popconfirm title="确认撤销所选套料反馈？" @confirm="withdraw">
+            <Button danger :disabled="selectedRows.length === 0">
+              撤销反馈
+            </Button>
+          </Popconfirm>
+          <span class="text-muted-foreground">
+            仅“已送车间”(MState=40)程序允许反馈；已选
+            {{ selectedRows.length }} 条
+          </span>
+        </Space>
       </template>
-    </Table>
-    <Modal v-model:open="feedbackVisible" title="发送套料反馈" :confirm-loading="actionLoading" @ok="send">
-      <FormItem label="生产车间" required><Select v-model:value="feedback.productionWorkshopCode" show-search><SelectOption value="5101">5101-生产制造本部</SelectOption><SelectOption value="5301">5301-生产制造景泰</SelectOption><SelectOption value="WWGB">WWGB-委外钢板部门</SelectOption></Select></FormItem>
-      <Checkbox v-model:checked="feedback.materialReceived">领料</Checkbox>
-    </Modal>
-  </Card></Page>
+      <template #mState="{ row }">
+        <Tag :color="row.mstate === 40 ? 'green' : 'default'">
+          {{ row.mstate === 40 ? '已送车间' : '编程中' }}
+        </Tag>
+      </template>
+      <template #feedbackSent="{ row }">
+        <Tag :color="row.feedbackSent ? 'green' : 'default'">
+          {{ row.feedbackSent ? '已反馈' : '未反馈' }}
+        </Tag>
+      </template>
+      <template #sProfit="{ row }">
+        {{ row.sProfit == null ? '' : `${(row.sProfit * 100).toFixed(2)}%` }}
+      </template>
+    </Grid>
+    <FeedbackModal><FeedbackForm /></FeedbackModal>
+  </Page>
 </template>
