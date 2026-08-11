@@ -151,7 +151,7 @@ const gridOptions: VxeTableGridOptions<NestRow> = {
 
 const [Grid, gridApi] = useVbenVxeGrid<NestRow>({
   formOptions: {
-    collapsed: false,
+    collapsed: true,
     schema: searchSchema,
     submitOnChange: false,
   },
@@ -189,7 +189,7 @@ async function withdraw() {
   <Page auto-content-height content-class="!overflow-hidden">
     <Grid>
       <template #toolbar-actions>
-        <Space wrap>
+        <Space>
           <Button
             type="primary"
             :disabled="selectedRows.length === 0"

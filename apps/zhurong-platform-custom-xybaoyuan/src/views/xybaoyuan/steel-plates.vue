@@ -5,10 +5,11 @@ import type { SteelPlate } from '#/api/xybaoyuan';
 
 import { ref } from 'vue';
 
-import { Page } from '@vben/common-ui';
+import { Page, useVbenModal } from '@vben/common-ui';
 
 import { Button, message, Popconfirm, Space, Tag } from 'ant-design-vue';
 
+import { useVbenForm } from '#/adapter/form';
 import { useVbenVxeGrid } from '#/adapter/vxe-table';
 import {
   deleteSteelPlates,
@@ -27,6 +28,62 @@ const searchSchema: VbenFormSchema[] = [
   { component: 'Input', fieldName: 'matRef', label: '材质' },
   { component: 'Input', fieldName: 'stockName', label: '仓库' },
 ];
+
+const syncSchema: VbenFormSchema[] = [
+  {
+    component: 'Input',
+    componentProps: {
+      allowClear: true,
+      placeholder: '物料编号、物料批号至少填写一项',
+    },
+    fieldName: 'prdRef',
+    label: '物料编号',
+  },
+  {
+    component: 'Input',
+    componentProps: {
+      allowClear: true,
+      placeholder: '物料编号、物料批号至少填写一项',
+    },
+    fieldName: 'lotNumber',
+    label: '物料批号',
+  },
+];
+
+const [SyncForm, syncFormApi] = useVbenForm({
+  schema: syncSchema,
+  showDefaultActions: false,
+  wrapperClass: 'grid-cols-1',
+});
+
+const [SyncModal, syncModalApi] = useVbenModal({
+  class: 'w-[560px]',
+  draggable: true,
+  fullscreenButton: false,
+  async onConfirm() {
+    const values = await syncFormApi.getValues();
+    const prdRef = String(values.prdRef ?? '').trim();
+    const lotNumber = String(values.lotNumber ?? '').trim();
+    if (!prdRef && !lotNumber) {
+      return void message.warning('物料编号或物料批号不能为空');
+    }
+    syncModalApi.lock();
+    actionLoading.value = true;
+    try {
+      const count = await syncErpSteelPlates({ lotNumber, prdRef });
+      message.success(`同步完成，共 ${count} 种钢板`);
+      await syncModalApi.close();
+      await refreshGrid();
+    } finally {
+      actionLoading.value = false;
+      syncModalApi.unlock();
+    }
+  },
+  async onOpenChange(open) {
+    if (open) await syncFormApi.resetForm();
+  },
+  title: '从 ERP 同步钢板',
+});
 
 const gridOptions: VxeTableGridOptions<SteelPlate> = {
   checkboxConfig: { highlight: true, range: true },
@@ -79,7 +136,7 @@ const gridOptions: VxeTableGridOptions<SteelPlate> = {
 
 const [Grid, gridApi] = useVbenVxeGrid<SteelPlate>({
   formOptions: {
-    collapsed: false,
+    collapsed: true,
     schema: searchSchema,
     submitOnChange: false,
   },
@@ -99,17 +156,6 @@ async function refreshGrid() {
   selectedRows.value = [];
   await gridApi.grid.clearCheckboxRow();
   await gridApi.query();
-}
-
-async function syncErp() {
-  actionLoading.value = true;
-  try {
-    const count = await syncErpSteelPlates(await gridApi.formApi.getValues());
-    message.success(`同步完成，共 ${count} 种钢板`);
-    await refreshGrid();
-  } finally {
-    actionLoading.value = false;
-  }
 }
 
 async function importSelected() {
@@ -147,7 +193,7 @@ async function exportData() {
     <Grid>
       <template #toolbar-actions>
         <Space>
-          <Button :loading="actionLoading" @click="syncErp">从 ERP 同步</Button>
+          <Button @click="syncModalApi.open()">从 ERP 同步</Button>
           <Button
             type="primary"
             :disabled="selectedRows.length === 0"
@@ -181,5 +227,6 @@ async function exportData() {
         <span class="ml-1">{{ row.task?.message }}</span>
       </template>
     </Grid>
+    <SyncModal><SyncForm /></SyncModal>
   </Page>
 </template>

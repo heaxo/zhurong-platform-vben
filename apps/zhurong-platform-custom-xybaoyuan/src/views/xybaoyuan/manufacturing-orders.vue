@@ -130,12 +130,13 @@ const [MachineForm, machineFormApi] = useVbenForm({
 });
 
 const [JobSearchForm, jobSearchFormApi] = useVbenForm({
+  actionLayout: 'rowEnd',
   handleReset: resetJobSearch,
   handleSubmit: filterJobTree,
   schema: jobSearchSchema,
   showDefaultActions: true,
   submitButtonOptions: { content: '搜索' },
-  wrapperClass: 'grid-cols-2',
+  wrapperClass: 'grid-cols-3',
 });
 
 const [JobOptionForm, jobOptionFormApi] = useVbenForm({
@@ -198,6 +199,9 @@ const [JobModal, jobModalApi] = useVbenModal({
         }
         jobName = String(values.newJobName ?? '').trim();
         if (!jobName) return void message.warning('新作业名称不能为空');
+        if (hasJobWithName(node, jobName)) {
+          return void message.warning(`当前目录已存在作业“${jobName}”`);
+        }
         jobRef = await createJob(jobName, node.path);
       } else {
         if (!node || node.isFolder) {
@@ -306,7 +310,7 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
 
 const [Grid, gridApi] = useVbenVxeGrid<ManufacturingOrder>({
   formOptions: {
-    collapsed: false,
+    collapsed: true,
     schema: searchSchema,
     submitOnChange: false,
   },
@@ -333,6 +337,15 @@ function jobModeOptions(canCreate: boolean) {
       value: 'create',
     },
   ];
+}
+
+function hasJobWithName(folder: JobTreeNode, jobName: string) {
+  const normalizedName = jobName.trim().toLocaleLowerCase();
+  return (folder.children ?? []).some(
+    (child) =>
+      !child.isFolder &&
+      child.label.trim().toLocaleLowerCase() === normalizedName,
+  );
 }
 
 async function setJobModeAvailability(canCreate: boolean, mode: JobMode) {
@@ -454,6 +467,20 @@ async function invalidate() {
 
 async function importSelected() {
   if (selectedRows.value.length === 0) return message.warning('请选择生产订单');
+  const missingJobs = selectedRows.value.filter(
+    (row) => !String(row.jobRef ?? '').trim(),
+  );
+  const missingMachines = selectedRows.value.filter(
+    (row) => !String(row.wrkRef ?? '').trim(),
+  );
+  const errors: string[] = [];
+  if (missingJobs.length > 0) {
+    errors.push(`未设置作业：${formatOrderNames(missingJobs)}`);
+  }
+  if (missingMachines.length > 0) {
+    errors.push(`未设置设备：${formatOrderNames(missingMachines)}`);
+  }
+  if (errors.length > 0) return message.warning(errors.join('；'));
   actionLoading.value = true;
   try {
     const result = await importOrders(selectedRows.value.map((row) => row.id));
@@ -466,6 +493,16 @@ async function importSelected() {
   } finally {
     actionLoading.value = false;
   }
+}
+
+function formatOrderNames(orders: ManufacturingOrder[]) {
+  const names = orders
+    .slice(0, 5)
+    .map(
+      (order) =>
+        order.productionOrderNumber || order.productionOrderErpInternalCode,
+    );
+  return `${names.join('、')}${orders.length > names.length ? `等${orders.length}条` : ''}`;
 }
 
 async function exportData() {

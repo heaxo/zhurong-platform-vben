@@ -171,7 +171,7 @@ async function exportData() {
   <Page auto-content-height content-class="!overflow-hidden">
     <Grid>
       <template #toolbar-actions>
-        <Space wrap>
+        <Space>
           <Button type="primary" @click="createModalApi.open()">新增</Button>
           <Popconfirm title="确认删除所选基础零件？" @confirm="removeSelected">
             <Button danger :disabled="selectedRows.length === 0">
