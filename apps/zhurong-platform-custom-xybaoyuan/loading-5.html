@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <style data-app-loading="inject-css">
+    html {
+      /* same as ant-design-vue/dist/reset.css setting, avoid the title line-height changed */
+      line-height: 1.15;
+    }
+
+    .loading {
+      position: fixed;
+      top: 0;
+      left: 0;
+      z-index: 9999;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+      background-color: #f4f7f9;
+
+      /* transition: all 0.8s ease-out; */
+    }
+
+    .loading.hidden {
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 0.8s ease-out;
+    }
+
+    .dark .loading {
+      background: #0d0d10;
+    }
+
+    html.dark {
+      background: #0d0d10;
+    }
+
+    .title {
+      margin-top: 66px;
+      font-size: 28px;
+      font-weight: 600;
+      color: rgb(0 0 0 / 85%);
+    }
+
+    .dark .title {
+      color: #fff;
+    }
+
+    .loader {
+      position: relative;
+      width: 48px;
+      height: 48px;
+    }
+
+    .loader::before {
+      position: absolute;
+      top: 60px;
+      left: 0;
+      width: 48px;
+      height: 5px;
+      content: '';
+      background: hsl(var(--primary, 210 100% 50%) / 50%);
+      border-radius: 50%;
+      animation: shadow-ani 0.5s linear infinite;
+    }
+
+    .loader::after {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      content: '';
+      background: hsl(var(--primary, 210 100% 50%));
+      border-radius: 4px;
+      animation: jump-ani 0.5s linear infinite;
+    }
+
+    @keyframes jump-ani {
+      15% {
+        border-bottom-right-radius: 3px;
+      }
+
+      25% {
+        transform: translateY(9px) rotate(22.5deg);
+      }
+
+      50% {
+        border-bottom-right-radius: 40px;
+        transform: translateY(18px) scale(1, 0.9) rotate(45deg);
+      }
+
+      75% {
+        transform: translateY(9px) rotate(67.5deg);
+      }
+
+      100% {
+        transform: translateY(0) rotate(90deg);
+      }
+    }
+
+    @keyframes shadow-ani {
+      0%,
+      100% {
+        transform: scale(1, 1);
+      }
+
+      50% {
+        transform: scale(1.2, 1);
+      }
+    }
+    #__app-loading__.hidden {
+      pointer-events: none;
+      visibility: hidden;
+      opacity: 0;
+      transition: all 1s ease-out;
+    }
+    #__app-loading__ {
+      position: fixed;
+      inset: 0;
+
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    /*  begin dots css */
+
+    .dots {
+      margin: 100px auto;
+      width: 40px;
+      height: 40px;
+      position: relative;
+      text-align: center;
+      animation: sk-rotate 2.0s infinite linear;
+    }
+
+    .dot1,
+    .dot2 {
+      width: 60%;
+      height: 60%;
+      display: inline-block;
+      position: absolute;
+      top: 0;
+      background-color: var(--colorPrimary);
+      border-radius: 100%;
+      animation: sk-bounce 2.0s infinite ease-in-out;
+    }
+
+    .dot2 {
+      top: auto;
+      bottom: 0;
+      animation-delay: -1.0s;
+    }
+
+    @keyframes sk-rotate {
+      100% {
+        transform: rotate(360deg);
+      }
+    }
+
+    @keyframes sk-bounce {
+      0%,
+      100% {
+        transform: scale(0.0);
+      }
+      50% {
+        transform: scale(1.0);
+      }
+    }
+
+  </style>
+</head>
+<body>
+<div id="__app-loading__">
+  <div class="dots">
+    <div class="dot1"></div>
+    <div class="dot2"></div>
+  </div>
+</div>
+</body>
+<script>
+  function findLocalStorageByPartialKey(partial) {
+    const result = [];
+
+    for (let i = 0; i < localStorage.length; i++) {
+      const key = localStorage.key(i);
+      if (key && key.endsWith(partial)) {
+        result.push({
+          key,
+          value: localStorage.getItem(key),
+        });
+      }
+    }
+
+    return result;
+  }
+  const matches = findLocalStorageByPartialKey('preferences');
+  if (matches && matches.length){
+    const json = matches[0].value;
+    if (json){
+      try {
+        const preferences = JSON.parse(json);
+        document.documentElement.style.setProperty('--colorPrimary', preferences.value.theme.colorPrimary);
+      }catch(e){
+
+      }
+    }
+  }
+</script>
+</html>
