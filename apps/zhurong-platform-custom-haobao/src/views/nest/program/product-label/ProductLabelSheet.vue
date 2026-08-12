@@ -58,9 +58,19 @@ interface Props {
   gapMm?: number;
 }
 
+interface LabelCell {
+  value: string;
+  widthRatio?: number;
+}
+
 interface LabelRow {
   title: string;
-  value: string;
+  cells: LabelCell[];
+}
+
+interface LabelCellLayout {
+  centerX: number;
+  width: number;
 }
 
 interface RenderedLabel {
@@ -82,16 +92,14 @@ const props = withDefaults(defineProps<Props>(), {
 
 const rootRef = ref<HTMLDivElement>();
 
-const resolvedLayout = computed<ProductLabelLayout>(
-  () => ({
-    ...DEFAULT_PRODUCT_LABEL_LAYOUT,
-    ...props.layout,
+const resolvedLayout = computed<ProductLabelLayout>(() => ({
+  ...DEFAULT_PRODUCT_LABEL_LAYOUT,
+  ...props.layout,
 
-    rowHeightWeights:
-      props.layout?.rowHeightWeights ??
-      DEFAULT_PRODUCT_LABEL_LAYOUT.rowHeightWeights,
-  }),
-);
+  rowHeightWeights:
+    props.layout?.rowHeightWeights ??
+    DEFAULT_PRODUCT_LABEL_LAYOUT.rowHeightWeights,
+}));
 
 const previewStyle = computed(() => ({
   display: 'grid',
@@ -111,30 +119,19 @@ const geometry = computed(() => {
   const tableX = layout.tableInsetMm;
   const tableY = layout.tableInsetMm;
 
-  const tableWidth = Math.max(
-    1,
-    layout.widthMm - layout.tableInsetMm * 2,
-  );
+  const tableWidth = Math.max(1, layout.widthMm - layout.tableInsetMm * 2);
 
-  const tableHeight = Math.max(
-    1,
-    layout.heightMm - layout.tableInsetMm * 2,
-  );
+  const tableHeight = Math.max(1, layout.heightMm - layout.tableInsetMm * 2);
 
   const tableRight = tableX + tableWidth;
   const tableBottom = tableY + tableHeight;
 
-  const weights = layout.rowHeightWeights.map(
-    value => Math.max(0.01, value),
-  );
+  const weights = layout.rowHeightWeights.map((value) => Math.max(0.01, value));
 
-  const totalWeight = weights.reduce(
-    (sum, value) => sum + value,
-    0,
-  );
+  const totalWeight = weights.reduce((sum, value) => sum + value, 0);
 
   const rowHeights = weights.map(
-    value => (tableHeight * value) / totalWeight,
+    (value) => (tableHeight * value) / totalWeight,
   );
 
   const rowTops: number[] = [];
@@ -161,11 +158,9 @@ const geometry = computed(() => {
     tableWidth - titleColumnWidth - 3,
   );
 
-  const titleDividerX =
-    tableX + titleColumnWidth;
+  const titleDividerX = tableX + titleColumnWidth;
 
-  const qrDividerX =
-    tableRight - qrColumnWidth;
+  const qrDividerX = tableRight - qrColumnWidth;
 
   /**
    * 前四行占满右侧。
@@ -180,53 +175,28 @@ const geometry = computed(() => {
     qrDividerX,
   ];
 
-  const valueCenterXs = valueRightXs.map(
-    right => (titleDividerX + right) / 2,
-  );
-
-  const valueWidths = valueRightXs.map(
-    right =>
-      Math.max(
-        1,
-        right -
-        titleDividerX -
-        layout.cellPaddingMm * 2,
-      ),
-  );
-
   /**
    * 前四条横线贯穿整个表格。
    * 数量与日期之间的横线只画到二维码左侧。
    */
-  const horizontalLines = rowBottoms
-    .slice(0, 5)
-    .map((y, index) => ({
-      y,
-      x1: tableX,
-      x2:
-        index === 4
-          ? qrDividerX
-          : tableRight,
-    }));
+  const horizontalLines = rowBottoms.slice(0, 5).map((y, index) => ({
+    y,
+    x1: tableX,
+    x2: index === 4 ? qrDividerX : tableRight,
+  }));
 
-  const qrAreaTop = rowTops[4];
+  const qrAreaTop = rowTops[4] ?? tableY;
 
-  const qrAreaHeight =
-    rowHeights[4] + rowHeights[5];
+  const qrAreaHeight = (rowHeights[4] ?? 0) + (rowHeights[5] ?? 0);
 
   const qrSize = Math.max(
     1,
-    Math.min(qrColumnWidth, qrAreaHeight) -
-    layout.qrPaddingMm * 2,
+    Math.min(qrColumnWidth, qrAreaHeight) - layout.qrPaddingMm * 2,
   );
 
-  const qrX =
-    qrDividerX +
-    (qrColumnWidth - qrSize) / 2;
+  const qrX = qrDividerX + (qrColumnWidth - qrSize) / 2;
 
-  const qrY =
-    qrAreaTop +
-    (qrAreaHeight - qrSize) / 2;
+  const qrY = qrAreaTop + (qrAreaHeight - qrSize) / 2;
 
   return {
     tableX,
@@ -242,14 +212,12 @@ const geometry = computed(() => {
     rowHeights,
 
     titleDividerX,
-    titleCenterX:
-      (tableX + titleDividerX) / 2,
+    titleCenterX: (tableX + titleDividerX) / 2,
 
     qrDividerX,
     qrAreaTop,
 
-    valueCenterXs,
-    valueWidths,
+    valueRightXs,
 
     horizontalLines,
 
@@ -259,99 +227,198 @@ const geometry = computed(() => {
   };
 });
 
-function getDisplayedQuantity(
-  data: LabelDataVO,
-): string {
-  if (
-    props.expandByQuantity &&
-    props.expandedQuantityDisplay === 'one'
-  ) {
+function getDisplayedQuantity(data: LabelDataVO): string {
+  if (props.expandByQuantity && props.expandedQuantityDisplay === 'one') {
     return '1';
   }
 
   return String(data.quantity ?? '');
 }
 
-function createRows(
-  data: LabelDataVO,
-): LabelRow[] {
+function toLabelText(value: null | number | string | undefined): string {
+  return value === null || value === undefined ? '' : String(value);
+}
+
+function createRows(data: LabelDataVO): LabelRow[] {
   return [
     {
       title: '订单',
-      value: data.ordRef ?? '',
+      cells: [
+        {
+          value: toLabelText(data.ordRef),
+        },
+      ],
     },
     {
       title: '品号',
-      value: data.prdRef ?? '',
+      cells: [
+        {
+          value: toLabelText(data.prdRef),
+          widthRatio: 65,
+        },
+        {
+          value: toLabelText(data.iorder),
+          widthRatio: 35,
+        },
+      ],
     },
     {
       title: '品名',
-      value: data.prdName ?? '',
+      cells: [
+        {
+          value: toLabelText(data.prdName),
+        },
+      ],
     },
     {
       title: '颜色',
-      value: data.color ?? '',
+      cells: [
+        {
+          value: toLabelText(data.color),
+          widthRatio: 45,
+        },
+        {
+          value: toLabelText(data.matRef),
+          widthRatio: 35,
+        },
+        {
+          value: toLabelText(data.thickness),
+          widthRatio: 20,
+        },
+      ],
     },
     {
       title: '数量',
-      value: getDisplayedQuantity(data),
+      cells: [
+        {
+          value: getDisplayedQuantity(data),
+        },
+      ],
     },
     {
       title: '日期',
-      value: formatLabelDate(data.date),
+      cells: [
+        {
+          value: formatLabelDate(data.date),
+        },
+      ],
     },
   ];
 }
 
-const renderedLabels = computed<RenderedLabel[]>(
-  () => {
-    const result: RenderedLabel[] = [];
+const renderedLabels = computed<RenderedLabel[]>(() => {
+  const result: RenderedLabel[] = [];
 
-    props.data.forEach((item, dataIndex) => {
-      const quantity = normalizeQuantity(
-        item.quantity,
-      );
+  props.data.forEach((item, dataIndex) => {
+    const quantity = normalizeQuantity(item.quantity);
 
-      const labelCount =
-        props.expandByQuantity ? quantity : 1;
+    const labelCount = props.expandByQuantity ? quantity : 1;
 
-      for (
-        let copyIndex = 0;
-        copyIndex < labelCount;
-        copyIndex++
-      ) {
-        const qr = createQrModel(item.qrCodeContent);
-        result.push({
-          key: `${dataIndex}-${copyIndex}`,
-          rows: createRows(item),
-          qr: qr,
-          qrPath: qr ? createQrPath(qr) : '',
-          images: item.images ?? [],
-        });
-      }
-    });
+    for (let copyIndex = 0; copyIndex < labelCount; copyIndex++) {
+      const qr = createQrModel(item.qrCodeContent);
+      result.push({
+        key: `${dataIndex}-${copyIndex}`,
+        rows: createRows(item),
+        qr: qr,
+        qrPath: qr ? createQrPath(qr) : '',
+        images: item.images ?? [],
+      });
+    }
+  });
 
-    return result;
-  },
-);
+  return result;
+});
 
-function getValueFontSize(
-  value: string,
+function getValueCellLayout(
+  row: LabelRow,
   rowIndex: number,
+  cellIndex: number,
+): LabelCellLayout {
+  const cells =
+    row.cells.length > 0
+      ? row.cells
+      : [
+          {
+            value: '',
+          },
+        ];
+
+  const ratios = cells.map((cell) => Math.max(0.01, cell.widthRatio ?? 1));
+
+  const totalRatio = ratios.reduce((sum, ratio) => sum + ratio, 0);
+
+  const valueLeftX = geometry.value.titleDividerX;
+
+  const valueRightX =
+    geometry.value.valueRightXs[rowIndex] ?? geometry.value.tableRight;
+
+  const valueWidth = Math.max(1, valueRightX - valueLeftX);
+
+  const leftRatio = ratios
+    .slice(0, cellIndex)
+    .reduce((sum, ratio) => sum + ratio, 0);
+
+  const rightRatio = leftRatio + (ratios[cellIndex] ?? 1);
+
+  const cellLeftX = valueLeftX + (valueWidth * leftRatio) / totalRatio;
+
+  const cellRightX =
+    cellIndex === cells.length - 1
+      ? valueRightX
+      : valueLeftX + (valueWidth * rightRatio) / totalRatio;
+
+  return {
+    centerX: (cellLeftX + cellRightX) / 2,
+    width: Math.max(
+      1,
+      cellRightX - cellLeftX - resolvedLayout.value.cellPaddingMm * 2,
+    ),
+  };
+}
+
+function getValueCellDividers(row: LabelRow, rowIndex: number): number[] {
+  if (row.cells.length <= 1) {
+    return [];
+  }
+
+  const ratios = row.cells.map((cell) => Math.max(0.01, cell.widthRatio ?? 1));
+
+  const totalRatio = ratios.reduce((sum, ratio) => sum + ratio, 0);
+
+  const valueLeftX = geometry.value.titleDividerX;
+
+  const valueRightX =
+    geometry.value.valueRightXs[rowIndex] ?? geometry.value.tableRight;
+
+  const valueWidth = Math.max(1, valueRightX - valueLeftX);
+
+  let accumulatedRatio = 0;
+
+  return ratios.slice(0, -1).map((ratio) => {
+    accumulatedRatio += ratio;
+
+    return valueLeftX + (valueWidth * accumulatedRatio) / totalRatio;
+  });
+}
+
+function getValueCellFontSize(
+  value: string,
+  row: LabelRow,
+  rowIndex: number,
+  cellIndex: number,
 ): number {
   const layout = resolvedLayout.value;
+  const cellLayout = getValueCellLayout(row, rowIndex, cellIndex);
 
   return calculateFittedFontSizeMm(
     value,
-    geometry.value.valueWidths[rowIndex],
+    cellLayout.width,
     layout.valueFontSizeMm,
     layout.minValueFontSizeMm,
   );
 }
 
-function getImagePreserveAspectRatio(
-  image: LabelImageElement,
-): string {
+function getImagePreserveAspectRatio(image: LabelImageElement): string {
   switch (image.fit) {
     case 'cover':
       return 'xMidYMid slice';
@@ -371,9 +438,7 @@ function getSvgElements(): SVGSVGElement[] {
   }
 
   return Array.from(
-    rootRef.value.querySelectorAll<SVGSVGElement>(
-      'svg.product-label',
-    ),
+    rootRef.value.querySelectorAll<SVGSVGElement>('svg.product-label'),
   );
 }
 
@@ -386,12 +451,7 @@ async function getEmbeddedSvgCopies(
   const elements = getSvgElements();
 
   return Promise.all(
-    elements.map(element =>
-      cloneSvgWithEmbeddedImages(
-        element,
-        requestInit,
-      ),
-    ),
+    elements.map((element) => cloneSvgWithEmbeddedImages(element, requestInit)),
   );
 }
 
@@ -400,12 +460,8 @@ async function getEmbeddedSvgCopies(
  *
  * 每张标签占据一个独立页面。
  */
-async function print(
-  options: PrintLabelOptions = {},
-): Promise<void> {
-  const svgElements = await getEmbeddedSvgCopies(
-    options.imageRequestInit,
-  );
+async function print(options: PrintLabelOptions = {}): Promise<void> {
+  const svgElements = await getEmbeddedSvgCopies(options.imageRequestInit);
 
   if (svgElements.length === 0) {
     throw new Error('没有可打印的标签数据');
@@ -415,16 +471,10 @@ async function print(
 
   const layout = resolvedLayout.value;
 
-  const printWindow = window.open(
-    '',
-    '_blank',
-    'width=1000,height=800',
-  );
+  const printWindow = window.open('', '_blank', 'width=1000,height=800');
 
   if (!printWindow) {
-    throw new Error(
-      '浏览器拦截了打印窗口，请允许当前网站打开弹窗',
-    );
+    throw new Error('浏览器拦截了打印窗口，请允许当前网站打开弹窗');
   }
 
   /*
@@ -586,10 +636,7 @@ async function print(
   /*
    * 检查打印窗口中实际页数。
    */
-  const pageCount =
-    printWindow.document.querySelectorAll(
-      '.label-page',
-    ).length;
+  const pageCount = printWindow.document.querySelectorAll('.label-page').length;
 
   console.log('打印窗口分页节点数：', pageCount);
 
@@ -601,7 +648,7 @@ async function print(
     );
   }
 
-  await new Promise<void>(resolve => {
+  await new Promise<void>((resolve) => {
     window.setTimeout(resolve, 300);
   });
 
@@ -613,39 +660,26 @@ async function print(
 
   printWindow.print();
 }
-function getTextBaselineY(
-  rowIndex: number,
-  fontSizeMm: number,
-): number {
+function getTextBaselineY(rowIndex: number, fontSizeMm: number): number {
   return (
-    geometry.value.rowCenters[rowIndex] +
-    fontSizeMm *
-    resolvedLayout.value.textBaselineOffsetRatio
+    (geometry.value.rowCenters[rowIndex] ?? geometry.value.tableY) +
+    fontSizeMm * resolvedLayout.value.textBaselineOffsetRatio
   );
 }
 
-function getTitleTextY(
-  rowIndex: number,
-): number {
-  return getTextBaselineY(
-    rowIndex,
-    resolvedLayout.value.titleFontSizeMm,
-  );
+function getTitleTextY(rowIndex: number): number {
+  return getTextBaselineY(rowIndex, resolvedLayout.value.titleFontSizeMm);
 }
 
-function getValueTextY(
+function getValueCellTextY(
   value: string,
+  row: LabelRow,
   rowIndex: number,
+  cellIndex: number,
 ): number {
-  const fontSize = getValueFontSize(
-    value,
-    rowIndex,
-  );
+  const fontSize = getValueCellFontSize(value, row, rowIndex, cellIndex);
 
-  return getTextBaselineY(
-    rowIndex,
-    fontSize,
-  );
+  return getTextBaselineY(rowIndex, fontSize);
 }
 /**
  * 注册中文字体。
@@ -662,29 +696,18 @@ async function registerPdfFont(
   });
 
   if (!response.ok) {
-    throw new Error(
-      `PDF 中文字体加载失败：${response.status}`,
-    );
+    throw new Error(`PDF 中文字体加载失败：${response.status}`);
   }
 
-  const fontBuffer =
-    await response.arrayBuffer();
+  const fontBuffer = await response.arrayBuffer();
 
-  const fontBase64 =
-    arrayBufferToBase64(fontBuffer);
+  const fontBase64 = arrayBufferToBase64(fontBuffer);
 
   const fontFileName = 'label-font.ttf';
 
-  pdf.addFileToVFS(
-    fontFileName,
-    fontBase64,
-  );
+  pdf.addFileToVFS(fontFileName, fontBase64);
 
-  pdf.addFont(
-    fontFileName,
-    fontFamily,
-    'normal',
-  );
+  pdf.addFont(fontFileName, fontFamily, 'normal');
 
   pdf.setFont(fontFamily, 'normal');
 }
@@ -697,10 +720,7 @@ async function registerPdfFont(
 async function exportPdfBlob(
   options: ExportLabelPdfOptions = {},
 ): Promise<Blob> {
-  const svgElements =
-    await getEmbeddedSvgCopies(
-      options.requestInit,
-    );
+  const svgElements = await getEmbeddedSvgCopies(options.requestInit);
 
   if (svgElements.length === 0) {
     throw new Error('没有可导出的标签数据');
@@ -717,23 +737,17 @@ async function exportPdfBlob(
   const layout = resolvedLayout.value;
 
   const orientation =
-    layout.widthMm >= layout.heightMm
-      ? 'landscape'
-      : 'portrait';
+    layout.widthMm >= layout.heightMm ? 'landscape' : 'portrait';
 
   const pdf = new jsPDF({
     orientation,
     unit: 'mm',
-    format: [
-      layout.widthMm,
-      layout.heightMm,
-    ],
+    format: [layout.widthMm, layout.heightMm],
     compress: true,
     putOnlyUsedFonts: true,
   });
 
-  const pdfFontFamily =
-    options.fontFamily ?? 'LabelPdfFont';
+  const pdfFontFamily = options.fontFamily ?? 'LabelPdfFont';
 
   if (options.fontUrl) {
     await registerPdfFont(
@@ -747,16 +761,10 @@ async function exportPdfBlob(
      * 将 SVG 中的字体替换为已注册的 PDF 字体。
      */
     for (const svg of svgElements) {
-      const texts =
-        svg.querySelectorAll<SVGTextElement>(
-          'text',
-        );
+      const texts = svg.querySelectorAll<SVGTextElement>('text');
 
-      texts.forEach(text => {
-        text.setAttribute(
-          'font-family',
-          pdfFontFamily,
-        );
+      texts.forEach((text) => {
+        text.setAttribute('font-family', pdfFontFamily);
       });
     }
   }
@@ -773,33 +781,23 @@ async function exportPdfBlob(
     ) => Promise<unknown>;
   };
 
-  const svgPdf =
-    pdf as unknown as SvgCapablePdf;
+  const svgPdf = pdf as unknown as SvgCapablePdf;
 
-  for (
-    let index = 0;
-    index < svgElements.length;
-    index++
-  ) {
+  for (let index = 0; index < svgElements.length; index++) {
     if (index > 0) {
-      pdf.addPage(
-        [
-          layout.widthMm,
-          layout.heightMm,
-        ],
-        orientation,
-      );
+      pdf.addPage([layout.widthMm, layout.heightMm], orientation);
     }
 
-    await svgPdf.svg(
-      svgElements[index],
-      {
+    const svgElement = svgElements[index];
+
+    if (svgElement) {
+      await svgPdf.svg(svgElement, {
         x: 0,
         y: 0,
         width: layout.widthMm,
         height: layout.heightMm,
-      },
-    );
+      });
+    }
   }
 
   return pdf.output('blob');
@@ -808,26 +806,19 @@ async function exportPdfBlob(
 /**
  * 直接下载 PDF。
  */
-async function downloadPdf(
-  options: ExportLabelPdfOptions = {},
-): Promise<void> {
+async function downloadPdf(options: ExportLabelPdfOptions = {}): Promise<void> {
   const blob = await exportPdfBlob(options);
 
-  downloadBlob(
-    blob,
-    options.fileName ?? '产品标签.pdf',
-  );
+  downloadBlob(blob, options.fileName ?? '产品标签.pdf');
 }
 
 function getLabelCount(): number {
   return renderedLabels.value.length;
 }
 
-function createQrPath(
-  qr: QrModel,
-): string {
+function createQrPath(qr: QrModel): string {
   return qr.cells
-    .map(cell => {
+    .map((cell) => {
       return `M${cell.x} ${cell.y}h1v1h-1z`;
     })
     .join('');
@@ -843,11 +834,7 @@ defineExpose({
 </script>
 
 <template>
-  <div
-    ref="rootRef"
-    class="product-label-sheet"
-    :style="previewStyle"
-  >
+  <div ref="rootRef" class="product-label-sheet" :style="previewStyle">
     <svg
       v-for="label in renderedLabels"
       :key="label.key"
@@ -855,13 +842,11 @@ defineExpose({
       xmlns="http://www.w3.org/2000/svg"
       :width="`${resolvedLayout.widthMm}mm`"
       :height="`${resolvedLayout.heightMm}mm`"
-      :viewBox="
-        `0 0 ${resolvedLayout.widthMm} ${resolvedLayout.heightMm}`
-      "
+      :viewBox="`0 0 ${resolvedLayout.widthMm} ${resolvedLayout.heightMm}`"
       shape-rendering="geometricPrecision"
     >
       <!-- 标签白色背景和外边框 -->
-<!--      <rect
+      <!--      <rect
         fill="#ffffff"
         stroke="#000000"
         :stroke-width="
@@ -886,17 +871,10 @@ defineExpose({
       -->
       <template
         v-for="(image, imageIndex) in label.images"
-        :key="
-          image.key ??
-          `${label.key}-image-${imageIndex}`
-        "
+        :key="image.key ?? `${label.key}-image-${imageIndex}`"
       >
         <defs v-if="image.fit === 'cover'">
-          <clipPath
-            :id="
-              `image-clip-${label.key}-${imageIndex}`
-            "
-          >
+          <clipPath :id="`image-clip-${label.key}-${imageIndex}`">
             <rect
               :x="image.xMm"
               :y="image.yMm"
@@ -913,9 +891,7 @@ defineExpose({
           :width="image.widthMm"
           :height="image.heightMm"
           :opacity="image.opacity ?? 1"
-          :preserveAspectRatio="
-            getImagePreserveAspectRatio(image)
-          "
+          :preserveAspectRatio="getImagePreserveAspectRatio(image)"
           :clip-path="
             image.fit === 'cover'
               ? `url(#image-clip-${label.key}-${imageIndex})`
@@ -928,9 +904,7 @@ defineExpose({
       <rect
         fill="none"
         stroke="#000000"
-        :stroke-width="
-          resolvedLayout.tableBorderWidthMm
-        "
+        :stroke-width="resolvedLayout.tableBorderWidthMm"
         :x="geometry.tableX"
         :y="geometry.tableY"
         :width="geometry.tableWidth"
@@ -942,9 +916,7 @@ defineExpose({
         v-for="(line, index) in geometry.horizontalLines"
         :key="`horizontal-${index}`"
         stroke="#000000"
-        :stroke-width="
-          resolvedLayout.tableBorderWidthMm
-        "
+        :stroke-width="resolvedLayout.tableBorderWidthMm"
         :x1="line.x1"
         :x2="line.x2"
         :y1="line.y"
@@ -954,9 +926,7 @@ defineExpose({
       <!-- 标题列分隔线 -->
       <line
         stroke="#000000"
-        :stroke-width="
-          resolvedLayout.tableBorderWidthMm
-        "
+        :stroke-width="resolvedLayout.tableBorderWidthMm"
         :x1="geometry.titleDividerX"
         :x2="geometry.titleDividerX"
         :y1="geometry.tableY"
@@ -966,9 +936,7 @@ defineExpose({
       <!-- 二维码列分隔线 -->
       <line
         stroke="#000000"
-        :stroke-width="
-          resolvedLayout.tableBorderWidthMm
-        "
+        :stroke-width="resolvedLayout.tableBorderWidthMm"
         :x1="geometry.qrDividerX"
         :x2="geometry.qrDividerX"
         :y1="geometry.qrAreaTop"
@@ -980,6 +948,20 @@ defineExpose({
         v-for="(row, rowIndex) in label.rows"
         :key="`${label.key}-${rowIndex}-${row.title}`"
       >
+        <line
+          v-for="(dividerX, dividerIndex) in getValueCellDividers(
+            row,
+            rowIndex,
+          )"
+          :key="`${label.key}-${rowIndex}-divider-${dividerIndex}`"
+          stroke="#000000"
+          :stroke-width="resolvedLayout.tableBorderWidthMm"
+          :x1="dividerX"
+          :x2="dividerX"
+          :y1="geometry.rowTops[rowIndex]"
+          :y2="geometry.rowBottoms[rowIndex]"
+        />
+
         <!-- 左侧字段名称 -->
         <text
           fill="#000000"
@@ -994,24 +976,18 @@ defineExpose({
 
         <!-- 字段值 -->
         <text
+          v-for="(cell, cellIndex) in row.cells"
+          :key="`${label.key}-${rowIndex}-cell-${cellIndex}`"
           fill="#000000"
           text-anchor="middle"
           :font-family="resolvedLayout.fontFamily"
           :font-size="
-      getValueFontSize(
-        row.value,
-        rowIndex,
-      )
-    "
-          :x="geometry.valueCenterXs[rowIndex]"
-          :y="
-      getValueTextY(
-        row.value,
-        rowIndex,
-      )
-    "
+            getValueCellFontSize(cell.value, row, rowIndex, cellIndex)
+          "
+          :x="getValueCellLayout(row, rowIndex, cellIndex).centerX"
+          :y="getValueCellTextY(cell.value, row, rowIndex, cellIndex)"
         >
-          {{ row.value }}
+          {{ cell.value }}
         </text>
       </g>
 
@@ -1022,33 +998,22 @@ defineExpose({
         :y="geometry.qrY"
         :width="geometry.qrSize"
         :height="geometry.qrSize"
-        :viewBox="
-    `${-resolvedLayout.qrQuietZoneModules}
+        :viewBox="`${-resolvedLayout.qrQuietZoneModules}
      ${-resolvedLayout.qrQuietZoneModules}
      ${label.qr.size + resolvedLayout.qrQuietZoneModules * 2}
-     ${label.qr.size + resolvedLayout.qrQuietZoneModules * 2}`
-  "
+     ${label.qr.size + resolvedLayout.qrQuietZoneModules * 2}`"
         preserveAspectRatio="xMidYMid meet"
         shape-rendering="crispEdges"
       >
         <rect
           :x="-resolvedLayout.qrQuietZoneModules"
           :y="-resolvedLayout.qrQuietZoneModules"
-          :width="
-      label.qr.size +
-      resolvedLayout.qrQuietZoneModules * 2
-    "
-          :height="
-      label.qr.size +
-      resolvedLayout.qrQuietZoneModules * 2
-    "
+          :width="label.qr.size + resolvedLayout.qrQuietZoneModules * 2"
+          :height="label.qr.size + resolvedLayout.qrQuietZoneModules * 2"
           fill="#ffffff"
         />
 
-        <path
-          :d="label.qrPath"
-          fill="#000000"
-        />
+        <path :d="label.qrPath ?? undefined" fill="#000000" />
       </svg>
     </svg>
   </div>

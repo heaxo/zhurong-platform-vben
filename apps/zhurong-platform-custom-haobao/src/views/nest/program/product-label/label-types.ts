@@ -5,11 +5,20 @@ export interface LabelDataVO {
   /** 品号 */
   prdRef?: string;
 
+  /** 订单行号 */
+  iorder?: number | string;
+
   /** 品名 */
   prdName?: string;
 
   /** 颜色 */
   color?: string;
+
+  /** 材料 */
+  matRef?: string;
+
+  /** 厚度 */
+  thickness?: number | string;
 
   /** 数量 */
   quantity?: number;
@@ -69,7 +78,6 @@ export interface LabelLayout {
   tableBorderWidthMm: number;
 }
 
-
 export const DEFAULT_LABEL_LAYOUT: LabelLayout = {
   widthMm: 70,
   heightMm: 50,
@@ -108,11 +116,20 @@ export interface LabelDataVO {
   /** 品号 */
   prdRef?: string;
 
+  /** 订单行号 */
+  iorder?: number | string;
+
   /** 品名 */
   prdName?: string;
 
   /** 颜色 */
   color?: string;
+
+  /** 材料 */
+  matRef?: string;
+
+  /** 厚度 */
+  thickness?: number | string;
 
   /** 数量 */
   quantity?: number;
@@ -133,10 +150,7 @@ export interface LabelDataVO {
   images?: LabelImageElement[];
 }
 
-export type LabelImageFit =
-  | 'contain'
-  | 'cover'
-  | 'stretch';
+export type LabelImageFit = 'contain' | 'cover' | 'stretch';
 
 export interface LabelImageElement {
   /** 图片唯一标识，可选 */
@@ -200,14 +214,7 @@ export interface ProductLabelLayout {
    *
    * [1, 1.2, 1, 1, 1, 1] 表示第二行更高。
    */
-  rowHeightWeights: [
-    number,
-    number,
-    number,
-    number,
-    number,
-    number,
-  ];
+  rowHeightWeights: [number, number, number, number, number, number];
 
   /** 左侧字段名称列宽 */
   titleColumnWidthMm: number;
@@ -241,9 +248,7 @@ export interface ProductLabelLayout {
   tableBorderWidthMm: number;
 }
 
-export type ExpandedQuantityDisplay =
-  | 'source'
-  | 'one';
+export type ExpandedQuantityDisplay = 'source' | 'one';
 
 export interface PrintLabelOptions {
   /**
@@ -278,30 +283,29 @@ export interface ExportLabelPdfOptions {
   requestInit?: RequestInit;
 }
 
-export const DEFAULT_PRODUCT_LABEL_LAYOUT: ProductLabelLayout =
-  {
-    widthMm: 70,
-    heightMm: 50,
+export const DEFAULT_PRODUCT_LABEL_LAYOUT: ProductLabelLayout = {
+  widthMm: 70,
+  heightMm: 50,
 
-    outerInsetMm: 0.6,
-    tableInsetMm: 2,
+  outerInsetMm: 0.6,
+  tableInsetMm: 2,
 
-    rowHeightWeights: [1, 1, 1, 1, 1, 1],
+  rowHeightWeights: [1, 1, 1, 1, 1, 1],
 
-    titleColumnWidthMm: 12,
-    qrColumnWidthMm: 17,
+  titleColumnWidthMm: 12,
+  qrColumnWidthMm: 17,
 
-    cellPaddingMm: 1,
-    qrPaddingMm: 0.8,
-    qrQuietZoneModules: 2,
+  cellPaddingMm: 1,
+  qrPaddingMm: 0.8,
+  qrQuietZoneModules: 2,
 
-    titleFontSizeMm: 3.3,
-    valueFontSizeMm: 3.1,
-    minValueFontSizeMm: 1.8,
+  titleFontSizeMm: 3.3,
+  valueFontSizeMm: 3.1,
+  minValueFontSizeMm: 1.8,
 
-    fontFamily:
-      '"Microsoft YaHei", "Noto Sans SC", "PingFang SC", SimSun, sans-serif',
-    textBaselineOffsetRatio: 0.38,
-    outerBorderWidthMm: 0.35,
-    tableBorderWidthMm: 0.22,
-  };
+  fontFamily:
+    '"Microsoft YaHei", "Noto Sans SC", "PingFang SC", SimSun, sans-serif',
+  textBaselineOffsetRatio: 0.38,
+  outerBorderWidthMm: 0.35,
+  tableBorderWidthMm: 0.22,
+};
