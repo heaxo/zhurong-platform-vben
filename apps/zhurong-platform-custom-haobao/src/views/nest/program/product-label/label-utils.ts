@@ -136,7 +136,7 @@ export function estimateTextWidthMm(
     }
   }
 
-  return units * fontSizeMm * 0.92;
+  return units * fontSizeMm * 1.06;
 }
 
 /**

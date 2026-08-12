@@ -254,11 +254,11 @@ function createRows(data: LabelDataVO): LabelRow[] {
       cells: [
         {
           value: toLabelText(data.prdRef),
-          widthRatio: 70,
+          widthRatio: 75,
         },
         {
           value: toLabelText(data.iorder),
-          widthRatio: 30,
+          widthRatio: 25,
         },
       ],
     },
