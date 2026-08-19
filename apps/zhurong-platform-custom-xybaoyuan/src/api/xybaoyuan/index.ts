@@ -2,9 +2,10 @@ import type { Recordable } from '@vben/types';
 
 import { downloadFileFromBlob } from '@vben/utils';
 
-import { CUSTOM_BASE_PREFIX, requestClient } from '#/api/request';
+import { CLIENT_PROXY_BASE_PREFIX, requestClient } from '#/api/request';
 
-const PREFIX = `${CUSTOM_BASE_PREFIX}/xybaoyuan`;
+// 所有客户业务请求先到 core，再由 core 按当前登录账号的 client_id 定向到客户端本机 custom。
+const PREFIX = `${CLIENT_PROXY_BASE_PREFIX}/xybaoyuan`;
 
 export type EntityId = string;
 

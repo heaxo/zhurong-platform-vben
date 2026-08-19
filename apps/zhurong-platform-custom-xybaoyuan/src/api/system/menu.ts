@@ -1,5 +1,6 @@
 import type { Recordable } from '@vben/types';
-import { requestClient,AUTH_BASE_PRIFIX } from '#/api/request';
+
+import { AUTH_BASE_PRIFIX, requestClient } from '#/api/request';
 
 export namespace SystemMenuApi {
   /** 徽标颜色集合 */
@@ -92,7 +93,7 @@ export namespace SystemMenuApi {
 /**
  * 获取菜单数据列表
  */
-async function getMenuList(params) {
+async function getMenuList(params: Recordable<any>) {
   return requestClient.get<Array<SystemMenuApi.SystemMenu>>(
     `${AUTH_BASE_PRIFIX}/sysMenu/page`,
     {

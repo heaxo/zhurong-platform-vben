@@ -10,7 +10,7 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
-    defaultHomePath: '/order',
+    defaultHomePath: '/xybaoyuan/manufacturing-orders',
     defaultAvatar: '/log.png',
     enablePreferences: false
   },

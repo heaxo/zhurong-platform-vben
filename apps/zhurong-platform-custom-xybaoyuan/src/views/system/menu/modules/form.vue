@@ -17,7 +17,7 @@ import { breakpointsTailwind, useBreakpoints } from '@vueuse/core';
 import { useVbenForm, z } from '#/adapter/form';
 import {
   createMenu,
-  getMenuList, getMenuTreeList,
+  getMenuTreeList,
   isMenuNameExists,
   isMenuPathExists,
   SystemMenuApi,

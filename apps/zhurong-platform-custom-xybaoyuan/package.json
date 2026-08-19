@@ -43,6 +43,7 @@
     "@vben/utils": "workspace:*",
     "@vben-core/menu-ui": "workspace:*",
     "@vben-core/shadcn-ui": "workspace:*",
+    "@zhurong/components": "workspace:*",
     "@vueuse/core": "catalog:",
     "ant-design-vue": "catalog:",
     "@ant-design/icons-vue": "catalog:",
