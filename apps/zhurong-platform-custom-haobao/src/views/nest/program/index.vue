@@ -45,12 +45,33 @@ function handleSelect(jobRefs: string[]) {
 const selectedRows = ref<any[]>([]);
 const selectedSubRows = ref<any[]>([]);
 const selectedCount = computed(() => selectedRows.value.length + selectedSubRows.value.length);
+function resolveSelectionRecords({records = [], reserves = [], allRecords = []}: any = {}) {
+  const currentRecords = typeof records === 'function' ? records() : records;
+  const reserveRecords = typeof reserves === 'function' ? reserves() : reserves;
+  const nestedRecords = typeof allRecords === 'function' ? allRecords() : allRecords;
+  const mergedRecords = nestedRecords?.length
+    ? nestedRecords
+    : [...(currentRecords ?? []), ...(reserveRecords ?? [])];
+  const rowMap = new Map();
+
+  mergedRecords.forEach((row: any) => {
+    const rowKey = row?.recID ?? row?.recId;
+
+    if (rowKey === undefined || rowKey === null) {
+      rowMap.set(row, row);
+    } else {
+      rowMap.set(rowKey, row);
+    }
+  });
+
+  return [...rowMap.values()];
+}
 const gridEvents = {
-  checkboxChange: ({records}) => {
-    selectedRows.value = records;
+  checkboxChange: (params) => {
+    selectedRows.value = resolveSelectionRecords(params);
   },
-  checkboxAll: ({records}) => {
-    selectedRows.value = records;
+  checkboxAll: (params) => {
+    selectedRows.value = resolveSelectionRecords(params);
   },
   cellClick: async (param) => {
     if (param.column.field === 'cnc') {
@@ -59,11 +80,11 @@ const gridEvents = {
   },
 };
 const subGridEvents = {
-  checkboxChange: ({records}) => {
-    selectedSubRows.value = records;
+  checkboxChange: (params) => {
+    selectedSubRows.value = resolveSelectionRecords(params);
   },
-  checkboxAll: ({records}) => {
-    selectedSubRows.value = records;
+  checkboxAll: (params) => {
+    selectedSubRows.value = resolveSelectionRecords(params);
   },
   cellClick: async (param) => {
 
@@ -248,6 +269,10 @@ async function handleExportExcel(){
 async function clearTableState() {
   // 清除选中（checkbox）
   await gridRef.value._gridApi.grid.clearCheckboxRow();
+  await gridRef.value._gridApi.grid.clearCheckboxReserve();
+  gridRef.value.clearNestPartSelection();
+  selectedRows.value = [];
+  selectedSubRows.value = [];
   // 清除单选
   await gridRef.value._gridApi.grid.clearRadioRow();
   // 清除当前行
@@ -261,6 +286,7 @@ async function clearTableState() {
 }
 
 const checkboxConfig = {
+  reserve: true,
   checkMethod({row}) {
     return row.mstate !== 40 && row.mstate !== 90;
   },

@@ -613,7 +613,6 @@ const [Grid, gridApi] = useVbenVxeGrid({
       sort: true,
       ajax: {
         query: async ({page, sorts}, formValues) => {
-          clearNestPartSelection();
           const data = await requestPageNestOverview({
             page: page.currentPage,
             pageSize: page.pageSize,
