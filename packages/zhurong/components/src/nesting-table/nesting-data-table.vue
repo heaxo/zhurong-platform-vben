@@ -526,7 +526,7 @@ function buildAttributeProps(metas, row) {
 
 const [Grid, gridApi] = useVbenVxeGrid({
   formOptions: {
-    wrapperClass: 'grid-cols-3',
+    wrapperClass: 'grid-cols-4',
     schema: [
       {
         component: 'Input',
@@ -537,6 +537,11 @@ const [Grid, gridApi] = useVbenVxeGrid({
         component: 'Input',
         fieldName: 'cnc',
         label: 'CNC',
+      },
+      {
+        component: 'Input',
+        fieldName: 'jobRef',
+        label: '作业编码',
       },
       {
         component: 'ApiSelect',
@@ -585,6 +590,9 @@ const [Grid, gridApi] = useVbenVxeGrid({
     id: "nestingDataGridTable",
     customConfig: {
       storage: true,
+    },
+    cellConfig:{
+      height: 100
     },
     checkboxConfig,
     expandConfig: {

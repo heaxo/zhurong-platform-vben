@@ -18,7 +18,7 @@ import {downloadBlobFile, downloadFileWithAuth} from "@zhurong/api";
 
 
 const queryParameters = reactive({
-  jobRef: null,
+
 });
 
 const FIELD_REGISTRY = useFieldRegistry();
@@ -42,8 +42,9 @@ function handleSelect(jobRefs: string[]) {
   }
 }
 
-const selectedRows = ref([]);
-const selectedSubRows = ref([]);
+const selectedRows = ref<any[]>([]);
+const selectedSubRows = ref<any[]>([]);
+const selectedCount = computed(() => selectedRows.value.length + selectedSubRows.value.length);
 const gridEvents = {
   checkboxChange: ({records}) => {
     selectedRows.value = records;
@@ -413,7 +414,8 @@ async function handleExportPdf(): Promise<void> {
       enableServerSideSorting
     >
       <template #toolbar-actions>
-        <Space>
+        <Space class="toolbar-actions">
+          <span class="selection-summary">已选 {{ selectedCount }} 条</span>
           <Tooltip title="标签模式">
             <Button
               @click="selectMode"
@@ -438,6 +440,8 @@ async function handleExportPdf(): Promise<void> {
           </Tooltip>
           <Tooltip title="导出 PDF">
             <Button
+              :disabled="(!selectedRows || !selectedRows.length) &&
+              (!selectedSubRows || !selectedSubRows.length)"
               :loading="exporting"
               @click="handleExportPdf"
             >
@@ -481,6 +485,20 @@ async function handleExportPdf(): Promise<void> {
 :deep(.dark .vxe-cell--checkbox) {
   color: white !important;
 }
+
+.toolbar-actions {
+  flex-wrap: nowrap;
+}
+
+.selection-summary {
+  display: inline-flex;
+  height: 32px;
+  align-items: center;
+  color: hsl(var(--muted-foreground));
+  line-height: 32px;
+  white-space: nowrap;
+}
+
 .label-render-host {
   position: fixed;
   top: 0;
