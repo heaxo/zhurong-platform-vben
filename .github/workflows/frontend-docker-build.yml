@@ -12,6 +12,7 @@ on:
           - all
           - but
           - haobao
+          - xybaoyuan
 
 permissions:
   contents: write
@@ -74,6 +75,9 @@ jobs:
             haobao)
               bump_app apps/zhurong-platform-custom-haobao
               ;;
+            xybaoyuan)
+              bump_app apps/zhurong-platform-custom-xybaoyuan
+              ;;
           esac
 
       - name: Build frontend app
@@ -89,6 +93,9 @@ jobs:
               ;;
             haobao)
               pnpm exec turbo build --filter=@zhurong-platform/custom-haobao
+              ;;
+            xybaoyuan)
+              pnpm exec turbo build --filter=@zhurong-platform/custom-xybaoyuan
               ;;
           esac
 
@@ -115,6 +122,9 @@ jobs:
               ;;
             haobao)
               build_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx
+              ;;
+            xybaoyuan)
+              build_image apps/zhurong-platform-custom-xybaoyuan zhurong-platform/custom-xybaoyuan-nginx
               ;;
           esac
 
@@ -158,6 +168,9 @@ jobs:
             haobao)
               publish_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx zhurong-platform-custom-haobao-nginx
               ;;
+            xybaoyuan)
+              publish_image apps/zhurong-platform-custom-xybaoyuan zhurong-platform/custom-xybaoyuan-nginx zhurong-platform-custom-xybaoyuan-nginx
+              ;;
           esac
 
       - name: Commit bumped versions
@@ -165,7 +178,8 @@ jobs:
         run: |
           if git diff --quiet -- \
             apps/zhurong-platform-custom-but/package.json \
-            apps/zhurong-platform-custom-haobao/package.json; then
+            apps/zhurong-platform-custom-haobao/package.json \
+            apps/zhurong-platform-custom-xybaoyuan/package.json; then
             echo "No version changes to commit."
             exit 0
           fi
@@ -175,6 +189,7 @@ jobs:
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
           git add \
             apps/zhurong-platform-custom-but/package.json \
-            apps/zhurong-platform-custom-haobao/package.json
+            apps/zhurong-platform-custom-haobao/package.json\
+            apps/zhurong-platform-custom-xybaoyuan/package.json
           git commit -m "Bump frontend Docker image versions"
           git push
