@@ -17,6 +17,10 @@ on:
 permissions:
   contents: write
 
+env:
+  ALIYUN_REGISTRY: crpi-8o01gg1zrswkepyk.cn-shenzhen.personal.cr.aliyuncs.com
+  FRONTEND_DOCKER_APPS: 'but haobao xybaoyuan'
+
 concurrency:
   group: frontend-docker-build-${{ github.ref_name }}
   cancel-in-progress: false
@@ -36,9 +40,41 @@ jobs:
       - name: Setup Node
         uses: ./.github/actions/setup-node
 
+      - name: Resolve selected frontend apps
+        id: frontend_apps
+        shell: bash
+        run: |
+          selected="${{ inputs.app }}"
+          read -r -a all_apps <<< "${FRONTEND_DOCKER_APPS}"
+
+          if [ "${selected}" = "all" ]; then
+            apps=("${all_apps[@]}")
+          else
+            apps=()
+            for app in "${all_apps[@]}"; do
+              if [ "${app}" = "${selected}" ]; then
+                apps=("${app}")
+                break
+              fi
+            done
+
+            if [ "${#apps[@]}" -eq 0 ]; then
+              echo "Unknown frontend app: ${selected}" >&2
+              echo "Known apps: ${FRONTEND_DOCKER_APPS}" >&2
+              exit 1
+            fi
+          fi
+
+          echo "apps=${apps[*]}" >> "${GITHUB_OUTPUT}"
+          echo "Selected apps: ${apps[*]}"
+
       - name: Bump selected app versions
         shell: bash
         run: |
+          app_dir() {
+            echo "apps/zhurong-platform-custom-$1"
+          }
+
           bump_patch_version() {
             local version="$1"
             IFS='.' read -r major minor patch <<< "${version}"
@@ -64,122 +100,101 @@ jobs:
             echo "${app_dir}: ${current_version} -> ${next_version}"
           }
 
-          case "${{ inputs.app }}" in
-            all)
-              bump_app apps/zhurong-platform-custom-but
-              bump_app apps/zhurong-platform-custom-haobao
-              ;;
-            but)
-              bump_app apps/zhurong-platform-custom-but
-              ;;
-            haobao)
-              bump_app apps/zhurong-platform-custom-haobao
-              ;;
-            xybaoyuan)
-              bump_app apps/zhurong-platform-custom-xybaoyuan
-              ;;
-          esac
+          for app in ${{ steps.frontend_apps.outputs.apps }}; do
+            bump_app "$(app_dir "${app}")"
+          done
 
       - name: Build frontend app
         shell: bash
         run: |
-          case "${{ inputs.app }}" in
-            all)
-              pnpm exec turbo build --filter=@zhurong-platform/custom-but
-              pnpm exec turbo build --filter=@zhurong-platform/custom-haobao
-              ;;
-            but)
-              pnpm exec turbo build --filter=@zhurong-platform/custom-but
-              ;;
-            haobao)
-              pnpm exec turbo build --filter=@zhurong-platform/custom-haobao
-              ;;
-            xybaoyuan)
-              pnpm exec turbo build --filter=@zhurong-platform/custom-xybaoyuan
-              ;;
-          esac
+          app_dir() {
+            echo "apps/zhurong-platform-custom-$1"
+          }
+
+          for app in ${{ steps.frontend_apps.outputs.apps }}; do
+            package_name="$(node -p "require('./$(app_dir "${app}")/package.json').name")"
+            pnpm exec turbo build --filter="${package_name}"
+          done
 
       - name: Build Docker image
         shell: bash
         run: |
-          build_image() {
-            local app_dir="$1"
-            local image="$2"
-
-            docker build \
-              -f "${app_dir}/deploy/Dockerfile" \
-              -t "${image}" \
-              "${app_dir}"
+          app_dir() {
+            echo "apps/zhurong-platform-custom-$1"
           }
 
-          case "${{ inputs.app }}" in
-            all)
-              build_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx
-              build_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx
-              ;;
-            but)
-              build_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx
-              ;;
-            haobao)
-              build_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx
-              ;;
-            xybaoyuan)
-              build_image apps/zhurong-platform-custom-xybaoyuan zhurong-platform/custom-xybaoyuan-nginx
-              ;;
-          esac
+          for app in ${{ steps.frontend_apps.outputs.apps }}; do
+            pnpm --dir "$(app_dir "${app}")" run docker:build
+          done
 
       - name: List built images
         run: docker images "zhurong-platform/*"
 
       - name: Login to Aliyun Container Registry
-        run: echo "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}" | docker login crpi-8o01gg1zrswkepyk.cn-shenzhen.personal.cr.aliyuncs.com --username "${{ secrets.ALIYUN_REGISTRY_USERNAME }}" --password-stdin
+        run: echo "${{ secrets.ALIYUN_REGISTRY_PASSWORD }}" | docker login "${ALIYUN_REGISTRY}" --username "${{ secrets.ALIYUN_REGISTRY_USERNAME }}" --password-stdin
 
       - name: Tag and push Aliyun images
         shell: bash
         run: |
+          app_dir() {
+            echo "apps/zhurong-platform-custom-$1"
+          }
+
           get_app_version() {
             local app_dir="$1"
             node -p "require('./${app_dir}/package.json').version"
           }
 
+          get_local_image() {
+            local app_dir="$1"
+
+            node - "${app_dir}" <<'NODE'
+          const appDir = process.argv[2];
+          const script = require(`./${appDir}/package.json`).scripts?.['docker:build'];
+          const match = script?.match(/(?:^|\s)-t\s+([^\s]+)/);
+
+          if (!match) {
+            throw new Error(`${appDir}/package.json scripts.docker:build must include "-t <image>"`);
+          }
+
+          console.log(match[1].replace(/:latest$/, ''));
+          NODE
+          }
+
           publish_image() {
             local app_dir="$1"
-            local local_image="$2"
-            local remote_repo="$3"
+            local local_image
+            local remote_repo
             local version
             local remote_image
 
+            local_image="$(get_local_image "${app_dir}")"
+            remote_repo="${local_image//\//-}"
             version="$(get_app_version "${app_dir}")"
-            remote_image="crpi-8o01gg1zrswkepyk.cn-shenzhen.personal.cr.aliyuncs.com/nbaliyun/${remote_repo}:${version}"
+            remote_image="${ALIYUN_REGISTRY}/nbaliyun/${remote_repo}:${version}"
 
             echo "Publishing ${local_image}:latest to ${remote_image}"
             docker tag "${local_image}:latest" "${remote_image}"
             docker push "${remote_image}"
           }
 
-          case "${{ inputs.app }}" in
-            all)
-              publish_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx zhurong-platform-but-nginx
-              publish_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx zhurong-platform-custom-haobao-nginx
-              ;;
-            but)
-              publish_image apps/zhurong-platform-custom-but zhurong-platform/but-nginx zhurong-platform-but-nginx
-              ;;
-            haobao)
-              publish_image apps/zhurong-platform-custom-haobao zhurong-platform/custom-haobao-nginx zhurong-platform-custom-haobao-nginx
-              ;;
-            xybaoyuan)
-              publish_image apps/zhurong-platform-custom-xybaoyuan zhurong-platform/custom-xybaoyuan-nginx zhurong-platform-custom-xybaoyuan-nginx
-              ;;
-          esac
+          for app in ${{ steps.frontend_apps.outputs.apps }}; do
+            publish_image "$(app_dir "${app}")"
+          done
 
       - name: Commit bumped versions
         shell: bash
         run: |
-          if git diff --quiet -- \
-            apps/zhurong-platform-custom-but/package.json \
-            apps/zhurong-platform-custom-haobao/package.json \
-            apps/zhurong-platform-custom-xybaoyuan/package.json; then
+          app_dir() {
+            echo "apps/zhurong-platform-custom-$1"
+          }
+
+          package_jsons=()
+          for app in ${{ steps.frontend_apps.outputs.apps }}; do
+            package_jsons+=("$(app_dir "${app}")/package.json")
+          done
+
+          if git diff --quiet -- "${package_jsons[@]}"; then
             echo "No version changes to commit."
             exit 0
           fi
@@ -187,9 +202,6 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git pull --rebase --autostash origin "${GITHUB_REF_NAME}"
-          git add \
-            apps/zhurong-platform-custom-but/package.json \
-            apps/zhurong-platform-custom-haobao/package.json\
-            apps/zhurong-platform-custom-xybaoyuan/package.json
+          git add "${package_jsons[@]}"
           git commit -m "Bump frontend Docker image versions"
           git push
