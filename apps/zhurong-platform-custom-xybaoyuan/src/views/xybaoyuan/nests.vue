@@ -47,6 +47,7 @@ const feedbackSchema: VbenFormSchema[] = [
       ],
       showSearch: true,
     },
+    defaultValue: 'BM000004',
     fieldName: 'productionWorkshopCode',
     label: '生产车间',
     rules: 'selectRequired',
@@ -220,7 +221,7 @@ async function withdraw() {
         </Tag>
       </template>
       <template #sProfit="{ row }">
-        {{ row.sprofit == null ? '' : `${(row.sprofit * 100).toFixed(2)}%` }}
+        {{ row.sprofit == null ? '' : `${(row.sprofit).toFixed(2)}%` }}
       </template>
     </Grid>
     <FeedbackModal><FeedbackForm /></FeedbackModal>
