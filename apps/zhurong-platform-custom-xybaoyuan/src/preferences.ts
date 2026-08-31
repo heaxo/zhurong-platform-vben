@@ -28,7 +28,7 @@ export const overridesPreferences = defineOverridesPreferences({
     showHome: true
   },
   footer: {
-    enable: true,
+    enable: false,
     fixed: true
   },
   tabbar: {
@@ -56,7 +56,7 @@ export const overridesPreferences = defineOverridesPreferences({
     companyName: 'custom-template',
     companySiteLink: 'http://localhost',
     date: '2026',
-    enable: true,
+    enable: false,
     icp: '',
     icpLink: '',
     settingShow: true,

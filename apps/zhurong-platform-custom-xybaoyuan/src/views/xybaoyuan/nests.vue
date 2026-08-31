@@ -28,8 +28,19 @@ const searchSchema: VbenFormSchema[] = [
   { component: 'Input', fieldName: 'jobRef', label: '作业' },
   { component: 'Input', fieldName: 'wrkRef', label: '设备' },
   {
-    component: 'InputNumber',
-    componentProps: { class: 'w-full', controls: false },
+    component: 'Select',
+    componentProps: { class: 'w-full', controls: false,options:[{
+      label:"全部",
+        value: null,
+      },{
+        label:"在车间",
+        value: 40,
+      },{
+        label:"已回传",
+        value: 90,
+      }]
+    },
+    defaultValue: 40,
     fieldName: 'mState',
     label: '程序状态',
   },
@@ -153,6 +164,7 @@ const gridOptions: VxeTableGridOptions<NestRow> = {
 
 const [Grid, gridApi] = useVbenVxeGrid<NestRow>({
   formOptions: {
+    wrapperClass:'grid-cols-5',
     collapsed: true,
     schema: searchSchema,
     submitOnChange: false,
