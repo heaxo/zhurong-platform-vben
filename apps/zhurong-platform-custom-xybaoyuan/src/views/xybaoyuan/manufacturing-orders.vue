@@ -70,6 +70,18 @@ const searchSchema: VbenFormSchema[] = [
     label: 'ERP内码',
   },
   { component: 'Input', fieldName: 'productionWorkshopName', label: '车间' },
+  { component: 'Select', fieldName: 'sendState', label: '状态',defaultValue: false,componentProps:{
+    options:[{
+      label:"全部",
+      value: null,
+    },{
+      label:"未导入",
+      value: false,
+    },{
+      label:"已导入",
+      value: true,
+    },]
+    } },
   { component: 'Input', fieldName: 'drawingCode', label: '图号' },
   { component: 'Input', fieldName: 'matRef', label: '材质' },
 ];
@@ -256,33 +268,35 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
       minWidth: 130,
       title: 'ERP内码',
     },
-    { field: 'productionWorkshopName', minWidth: 140, title: '生产车间' },
+    { field: 'productionWorkshopName', minWidth: 100, title: '生产车间' },
     { field: 'prdRef', minWidth: 150, title: '零件编号' },
     { field: 'prdName', minWidth: 160, title: '零件名称' },
     { field: 'drawingCode', minWidth: 160, title: '图号' },
-    {
-      field: 'partMaintenance',
-      slots: { default: 'partMaintenance' },
-      title: '零件档案',
-      width: 100,
-    },
     { field: 'matRef', minWidth: 90, title: '材质' },
-    { field: 'thickness', title: '厚度', width: 75 },
-    { field: 'quantity', title: '数量', width: 75 },
+    { field: 'thickness', title: '厚度', width: 65 },
+    { field: 'quantity', title: '数量', width: 65 },
     { field: 'cusRef', minWidth: 160, title: '计划跟踪号' },
     { field: 'wrkRef', minWidth: 110, title: '设备' },
     { field: 'jobName', minWidth: 150, title: '作业' },
-    {
-      field: 'sendState',
-      slots: { default: 'sendState' },
-      title: '导入状态',
-      width: 100,
-    },
     {
       field: 'task',
       minWidth: 220,
       slots: { default: 'task' },
       title: '最近导入结果',
+    },
+    {
+      field: 'partMaintenance',
+      slots: { default: 'partMaintenance' },
+      title: '零件档案',
+      fixed: 'right',
+      width: 80,
+    },
+    {
+      field: 'sendState',
+      slots: { default: 'sendState' },
+      title: '导入状态',
+      fixed: 'right',
+      width: 80,
     },
   ],
   height: 'auto',
@@ -310,6 +324,7 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
 
 const [Grid, gridApi] = useVbenVxeGrid<ManufacturingOrder>({
   formOptions: {
+    wrapperClass:'grid-cols-4',
     collapsed: true,
     schema: searchSchema,
     submitOnChange: false,

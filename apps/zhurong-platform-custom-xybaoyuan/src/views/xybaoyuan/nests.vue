@@ -39,10 +39,11 @@ const feedbackSchema: VbenFormSchema[] = [
   {
     component: 'Select',
     componentProps: {
+      style:{
+        width:'100%',
+      },
       options: [
-        { label: '5101-生产制造本部', value: '5101' },
-        { label: '5301-生产制造景泰', value: '5301' },
-        { label: 'WWGB-委外钢板部门', value: 'WWGB' },
+        { label: 'BM000004-生产车间', value: 'BM000004' },
       ],
       showSearch: true,
     },
@@ -108,12 +109,12 @@ const gridOptions: VxeTableGridOptions<NestRow> = {
       width: 100,
     },
     { field: 'matRef', minWidth: 90, title: '材质' },
-    { field: 'sThickness', title: '厚度', width: 75 },
-    { field: 'sLength', title: '板长', width: 90 },
-    { field: 'sWidth', title: '板宽', width: 90 },
+    { field: 'sthickness', title: '厚度', width: 75 },
+    { field: 'slength', title: '板长', width: 90 },
+    { field: 'swidth', title: '板宽', width: 90 },
     { field: 'quantity', title: '数量', width: 75 },
     {
-      field: 'sProfit',
+      field: 'sprofit',
       slots: { default: 'sProfit' },
       title: '利用率',
       width: 90,
@@ -219,7 +220,7 @@ async function withdraw() {
         </Tag>
       </template>
       <template #sProfit="{ row }">
-        {{ row.sProfit == null ? '' : `${(row.sProfit * 100).toFixed(2)}%` }}
+        {{ row.sprofit == null ? '' : `${(row.sprofit * 100).toFixed(2)}%` }}
       </template>
     </Grid>
     <FeedbackModal><FeedbackForm /></FeedbackModal>
