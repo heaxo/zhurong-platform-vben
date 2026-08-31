@@ -223,8 +223,22 @@ async function withdraw() {
         </Space>
       </template>
       <template #mState="{ row }">
-        <Tag :color="row.mstate === 40 ? 'green' : 'default'">
-          {{ row.mstate === 40 ? '已送车间' : '编程中' }}
+        <Tag
+          :color="
+      row.mstate === 40
+        ? 'green'
+        : row.mstate === 90
+          ? 'blue'
+          : 'default'
+    "
+        >
+          {{
+            row.mstate === 40
+              ? '已送车间'
+              : row.mstate === 90
+                ? '已回传'
+                : '编程中'
+          }}
         </Tag>
       </template>
       <template #feedbackSent="{ row }">
