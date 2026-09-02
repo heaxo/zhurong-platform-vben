@@ -82,7 +82,7 @@ const searchSchema: VbenFormSchema[] = [
       value: true,
     },]
     } },
-  { component: 'Input', fieldName: 'drawingCode', label: '图号' },
+  { component: 'Input', fieldName: 'prdName', label: '图号' },
   { component: 'Input', fieldName: 'matRef', label: '材质' },
 ];
 
@@ -270,8 +270,8 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
     },
     { field: 'productionWorkshopName', minWidth: 100, title: '生产车间' },
     { field: 'prdRef', minWidth: 150, title: '零件编号' },
-    { field: 'prdName', minWidth: 160, title: '零件名称' },
-    { field: 'drawingCode', minWidth: 160, title: '图号' },
+    { field: 'prdName', minWidth: 160, title: '图号' },
+    { field: 'drawingCode', minWidth: 160, title: '零件名称' },
     { field: 'matRef', minWidth: 90, title: '材质' },
     { field: 'thickness', title: '厚度', width: 65 },
     { field: 'quantity', title: '数量', width: 65 },

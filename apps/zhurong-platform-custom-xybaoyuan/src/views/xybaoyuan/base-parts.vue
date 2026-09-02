@@ -22,8 +22,8 @@ const selectedRows = ref<BasePart[]>([]);
 
 const searchSchema: VbenFormSchema[] = [
   { component: 'Input', fieldName: 'prdRef', label: '零件编码' },
-  { component: 'Input', fieldName: 'prdName', label: '零件名称' },
-  { component: 'Input', fieldName: 'drawingCode', label: '图号' },
+  { component: 'Input', fieldName: 'prdName', label: '图号' },
+  { component: 'Input', fieldName: 'drawingCode', label: '零件名称' },
   { component: 'Input', fieldName: 'matRef', label: '材质' },
 ];
 
@@ -34,11 +34,11 @@ const createSchema: VbenFormSchema[] = [
     label: '零件编码',
     rules: 'required',
   },
-  { component: 'Input', fieldName: 'prdName', label: '零件名称' },
+  { component: 'Input', fieldName: 'prdName', label: '图号' },
   {
     component: 'Input',
     fieldName: 'drawingCode',
-    label: '图号',
+    label: '零件名称',
     rules: 'required',
   },
   { component: 'Input', fieldName: 'matRef', label: '材质' },
@@ -94,8 +94,8 @@ const gridOptions: VxeTableGridOptions<BasePart> = {
   columns: [
     { type: 'checkbox', width: 48 },
     { field: 'prdRef', minWidth: 170, title: '零件编码' },
-    { field: 'prdName', minWidth: 180, title: '零件名称' },
-    { field: 'drawingCode', minWidth: 180, title: '图号' },
+    { field: 'prdName', minWidth: 180, title: '图号' },
+    { field: 'drawingCode', minWidth: 180, title: '零件名称' },
     { field: 'matRef', minWidth: 120, title: '材质' },
     { field: 'thickness', title: '厚度', width: 90 },
     {
