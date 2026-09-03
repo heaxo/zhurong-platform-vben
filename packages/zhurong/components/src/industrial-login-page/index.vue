@@ -49,33 +49,7 @@ function handleSubmit(values: Recordable<any>) {
           数字化生产协同平台
         </p>
         <h1>{{ appName }}</h1>
-        <p class="story-description">
-          连接业务订单、生产设备与现场执行，让每一次协同都有迹可循，让生产运营更加稳定高效。
-        </p>
 
-        <ul class="capability-list">
-          <li>
-            <span class="capability-list__index">01</span>
-            <span>
-              <strong>业务协同</strong>
-              <small>统一数据入口与业务流程</small>
-            </span>
-          </li>
-          <li>
-            <span class="capability-list__index">02</span>
-            <span>
-              <strong>可靠执行</strong>
-              <small>连接设备与客户端自动化任务</small>
-            </span>
-          </li>
-          <li>
-            <span class="capability-list__index">03</span>
-            <span>
-              <strong>全程可控</strong>
-              <small>清晰掌握生产与反馈状态</small>
-            </span>
-          </li>
-        </ul>
       </div>
 
       <footer class="story-footer">
