@@ -272,6 +272,7 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
     { field: 'prdRef', minWidth: 150, title: '零件编号' },
     { field: 'prdName', minWidth: 160, title: '图号' },
     { field: 'drawingCode', minWidth: 160, title: '零件名称' },
+    { field: 'nestingPerson', minWidth: 120, title: '套料员' },
     { field: 'matRef', minWidth: 90, title: '材质' },
     { field: 'thickness', title: '厚度', width: 65 },
     { field: 'quantity', title: '数量', width: 65 },
