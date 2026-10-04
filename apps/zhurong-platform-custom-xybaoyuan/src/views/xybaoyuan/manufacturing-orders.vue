@@ -45,6 +45,12 @@ interface JobTreeNode extends JobBrowserTreeNode {
   path: string;
   title: string;
 }
+interface CellDblclickEvent {
+  column: {
+    field?: string;
+  };
+  row: ManufacturingOrder;
+}
 
 const selectedRows = ref<ManufacturingOrder[]>([]);
 const actionLoading = ref(false);
@@ -57,6 +63,21 @@ const jobTreeLoading = ref(false);
 const selectedJobNode = computed(() =>
   jobNodeMap.value.get(selectedJobKeys.value[0] ?? ''),
 );
+const copyableOrderFields = new Set<string>([
+  'cusRef',
+  'drawingCode',
+  'jobName',
+  'matRef',
+  'nestingPerson',
+  'prdName',
+  'prdRef',
+  'productionOrderErpInternalCode',
+  'productionOrderNumber',
+  'productionWorkshopName',
+  'quantity',
+  'thickness',
+  'wrkRef',
+]);
 
 const searchSchema: VbenFormSchema[] = [
   {
@@ -70,18 +91,28 @@ const searchSchema: VbenFormSchema[] = [
     label: 'ERP内码',
   },
   { component: 'Input', fieldName: 'productionWorkshopName', label: '车间' },
-  { component: 'Select', fieldName: 'sendState', label: '状态',defaultValue: false,componentProps:{
-    options:[{
-      label:"全部",
-      value: null,
-    },{
-      label:"未导入",
-      value: false,
-    },{
-      label:"已导入",
-      value: true,
-    },]
-    } },
+  {
+    component: 'Select',
+    fieldName: 'sendState',
+    label: '状态',
+    defaultValue: false,
+    componentProps: {
+      options: [
+        {
+          label: '全部',
+          value: null,
+        },
+        {
+          label: '未导入',
+          value: false,
+        },
+        {
+          label: '已导入',
+          value: true,
+        },
+      ],
+    },
+  },
   { component: 'Input', fieldName: 'prdName', label: '图号' },
   { component: 'Input', fieldName: 'matRef', label: '材质' },
 ];
@@ -325,12 +356,13 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
 
 const [Grid, gridApi] = useVbenVxeGrid<ManufacturingOrder>({
   formOptions: {
-    wrapperClass:'grid-cols-4',
+    wrapperClass: 'grid-cols-4',
     collapsed: true,
     schema: searchSchema,
     submitOnChange: false,
   },
   gridEvents: {
+    cellDblclick: handleCellDblclick,
     checkboxAll: handleSelectionChange,
     checkboxChange: handleSelectionChange,
     checkboxRangeEnd: handleSelectionChange,
@@ -340,6 +372,44 @@ const [Grid, gridApi] = useVbenVxeGrid<ManufacturingOrder>({
 
 function handleSelectionChange({ records }: { records: ManufacturingOrder[] }) {
   selectedRows.value = records;
+}
+
+async function handleCellDblclick(event: CellDblclickEvent) {
+  const field = event.column.field;
+  if (!field || !copyableOrderFields.has(field)) return;
+
+  const value = event.row[field as keyof ManufacturingOrder];
+  if (value === null || value === undefined || value === '') {
+    return void message.warning('当前单元格无可复制内容');
+  }
+
+  try {
+    await copyTextToClipboard(String(value));
+    message.success('已复制单元格内容');
+  } catch {
+    message.error('复制失败，请手动复制');
+  }
+}
+
+async function copyTextToClipboard(text: string) {
+  if (navigator.clipboard?.writeText) {
+    try {
+      await navigator.clipboard.writeText(text);
+      return;
+    } catch {
+      // Fallback for browsers that expose the Clipboard API but block it.
+    }
+  }
+
+  const textarea = document.createElement('textarea');
+  textarea.value = text;
+  textarea.style.position = 'fixed';
+  textarea.style.opacity = '0';
+  document.body.append(textarea);
+  textarea.select();
+  const copied = document.execCommand('copy');
+  textarea.remove();
+  if (!copied) throw new Error('Copy failed');
 }
 
 function jobModeOptions(canCreate: boolean) {
@@ -511,6 +581,31 @@ async function importSelected() {
   }
 }
 
+async function copySelectedPrdRefQuery() {
+  if (selectedRows.value.length === 0) return message.warning('请选择生产订单');
+
+  const prdRefs = selectedRows.value
+    .map((row) => String(row.prdName ?? '').trim())
+    .filter(Boolean);
+  if (prdRefs.length === 0) return void message.warning('没有可复制的零件图号');
+
+  const text = prdRefs
+    .map((prdName) => `wholefilename:"${prdName.replaceAll('"', '""')}"`)
+    .join('|');
+
+  try {
+    await copyTextToClipboard(text);
+    const skippedCount = selectedRows.value.length - prdRefs.length;
+    message.success(
+      skippedCount > 0
+        ? `已复制 ${prdRefs.length} 条，跳过 ${skippedCount} 条空零件编号`
+        : `已复制 ${prdRefs.length} 条零件查询文本`,
+    );
+  } catch {
+    message.error('复制失败，请手动复制');
+  }
+}
+
 function formatOrderNames(orders: ManufacturingOrder[]) {
   const names = orders
     .slice(0, 5)
@@ -554,6 +649,12 @@ async function exportData() {
           <Popconfirm title="确认作废所选生产订单？" @confirm="invalidate">
             <Button danger :disabled="selectedRows.length === 0">作废</Button>
           </Popconfirm>
+          <Button
+            :disabled="selectedRows.length === 0"
+            @click="copySelectedPrdRefQuery"
+          >
+            复制零件查询
+          </Button>
           <Button @click="exportData">导出 CSV</Button>
           <!-- prettier-ignore -->
           <span class="text-muted-foreground">已选 {{ selectedRows.length }} 条</span>
