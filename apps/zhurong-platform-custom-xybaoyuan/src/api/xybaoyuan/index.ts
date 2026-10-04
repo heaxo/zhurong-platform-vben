@@ -2,10 +2,11 @@ import type { Recordable } from '@vben/types';
 
 import { downloadFileFromBlob } from '@vben/utils';
 
-import { CLIENT_PROXY_BASE_PREFIX, requestClient } from '#/api/request';
+import { CLIENT_PROXY_BASE_PREFIX, CUSTOM_BASE_PREFIX, requestClient } from '#/api/request';
 
 // 所有客户业务请求先到 core，再由 core 按当前登录账号的 client_id 定向到客户端本机 custom。
 const PREFIX = `${CLIENT_PROXY_BASE_PREFIX}/xybaoyuan`;
+const PREFIX_CUSTOM = `${CUSTOM_BASE_PREFIX}/xybaoyuan`;
 
 export type EntityId = string;
 
@@ -102,7 +103,7 @@ export const pageSteelPlates = (params: Recordable<any>) =>
     params,
   });
 export const syncErpSteelPlates = (data: Recordable<any>) =>
-  requestClient.post<number>(`${PREFIX}/steel-plates/sync-erp`, data);
+  requestClient.post<number>(`${PREFIX_CUSTOM}/steel-plates/sync-erp`, data);
 export const deleteSteelPlates = (ids: EntityId[]) =>
   requestClient.delete(`${PREFIX}/steel-plates`, { data: { ids } });
 export const importSteelPlates = (ids: EntityId[]) =>

@@ -64,9 +64,9 @@ const [SyncModal, syncModalApi] = useVbenModal({
     const values = await syncFormApi.getValues();
     const prdRef = String(values.prdRef ?? '').trim();
     const lotNumber = String(values.lotNumber ?? '').trim();
-    if (!prdRef && !lotNumber) {
-      return void message.warning('物料编号或物料批号不能为空');
-    }
+    // if (!prdRef && !lotNumber) {
+    //   return void message.warning('物料编号或物料批号不能为空');
+    // }
     syncModalApi.lock();
     actionLoading.value = true;
     try {
