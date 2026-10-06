@@ -11,7 +11,7 @@ export const overridesPreferences = defineOverridesPreferences({
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
     defaultHomePath: '/inventory/sync',
-    defaultAvatar: '/goodmate-logo.png',
+    defaultAvatar: '/scjinggong-logo.png',
     enablePreferences: false
   },
   transition: {
@@ -20,8 +20,8 @@ export const overridesPreferences = defineOverridesPreferences({
   logo: {
     enable: true,
     fit: 'contain',
-    source: '/goodmate-logo.png',
-    sourceDark: '/goodmate-logo.png',
+    source: '/scjinggong-logo.png',
+    sourceDark: '/scjinggong-logo.png',
   },
   breadcrumb: {
     styleType: "background",
@@ -53,7 +53,7 @@ export const overridesPreferences = defineOverridesPreferences({
     timezone: false,
   },
   copyright: {
-    companyName: 'custom-goodmate',
+    companyName: 'custom-scjinggong',
     companySiteLink: 'https://www.szgoodmate.com/',
     date: '2026',
     enable: true,

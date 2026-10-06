@@ -47,15 +47,15 @@ const metrics = [
 </script>
 
 <template>
-  <div class="goodmate-login">
-    <header class="goodmate-login__brand">
-      <img src="/goodmate-logo.png" alt="Goodmate SYSTEM" />
+  <div class="scjinggong-login">
+    <header class="scjinggong-login__brand">
+      <img src="/scjinggong-logo.png" alt="Scjinggong SYSTEM" />
       <span>固美特科技</span>
     </header>
 
-    <section class="goodmate-login__visual" aria-label="固美特下料平台">
+    <section class="scjinggong-login__visual" aria-label="固美特下料平台">
       <div class="visual-media" aria-hidden="true">
-        <img src="/goodmate-login-visual.jpg" alt="" />
+        <img src="/scjinggong-login-visual.jpg" alt="" />
       </div>
 
       <div class="visual-content">
@@ -75,10 +75,10 @@ const metrics = [
       </div>
     </section>
 
-    <main class="goodmate-login__main">
+    <main class="scjinggong-login__main">
       <section class="login-card">
         <div class="login-card__logo">
-          <img src="/goodmate-logo.png" alt="Goodmate SYSTEM" />
+          <img src="/scjinggong-logo.png" alt="Scjinggong SYSTEM" />
         </div>
 
         <AuthenticationLogin
@@ -93,7 +93,7 @@ const metrics = [
           :show-third-party-login="false"
           register-path="/auth/register"
           submit-button-text="登录"
-          sub-title="请输入账号密码进入 Goodmate System"
+          sub-title="请输入账号密码进入 Scjinggong System"
           title="账号登录"
           @submit="authStore.authLogin"
         />
@@ -105,16 +105,16 @@ const metrics = [
 </template>
 
 <style scoped>
-.goodmate-login {
+.scjinggong-login {
   --primary: 202 94% 35%;
-  --goodmate-blue: #056faf;
-  --goodmate-blue-deep: #063f78;
-  --goodmate-blue-soft: #eaf5fb;
-  --goodmate-green: #46af32;
-  --goodmate-green-deep: #16813a;
-  --goodmate-ink: #12304f;
-  --goodmate-muted: #6a7d90;
-  --goodmate-line: rgb(5 111 175 / 15%);
+  --scjinggong-blue: #056faf;
+  --scjinggong-blue-deep: #063f78;
+  --scjinggong-blue-soft: #eaf5fb;
+  --scjinggong-green: #46af32;
+  --scjinggong-green-deep: #16813a;
+  --scjinggong-ink: #12304f;
+  --scjinggong-muted: #6a7d90;
+  --scjinggong-line: rgb(5 111 175 / 15%);
 
   position: relative;
   display: grid;
@@ -122,13 +122,13 @@ const metrics = [
   min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
-  color: var(--goodmate-ink);
+  color: var(--scjinggong-ink);
   background:
     linear-gradient(90deg, transparent 0 49%, rgb(5 111 175 / 5%) 49% 100%),
     linear-gradient(135deg, #f6fbff 0%, #ffffff 54%, #edf7f0 100%);
 }
 
-.goodmate-login::before {
+.scjinggong-login::before {
   position: absolute;
   inset: 0;
   pointer-events: none;
@@ -142,7 +142,7 @@ const metrics = [
   mask-image: linear-gradient(90deg, black 0%, transparent 58%);
 }
 
-.goodmate-login__brand {
+.scjinggong-login__brand {
   position: absolute;
   top: 30px;
   left: 42px;
@@ -151,7 +151,7 @@ const metrics = [
   gap: 14px;
   align-items: center;
   padding: 9px 14px;
-  color: var(--goodmate-blue-deep);
+  color: var(--scjinggong-blue-deep);
   background: rgb(255 255 255 / 90%);
   border: 1px solid rgb(255 255 255 / 60%);
   border-radius: 8px;
@@ -159,22 +159,22 @@ const metrics = [
   backdrop-filter: blur(12px);
 }
 
-.goodmate-login__brand img {
+.scjinggong-login__brand img {
   width: 176px;
   height: auto;
   object-fit: contain;
 }
 
-.goodmate-login__brand span {
+.scjinggong-login__brand span {
   padding-left: 14px;
   font-size: 15px;
   font-weight: 700;
   line-height: 1;
-  color: var(--goodmate-blue-deep);
+  color: var(--scjinggong-blue-deep);
   border-left: 1px solid rgb(5 111 175 / 22%);
 }
 
-.goodmate-login__visual {
+.scjinggong-login__visual {
   position: relative;
   display: flex;
   align-items: center;
@@ -182,11 +182,11 @@ const metrics = [
   min-height: 100dvh;
   padding: 118px clamp(44px, 6vw, 88px) 68px;
   overflow: hidden;
-  background: var(--goodmate-blue-deep);
+  background: var(--scjinggong-blue-deep);
   clip-path: polygon(0 0, 88% 0, 100% 100%, 0 100%);
 }
 
-.goodmate-login__visual::before {
+.scjinggong-login__visual::before {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -202,7 +202,7 @@ const metrics = [
     linear-gradient(180deg, rgb(0 0 0 / 16%), rgb(0 0 0 / 24%));
 }
 
-.goodmate-login__visual::after {
+.scjinggong-login__visual::after {
   position: absolute;
   top: -12%;
   right: 5.5%;
@@ -258,7 +258,7 @@ const metrics = [
     rgb(5 111 175 / 72%),
     rgb(70 175 50 / 76%)
   );
-  border-left: 4px solid var(--goodmate-green);
+  border-left: 4px solid var(--scjinggong-green);
 }
 
 .visual-content h1 {
@@ -316,7 +316,7 @@ const metrics = [
   color: rgb(255 255 255 / 72%);
 }
 
-.goodmate-login__main {
+.scjinggong-login__main {
   position: relative;
   z-index: 2;
   display: flex;
@@ -327,16 +327,16 @@ const metrics = [
   padding: 56px clamp(38px, 7vw, 112px) 56px 22px;
 }
 
-.goodmate-login__main::before,
-.goodmate-login__main::after {
+.scjinggong-login__main::before,
+.scjinggong-login__main::after {
   position: absolute;
   z-index: -1;
   pointer-events: none;
   content: '';
-  border: 1px solid var(--goodmate-line);
+  border: 1px solid var(--scjinggong-line);
 }
 
-.goodmate-login__main::before {
+.scjinggong-login__main::before {
   top: 12%;
   right: 12%;
   width: 168px;
@@ -344,7 +344,7 @@ const metrics = [
   transform: rotate(45deg);
 }
 
-.goodmate-login__main::after {
+.scjinggong-login__main::after {
   right: 20%;
   bottom: 12%;
   width: 88px;
@@ -384,38 +384,38 @@ const metrics = [
   margin: 24px 0 0;
   font-size: 12px;
   line-height: 1.6;
-  color: var(--goodmate-muted);
+  color: var(--scjinggong-muted);
   text-align: center;
   border-top: 1px solid rgb(5 111 175 / 10%);
 }
 
 :deep(.text-foreground) {
-  color: var(--goodmate-ink);
+  color: var(--scjinggong-ink);
 }
 
 :deep(.text-muted-foreground) {
-  color: var(--goodmate-muted);
+  color: var(--scjinggong-muted);
 }
 
 .login-form :deep(h2) {
   font-size: 28px;
   font-weight: 800;
   line-height: 1.25;
-  color: var(--goodmate-ink);
+  color: var(--scjinggong-ink);
   letter-spacing: 0;
 }
 
 .login-form :deep(p) {
   font-size: 13px;
-  color: var(--goodmate-muted);
+  color: var(--scjinggong-muted);
 }
 
 .login-form :deep(input) {
   min-height: 48px;
   padding-right: 15px;
   padding-left: 15px;
-  color: var(--goodmate-ink);
-  background: var(--goodmate-blue-soft);
+  color: var(--scjinggong-ink);
+  background: var(--scjinggong-blue-soft);
   border: 1px solid rgb(5 111 175 / 16%);
   border-radius: 8px;
   box-shadow: none;
@@ -436,7 +436,7 @@ const metrics = [
 .login-form :deep(input:focus),
 .login-form :deep(input:focus-visible) {
   background: #fff;
-  border-color: var(--goodmate-blue);
+  border-color: var(--scjinggong-blue);
   box-shadow: 0 0 0 3px rgb(5 111 175 / 12%);
   outline: none;
 }
@@ -444,8 +444,8 @@ const metrics = [
 .login-form :deep(input:-webkit-autofill),
 .login-form :deep(input:-webkit-autofill:hover),
 .login-form :deep(input:-webkit-autofill:focus) {
-  -webkit-text-fill-color: var(--goodmate-ink);
-  box-shadow: 0 0 0 1000px var(--goodmate-blue-soft) inset;
+  -webkit-text-fill-color: var(--scjinggong-ink);
+  box-shadow: 0 0 0 1000px var(--scjinggong-blue-soft) inset;
 }
 
 .login-form :deep(button[aria-label='login']),
@@ -457,8 +457,8 @@ const metrics = [
   color: #fff;
   background: linear-gradient(
     90deg,
-    var(--goodmate-blue),
-    var(--goodmate-green-deep)
+    var(--scjinggong-blue),
+    var(--scjinggong-green-deep)
   );
   border: none;
   border-radius: 8px;
@@ -489,11 +489,11 @@ const metrics = [
 }
 
 @media (max-width: 1120px) {
-  .goodmate-login {
+  .scjinggong-login {
     grid-template-columns: minmax(420px, 0.95fr) minmax(390px, 1.05fr);
   }
 
-  .goodmate-login__visual {
+  .scjinggong-login__visual {
     padding-right: 64px;
   }
 
@@ -508,36 +508,36 @@ const metrics = [
 }
 
 @media (max-width: 860px) {
-  .goodmate-login {
+  .scjinggong-login {
     grid-template-columns: 1fr;
     overflow: auto;
     background: linear-gradient(180deg, #063f78 0 220px, #f6fbff 220px);
   }
 
-  .goodmate-login::before {
+  .scjinggong-login::before {
     mask-image: none;
   }
 
-  .goodmate-login__brand {
+  .scjinggong-login__brand {
     top: 22px;
     left: 22px;
   }
 
-  .goodmate-login__brand img {
+  .scjinggong-login__brand img {
     width: 156px;
   }
 
-  .goodmate-login__brand span {
+  .scjinggong-login__brand span {
     display: none;
   }
 
-  .goodmate-login__visual {
+  .scjinggong-login__visual {
     min-height: 330px;
     padding: 96px 24px 34px;
     clip-path: none;
   }
 
-  .goodmate-login__visual::after {
+  .scjinggong-login__visual::after {
     display: none;
   }
 
@@ -567,14 +567,14 @@ const metrics = [
     display: none;
   }
 
-  .goodmate-login__main {
+  .scjinggong-login__main {
     align-items: flex-start;
     min-height: auto;
     padding: 24px 18px 30px;
   }
 
-  .goodmate-login__main::before,
-  .goodmate-login__main::after {
+  .scjinggong-login__main::before,
+  .scjinggong-login__main::after {
     display: none;
   }
 
@@ -588,7 +588,7 @@ const metrics = [
 }
 
 @media (max-width: 420px) {
-  .goodmate-login__brand img {
+  .scjinggong-login__brand img {
     width: 138px;
   }
 

@@ -1,5 +1,5 @@
 {
-  "name": "@zhurong-platform/custom-goodmate",
+  "name": "@zhurong-platform/custom-scjinggong",
   "version": "0.0.1",
   "homepage": "https://vben.pro",
   "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
@@ -17,7 +17,7 @@
   "type": "module",
   "scripts": {
     "build": "pnpm vite build --mode production",
-    "docker:build": "docker build -f deploy/Dockerfile -t zhurong-platform/custom-goodmate-nginx .",
+    "docker:build": "docker build -f deploy/Dockerfile -t zhurong-platform/custom-scjinggong-nginx .",
     "build:analyze": "pnpm vite build --mode analyze",
     "dev": "pnpm vite --mode development",
     "preview": "vite preview",

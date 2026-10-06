@@ -115,24 +115,24 @@ async function handleSubmit(value: Recordable<any>) {
 </script>
 
 <template>
-  <div class="goodmate-register">
-    <header class="goodmate-register__brand">
-      <img src="/goodmate-logo.png" alt="Goodmate SYSTEM" />
+  <div class="scjinggong-register">
+    <header class="scjinggong-register__brand">
+      <img src="/scjinggong-logo.png" alt="Scjinggong SYSTEM" />
       <span>固美特科技</span>
     </header>
 
-    <section class="goodmate-register__visual" aria-hidden="true">
-      <img src="/goodmate-login-visual.jpg" alt="" />
+    <section class="scjinggong-register__visual" aria-hidden="true">
+      <img src="/scjinggong-login-visual.jpg" alt="" />
       <div class="visual-copy">
         <p>GOODMATE DIGITAL FACTORY</p>
         <h1>打造数字化工厂，落地看得见</h1>
       </div>
     </section>
 
-    <main class="goodmate-register__main">
+    <main class="scjinggong-register__main">
       <section class="register-card">
         <div class="register-card__logo">
-          <img src="/goodmate-logo.png" alt="Goodmate SYSTEM" />
+          <img src="/scjinggong-logo.png" alt="Scjinggong SYSTEM" />
         </div>
 
         <AuthenticationRegister
@@ -141,7 +141,7 @@ async function handleSubmit(value: Recordable<any>) {
           :loading="loading"
           login-path="/auth/login"
           submit-button-text="注册"
-          sub-title="填写账号信息后即可创建 Goodmate System 账户"
+          sub-title="填写账号信息后即可创建 Scjinggong System 账户"
           @submit="handleSubmit"
         >
           <template #title>创建账号</template>
@@ -152,15 +152,15 @@ async function handleSubmit(value: Recordable<any>) {
 </template>
 
 <style scoped>
-.goodmate-register {
+.scjinggong-register {
   --primary: 202 94% 35%;
-  --goodmate-blue: #056faf;
-  --goodmate-blue-deep: #063f78;
-  --goodmate-blue-soft: #eaf5fb;
-  --goodmate-green-deep: #16813a;
-  --goodmate-ink: #12304f;
-  --goodmate-muted: #6a7d90;
-  --goodmate-line: rgb(5 111 175 / 15%);
+  --scjinggong-blue: #056faf;
+  --scjinggong-blue-deep: #063f78;
+  --scjinggong-blue-soft: #eaf5fb;
+  --scjinggong-green-deep: #16813a;
+  --scjinggong-ink: #12304f;
+  --scjinggong-muted: #6a7d90;
+  --scjinggong-line: rgb(5 111 175 / 15%);
 
   position: relative;
   display: grid;
@@ -168,13 +168,13 @@ async function handleSubmit(value: Recordable<any>) {
   min-height: 100vh;
   min-height: 100dvh;
   overflow: hidden;
-  color: var(--goodmate-ink);
+  color: var(--scjinggong-ink);
   background:
     linear-gradient(90deg, transparent 0 49%, rgb(5 111 175 / 5%) 49% 100%),
     linear-gradient(135deg, #f6fbff 0%, #fff 54%, #edf7f0 100%);
 }
 
-.goodmate-register__brand {
+.scjinggong-register__brand {
   position: absolute;
   top: 30px;
   left: 42px;
@@ -190,22 +190,22 @@ async function handleSubmit(value: Recordable<any>) {
   backdrop-filter: blur(12px);
 }
 
-.goodmate-register__brand img {
+.scjinggong-register__brand img {
   width: 176px;
   height: auto;
   object-fit: contain;
 }
 
-.goodmate-register__brand span {
+.scjinggong-register__brand span {
   padding-left: 14px;
   font-size: 15px;
   font-weight: 700;
   line-height: 1;
-  color: var(--goodmate-blue-deep);
+  color: var(--scjinggong-blue-deep);
   border-left: 1px solid rgb(5 111 175 / 22%);
 }
 
-.goodmate-register__visual {
+.scjinggong-register__visual {
   position: relative;
   display: flex;
   align-items: center;
@@ -213,11 +213,11 @@ async function handleSubmit(value: Recordable<any>) {
   min-height: 100dvh;
   padding: 118px clamp(44px, 6vw, 88px) 68px;
   overflow: hidden;
-  background: var(--goodmate-blue-deep);
+  background: var(--scjinggong-blue-deep);
   clip-path: polygon(0 0, 88% 0, 100% 100%, 0 100%);
 }
 
-.goodmate-register__visual::after {
+.scjinggong-register__visual::after {
   position: absolute;
   inset: 0;
   z-index: 1;
@@ -232,7 +232,7 @@ async function handleSubmit(value: Recordable<any>) {
     linear-gradient(180deg, rgb(0 0 0 / 16%), rgb(0 0 0 / 24%));
 }
 
-.goodmate-register__visual::before {
+.scjinggong-register__visual::before {
   position: absolute;
   top: -12%;
   right: 5.5%;
@@ -254,7 +254,7 @@ async function handleSubmit(value: Recordable<any>) {
   transform-origin: center;
 }
 
-.goodmate-register__visual img {
+.scjinggong-register__visual img {
   position: absolute;
   inset: 0;
   width: 100%;
@@ -297,7 +297,7 @@ async function handleSubmit(value: Recordable<any>) {
   text-shadow: 0 6px 24px rgb(0 26 62 / 34%);
 }
 
-.goodmate-register__main {
+.scjinggong-register__main {
   position: relative;
   z-index: 2;
   display: flex;
@@ -308,16 +308,16 @@ async function handleSubmit(value: Recordable<any>) {
   padding: 56px clamp(38px, 7vw, 112px) 56px 22px;
 }
 
-.goodmate-register__main::before,
-.goodmate-register__main::after {
+.scjinggong-register__main::before,
+.scjinggong-register__main::after {
   position: absolute;
   z-index: -1;
   pointer-events: none;
   content: '';
-  border: 1px solid var(--goodmate-line);
+  border: 1px solid var(--scjinggong-line);
 }
 
-.goodmate-register__main::before {
+.scjinggong-register__main::before {
   top: 12%;
   right: 12%;
   width: 168px;
@@ -325,7 +325,7 @@ async function handleSubmit(value: Recordable<any>) {
   transform: rotate(45deg);
 }
 
-.goodmate-register__main::after {
+.scjinggong-register__main::after {
   right: 20%;
   bottom: 12%;
   width: 88px;
@@ -363,32 +363,32 @@ async function handleSubmit(value: Recordable<any>) {
 }
 
 :deep(.text-foreground) {
-  color: var(--goodmate-ink);
+  color: var(--scjinggong-ink);
 }
 
 :deep(.text-muted-foreground) {
-  color: var(--goodmate-muted);
+  color: var(--scjinggong-muted);
 }
 
 .register-form :deep(h2) {
   font-size: 26px;
   font-weight: 800;
   line-height: 1.25;
-  color: var(--goodmate-ink);
+  color: var(--scjinggong-ink);
   letter-spacing: 0;
 }
 
 .register-form :deep(p) {
   font-size: 13px;
-  color: var(--goodmate-muted);
+  color: var(--scjinggong-muted);
 }
 
 .register-form :deep(input) {
   min-height: 46px;
   padding-right: 15px;
   padding-left: 15px;
-  color: var(--goodmate-ink);
-  background: var(--goodmate-blue-soft);
+  color: var(--scjinggong-ink);
+  background: var(--scjinggong-blue-soft);
   border: 1px solid rgb(5 111 175 / 16%);
   border-radius: 8px;
   box-shadow: none;
@@ -405,7 +405,7 @@ async function handleSubmit(value: Recordable<any>) {
 .register-form :deep(input:focus),
 .register-form :deep(input:focus-visible) {
   background: #fff;
-  border-color: var(--goodmate-blue);
+  border-color: var(--scjinggong-blue);
   box-shadow: 0 0 0 3px rgb(5 111 175 / 12%);
   outline: none;
 }
@@ -419,8 +419,8 @@ async function handleSubmit(value: Recordable<any>) {
   color: #fff;
   background: linear-gradient(
     90deg,
-    var(--goodmate-blue),
-    var(--goodmate-green-deep)
+    var(--scjinggong-blue),
+    var(--scjinggong-green-deep)
   );
   border: none;
   border-radius: 8px;
@@ -439,26 +439,26 @@ async function handleSubmit(value: Recordable<any>) {
 }
 
 @media (max-width: 860px) {
-  .goodmate-register {
+  .scjinggong-register {
     grid-template-columns: 1fr;
     overflow: auto;
     background: linear-gradient(180deg, #063f78 0 220px, #f6fbff 220px);
   }
 
-  .goodmate-register__brand {
+  .scjinggong-register__brand {
     top: 22px;
     left: 22px;
   }
 
-  .goodmate-register__brand img {
+  .scjinggong-register__brand img {
     width: 156px;
   }
 
-  .goodmate-register__brand span {
+  .scjinggong-register__brand span {
     display: none;
   }
 
-  .goodmate-register__visual {
+  .scjinggong-register__visual {
     min-height: 300px;
     padding: 94px 24px 34px;
     clip-path: none;
@@ -475,14 +475,14 @@ async function handleSubmit(value: Recordable<any>) {
     font-size: 34px;
   }
 
-  .goodmate-register__main {
+  .scjinggong-register__main {
     align-items: flex-start;
     min-height: auto;
     padding: 24px 18px 30px;
   }
 
-  .goodmate-register__main::before,
-  .goodmate-register__main::after {
+  .scjinggong-register__main::before,
+  .scjinggong-register__main::after {
     display: none;
   }
 
@@ -493,7 +493,7 @@ async function handleSubmit(value: Recordable<any>) {
 }
 
 @media (max-width: 420px) {
-  .goodmate-register__brand img {
+  .scjinggong-register__brand img {
     width: 138px;
   }
 
