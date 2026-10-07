@@ -1,18 +1,18 @@
 <script lang="ts" setup>
-import type { ZhurongScjinggongOrderVO } from '#/api';
+import type { ZhurongScjinggongOrderitemVO } from '#/api';
 
 import { computed, ref } from 'vue';
 
 import { useVbenDrawer } from '@vben/common-ui';
 import { useVbenForm } from '#/adapter/form';
-import { requestCreateZhurongScjinggongOrder, requestUpdateZhurongScjinggongOrder } from '#/api';
+import { requestCreateZhurongScjinggongOrderitem, requestUpdateZhurongScjinggongOrderitem } from '#/api';
 import { $t } from '#/locales';
 
 import { useFormSchema } from '../data';
 
 const emits = defineEmits(['success']);
 
-const formData = ref<ZhurongScjinggongOrderVO>();
+const formData = ref<ZhurongScjinggongOrderitemVO>();
 
 const [Form, formApi] = useVbenForm({
     schema: useFormSchema(),
@@ -26,7 +26,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
         if (!valid) return;
         const values = await formApi.getValues();
         drawerApi.lock();
-        (id.value ? requestUpdateZhurongScjinggongOrder({ id: id.value, ...values }) : requestCreateZhurongScjinggongOrder(values))
+        (id.value ? requestUpdateZhurongScjinggongOrderitem({ id: id.value, ...values }) : requestCreateZhurongScjinggongOrderitem(values))
             .then(() => {
                 emits('success');
                 drawerApi.close();
@@ -37,7 +37,7 @@ const [Drawer, drawerApi] = useVbenDrawer({
     },
     onOpenChange(isOpen) {
         if (isOpen) {
-            const data = drawerApi.getData<ZhurongScjinggongOrderVO>();
+            const data = drawerApi.getData<ZhurongScjinggongOrderitemVO>();
             formApi.resetForm();
             if (data) {
                 formData.value = data;

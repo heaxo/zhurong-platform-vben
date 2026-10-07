@@ -4,3 +4,4 @@ export * from './disMmttMmtt00000100';
 export * from './disNestNest00000100';
 export * from './wwccWwcc00000100';
 export * from './mmnnMmoo00000300';
+export * from './job-selection';

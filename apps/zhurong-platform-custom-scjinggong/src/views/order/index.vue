@@ -1,121 +1,117 @@
 <script lang="ts" setup>
-import {
-    type OnActionClickParams,
-    useVbenVxeGrid,
-    type VxeTableGridOptions
-} from "#/adapter/vxe-table";
-import {useColumns, useGridFormSchema} from "./data";
-import {requestGetZhurongScjinggongOrderitemPage} from "#/api";
-import type {ZhurongScjinggongOrderitemVO} from "#/api";
+import { useVbenVxeGrid, type VxeTableGridOptions } from '#/adapter/vxe-table';
+import { useColumns, useGridFormSchema } from './data';
+import { requestGetZhurongScjinggongOrderPage } from '#/api';
+import type { ZhurongScjinggongOrderVO } from '#/api';
 
-import {Page, useVbenDrawer} from '@vben/common-ui';
-import {Button,Input, message} from "ant-design-vue";
-import {isEmpty} from 'lodash-es';
-import {ExportOutlined} from "@ant-design/icons-vue";
-import {Plus} from '@vben/icons';
+import { Page, useVbenDrawer } from '@vben/common-ui';
+import { Button, message } from 'ant-design-vue';
 import Form from './modules/form.vue';
-import {ref} from "vue";
-const selectedRows = ref([]);
+import { ref } from 'vue';
+import { useRouter } from 'vue-router';
+const selectedRows = ref<ZhurongScjinggongOrderVO[]>([]);
+const router = useRouter();
 
-
-
-const [FormDrawer, formDrawerApi] = useVbenDrawer({
-    connectedComponent: Form,
-    destroyOnClose: true,
+const [FormDrawer] = useVbenDrawer({
+  connectedComponent: Form,
+  destroyOnClose: true,
 });
 
-function handleSelectionChange({records}) {
-    selectedRows.value = records;
+function handleSelectionChange({
+  records,
+}: {
+  records: ZhurongScjinggongOrderVO[];
+}) {
+  selectedRows.value = records;
 }
 const [Grid, gridApi] = useVbenVxeGrid({
-    formOptions: {
-      fieldMappingTime: [['createTime', ['startTime', 'endTime']]],
-      schema: useGridFormSchema(),
-      submitOnChange: true,
-      collapsed: true,
+  formOptions: {
+    fieldMappingTime: [['createTime', ['startTime', 'endTime']]],
+    schema: useGridFormSchema(),
+    submitOnChange: true,
+    collapsed: true,
+  },
+  gridEvents: {
+    checkboxChange: handleSelectionChange,
+    checkboxAll: handleSelectionChange,
+  },
+  gridOptions: {
+    virtualYConfig: {
+      enabled: true, // 开启纵向虚拟滚动
+      gt: 50,
     },
-    gridEvents: {
-        checkboxChange: handleSelectionChange,
-        checkboxAll: handleSelectionChange,
+    loading: false,
+    columns: useColumns(),
+    height: 'auto',
+    keepSource: true,
+    pagerConfig: {},
+    proxyConfig: {
+      ajax: {
+        query: async ({ page }, formValues) => {
+          const data = await requestGetZhurongScjinggongOrderPage({
+            page: page.currentPage,
+            pageSize: page.pageSize,
+            ...formValues,
+          });
+          return data;
+        },
+      },
     },
-    gridOptions: {
-        virtualYConfig: {
-            enabled: true,   // 开启纵向虚拟滚动
-            gt: 50,
-        },
-        loading: false,
-        columns: useColumns(),
-        height: 'auto',
-        keepSource: true,
-        pagerConfig: {
-        },
-        proxyConfig: {
-            ajax: {
-                query: async ({page}, formValues) => {
-                    const data = await requestGetZhurongScjinggongOrderitemPage({
-                        page: page.currentPage,
-                        pageSize: page.pageSize,
-                        ...formValues,
-                    });
-                    return data;
-                },
-            },
-        },
-        rowConfig: {
-            keyField: 'id',
-        },
+    rowConfig: {
+      keyField: 'id',
+    },
 
-        toolbarConfig: {
-            custom: true,
-            export: false,
-            refresh: {code: 'query'},
-            search: true,
-            zoom: true,
-        },
-    } as VxeTableGridOptions<ZhurongScjinggongOrderitemVO>,
+    toolbarConfig: {
+      custom: true,
+      export: false,
+      refresh: { code: 'query' },
+      search: true,
+      zoom: true,
+    },
+  } as VxeTableGridOptions<ZhurongScjinggongOrderVO>,
 });
 
-
-function onActionClick(e: OnActionClickParams<ZhurongScjinggongOrderitemVO>) {
-    switch (e.code) {
-        case 'delete': {
-            break;
-        }
-        case 'edit': {
-            break;
-        }
-    }
-}
 function successHandler() {
-    message.success('操作成功');
-    onRefresh();
+  message.success('操作成功');
+  onRefresh();
 }
 function onRefresh() {
-    gridApi.query();
+  gridApi.query();
 }
-function onCreate() {
-    formDrawerApi.setData({}).open();
+function onOrderCodeClick(row: ZhurongScjinggongOrderVO) {
+  if (row.id === undefined || row.id === null) return;
+  void router.push({
+    path: '/order/item',
+    query: { orderId: `${row.id}` },
+  });
 }
 </script>
 
 <template>
-    <Page auto-content-height>
-        <FormDrawer @success="successHandler" />
-        <Grid>
-            <template #toolbar-tools>
-                <Button type="primary" @click="onCreate">
-                    <Plus class="size-5" />
-                    {{ $t('ui.actionTitle.create') }}
-                </Button>
-            </template>
-            <template #toolbar-actions>
-
-            </template>
-
-        </Grid>
-    </Page>
+  <Page auto-content-height>
+    <FormDrawer @success="successHandler" />
+    <Grid>
+      <template #orderCode="{ row }">
+        <Button
+          v-if="row.orderCode"
+          class="!px-0"
+          size="small"
+          type="link"
+          @click="onOrderCodeClick(row)"
+        >
+          {{ row.orderCode }}
+        </Button>
+        <span v-else>-</span>
+      </template>
+      <template #toolbar-tools>
+        <!--                <Button type="primary" @click="onCreate">-->
+        <!--                    <Plus class="size-5" />-->
+        <!--                    {{ $t('ui.actionTitle.create') }}-->
+        <!--                </Button>-->
+      </template>
+      <template #toolbar-actions> </template>
+    </Grid>
+  </Page>
 </template>
 
-<style scoped>
-
-</style>
+<style scoped></style>

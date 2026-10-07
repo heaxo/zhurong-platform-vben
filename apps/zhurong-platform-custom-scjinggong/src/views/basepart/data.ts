@@ -1,283 +1,299 @@
-import type { VbenFormSchema } from '#/adapter/form';
-import type { VxeTableGridOptions } from '#/adapter/vxe-table';
-import type { ZhurongScjinggongBasepartVO } from '#/api';
+import type {VbenFormSchema} from '#/adapter/form';
+import type {VxeTableGridOptions} from '#/adapter/vxe-table';
+import type {ZhurongScjinggongBasepartVO} from '#/api';
+import {
+  getJobBrowserTree,
+  pageMachineTools,
+} from '@zhurong/api';
 
 export function useFormSchema(): VbenFormSchema[] {
-return [
-        {
-        component: 'Input',
-        fieldName: 'invalidState',
-        label: 'invalidState',
+  return [
+    {
+      component: 'Input',
+      fieldName: '零件编码',
+      label: '零件编码',
+    },
+    {
+      component: 'Input',
+      fieldName: '零件名称',
+      label: '零件名称',
+    },
+    {
+      component: 'ApiSelect',
+      componentProps: {
+        allowClear: true,
+        api: pageMachineTools,
+        class: 'w-full',
+        filterOption(input: string, option: any) {
+          return String(option?.label ?? '')
+            .toLowerCase()
+            .includes(input.toLowerCase());
         },
-        {
-        component: 'Input',
-        fieldName: 'prdRef',
-        label: 'prdRef',
-        },
-        {
-        component: 'Input',
-        fieldName: 'prdName',
-        label: 'prdName',
-        },
-        {
-        component: 'Input',
-        fieldName: 'wrkRef',
-        label: 'wrkRef',
-        },
-        {
-        component: 'Input',
-        fieldName: 'matRef',
-        label: 'matRef',
-        },
-        {
-        component: 'InputNumber',
-        fieldName: 'thickness',
-        label: 'thickness',
-        },
-        {
-        component: 'InputNumber',
-        fieldName: 'quantity',
-        label: 'quantity',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata1',
-        label: 'udata1',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata2',
-        label: 'udata2',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata3',
-        label: 'udata3',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata4',
-        label: 'udata4',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata5',
-        label: 'udata5',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata6',
-        label: 'udata6',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata7',
-        label: 'udata7',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata8',
-        label: 'udata8',
-        },
-        {
-        component: 'Input',
-        fieldName: 'drawingPath',
-        label: 'drawingPath',
-        },
-        {
-        component: 'Input',
-        fieldName: 'rawDrawingPath',
-        label: 'rawDrawingPath',
-        },
-];
+        labelField: 'wrkRef',
+        params: { page: 1, pageSize: -1 },
+        resultField: 'items',
+        showSearch: true,
+        valueField: 'wrkRef',
+      },
+      fieldName: 'wrkRef',
+      label: '机床',
+      rules: 'selectRequired',
+    },
+    {
+      component: 'Input',
+      fieldName: '材质',
+      label: '材质',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: '厚度',
+      label: '厚度',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: '数量',
+      label: '数量',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata1',
+      label: '层级',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata2',
+      label: '客户件号',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata3',
+      label: '物料参数',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata4',
+      label: '工艺路线集合',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata5',
+      label: '子件物料编码',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata6',
+      label: '子件物料名称',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata7',
+      label: '子件物料规格',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata8',
+      label: '子件物料材质',
+    },
+    {
+      component: 'Input',
+      fieldName: 'drawingPath',
+      label: '图纸路径',
+    },
+    {
+      component: 'Input',
+      fieldName: 'rawDrawingPath',
+      label: '原始图纸路径',
+    },
+  ];
 }
 
 
 export function useGridFormSchema(): VbenFormSchema[] {
-return [
-        {
-        component: 'Input',
-        fieldName: 'invalidState',
-        label: 'invalidState',
+  return [
+    {
+      component: 'Input',
+      fieldName: '零件编码',
+      label: '零件编码',
+    },
+    {
+      component: 'Input',
+      fieldName: '零件名称',
+      label: '零件名称',
+    },
+    {
+      component: 'ApiSelect',
+      componentProps: {
+        allowClear: true,
+        api: pageMachineTools,
+        class: 'w-full',
+        filterOption(input: string, option: any) {
+          return String(option?.label ?? '')
+            .toLowerCase()
+            .includes(input.toLowerCase());
         },
-        {
-        component: 'Input',
-        fieldName: 'prdRef',
-        label: 'prdRef',
-        },
-        {
-        component: 'Input',
-        fieldName: 'prdName',
-        label: 'prdName',
-        },
-        {
-        component: 'Input',
-        fieldName: 'wrkRef',
-        label: 'wrkRef',
-        },
-        {
-        component: 'Input',
-        fieldName: 'matRef',
-        label: 'matRef',
-        },
-        {
-        component: 'InputNumber',
-        fieldName: 'thickness',
-        label: 'thickness',
-        },
-        {
-        component: 'InputNumber',
-        fieldName: 'quantity',
-        label: 'quantity',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata1',
-        label: 'udata1',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata2',
-        label: 'udata2',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata3',
-        label: 'udata3',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata4',
-        label: 'udata4',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata5',
-        label: 'udata5',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata6',
-        label: 'udata6',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata7',
-        label: 'udata7',
-        },
-        {
-        component: 'Input',
-        fieldName: 'udata8',
-        label: 'udata8',
-        },
-        {
-        component: 'Input',
-        fieldName: 'drawingPath',
-        label: 'drawingPath',
-        },
-        {
-        component: 'Input',
-        fieldName: 'rawDrawingPath',
-        label: 'rawDrawingPath',
-        },
-];
+        labelField: 'wrkRef',
+        params: { page: 1, pageSize: -1 },
+        resultField: 'items',
+        showSearch: true,
+        valueField: 'wrkRef',
+      },
+      fieldName: 'wrkRef',
+      label: '机床',
+    },
+    {
+      component: 'Input',
+      fieldName: '材质',
+      label: '材质',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: '厚度',
+      label: '厚度',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: '数量',
+      label: '数量',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata1',
+      label: '层级',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata2',
+      label: '客户件号',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata3',
+      label: '物料参数',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata4',
+      label: '工艺路线集合',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata5',
+      label: '子件物料编码',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata6',
+      label: '子件物料名称',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata7',
+      label: '子件物料规格',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata8',
+      label: '子件物料材质',
+    },
+    {
+      component: 'Input',
+      fieldName: 'drawingPath',
+      label: '图纸路径',
+    },
+    {
+      component: 'Input',
+      fieldName: 'rawDrawingPath',
+      label: '原始图纸路径',
+    },
+  ];
 }
 
 export function useColumns<T = ZhurongScjinggongBasepartVO>(): VxeTableGridOptions['columns'] {
-return [
-{
-align: 'left',
-type: 'checkbox',
-width: 30,
-},
-        {
-        field: 'invalidState',
-        title: 'invalidState',
-        width: 150,
-        filters: [{ data: '' }],
-        filterRender: {
-        name: 'TableTextFilterInput',
-        }
-        },
-        {
-        field: 'prdRef',
-        title: 'prdRef',
-        width: 150
-        },
-        {
-        field: 'prdName',
-        title: 'prdName',
-        width: 150
-        },
-        {
-        field: 'wrkRef',
-        title: 'wrkRef',
-        width: 150
-        },
-        {
-        field: 'matRef',
-        title: 'matRef',
-        width: 150
-        },
-        {
-        field: 'thickness',
-        title: 'thickness',
-        width: 150
-        },
-        {
-        field: 'quantity',
-        title: 'quantity',
-        width: 150
-        },
-        {
-        field: 'udata1',
-        title: 'udata1',
-        width: 150
-        },
-        {
-        field: 'udata2',
-        title: 'udata2',
-        width: 150
-        },
-        {
-        field: 'udata3',
-        title: 'udata3',
-        width: 150
-        },
-        {
-        field: 'udata4',
-        title: 'udata4',
-        width: 150
-        },
-        {
-        field: 'udata5',
-        title: 'udata5',
-        width: 150
-        },
-        {
-        field: 'udata6',
-        title: 'udata6',
-        width: 150
-        },
-        {
-        field: 'udata7',
-        title: 'udata7',
-        width: 150
-        },
-        {
-        field: 'udata8',
-        title: 'udata8',
-        width: 150
-        },
-        {
-        field: 'drawingPath',
-        title: 'drawingPath',
-        width: 150
-        },
-        {
-        field: 'rawDrawingPath',
-        title: 'rawDrawingPath',
-        width: 150
-        },
-];
+  return [
+    {
+      align: 'left',
+      type: 'checkbox',
+      width: 30,
+    },
+    {
+      field: '零件编码',
+      title: '零件编码',
+      width: 150
+    },
+    {
+      field: '零件名称',
+      title: '零件名称',
+      width: 150
+    },
+    {
+      field: '机床',
+      title: '机床',
+      width: 120
+    },
+    {
+      field: '材质',
+      title: '材质',
+      width: 120
+    },
+    {
+      field: '厚度',
+      title: '厚度',
+      width: 100
+    },
+    {
+      field: '数量',
+      title: '数量',
+      width: 100
+    },
+    {
+      field: 'udata1',
+      title: '层级',
+      width: 150
+    },
+    {
+      field: 'udata2',
+      title: '客户件号',
+      width: 150
+    },
+    {
+      field: 'udata3',
+      title: '物料参数',
+      width: 150
+    },
+    {
+      field: 'udata4',
+      title: '工艺路线集合',
+      width: 150
+    },
+    {
+      field: 'udata5',
+      title: '子件物料编码',
+      width: 150
+    },
+    {
+      field: 'udata6',
+      title: '子件物料名称',
+      width: 150
+    },
+    {
+      field: 'udata7',
+      title: '子件物料规格',
+      width: 150
+    },
+    {
+      field: 'udata8',
+      title: '子件物料材质',
+      width: 150
+    },
+    {
+      field: 'drawingPath',
+      title: '图纸路径',
+      width: 150
+    },
+    {
+      field: 'rawDrawingPath',
+      title: '原始图纸路径',
+      width: 150
+    },
+  ];
 }

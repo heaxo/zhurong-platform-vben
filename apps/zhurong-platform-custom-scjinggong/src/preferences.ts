@@ -10,8 +10,8 @@ export const overridesPreferences = defineOverridesPreferences({
   app: {
     accessMode: 'backend',
     name: import.meta.env.VITE_APP_TITLE,
-    defaultHomePath: '/inventory/sync',
-    defaultAvatar: '/scjinggong-logo.png',
+    defaultHomePath: '/order',
+    defaultAvatar: '/logo.png',
     enablePreferences: false
   },
   transition: {
@@ -20,23 +20,23 @@ export const overridesPreferences = defineOverridesPreferences({
   logo: {
     enable: true,
     fit: 'contain',
-    source: '/scjinggong-logo.png',
-    sourceDark: '/scjinggong-logo.png',
+    source: '/logo.png',
+    sourceDark: '/logo.png',
   },
   breadcrumb: {
     styleType: "background",
     showHome: true
   },
   footer: {
-    enable: true,
+    enable: false,
     fixed: true
   },
   tabbar: {
     styleType: "brisk",
   },
   theme: {
-    colorPrimary: '#46af32',
-    builtinType: 'deep-blue',
+    colorPrimary: '#f97316',
+    builtinType: 'orange',
     mode: "light",
     radius: "1",
     semiDarkSidebar: true,
@@ -54,7 +54,7 @@ export const overridesPreferences = defineOverridesPreferences({
   },
   copyright: {
     companyName: 'custom-scjinggong',
-    companySiteLink: 'https://www.szgoodmate.com/',
+    companySiteLink: 'http://localhost/',
     date: '2026',
     enable: true,
     icp: '',

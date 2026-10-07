@@ -29,9 +29,10 @@ function handleSelectionChange({records}) {
 }
 const [Grid, gridApi] = useVbenVxeGrid({
     formOptions: {
+      wrapperClass:'grid-cols-4',
       fieldMappingTime: [['createTime', ['startTime', 'endTime']]],
       schema: useGridFormSchema(),
-      submitOnChange: true,
+      submitOnChange: false,
       collapsed: true,
     },
     gridEvents: {
@@ -103,10 +104,10 @@ function onCreate() {
         <FormDrawer @success="successHandler" />
         <Grid>
             <template #toolbar-tools>
-                <Button type="primary" @click="onCreate">
-                    <Plus class="size-5" />
-                    {{ $t('ui.actionTitle.create') }}
-                </Button>
+<!--                <Button type="primary" @click="onCreate">-->
+<!--                    <Plus class="size-5" />-->
+<!--                    {{ $t('ui.actionTitle.create') }}-->
+<!--                </Button>-->
             </template>
             <template #toolbar-actions>
 

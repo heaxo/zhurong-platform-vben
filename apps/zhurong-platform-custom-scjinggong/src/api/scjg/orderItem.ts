@@ -6,6 +6,14 @@ import type {
 
 import { CUSTOM_BASE_PREFIX, requestClient } from '#/api/request';
 
+type ZhurongScjinggongOrderitemImportToExpertDTO =
+  ZhurongScjinggongOrderitemDTO & {
+    ids: string[];
+    jobName?: string;
+    jobPath?: string;
+    jobRef?: string;
+  };
+
 async function requestGetZhurongScjinggongOrderitemPage(
   params: ZhurongScjinggongOrderitemPageQuery,
 ) {
@@ -66,10 +74,20 @@ async function requestBatchRemoveZhurongScjinggongOrderitem(data: number[]) {
   );
 }
 
+async function requestImportZhurongScjinggongOrderitemToExpert(
+  data: ZhurongScjinggongOrderitemImportToExpertDTO,
+) {
+  return requestClient.post<boolean>(
+    `${CUSTOM_BASE_PREFIX}/zhurongScjinggongOrderitem/importToExpert`,
+    data,
+  );
+}
+
 export {
   requestBatchRemoveZhurongScjinggongOrderitem,
   requestCreateZhurongScjinggongOrderitem,
   requestGetZhurongScjinggongOrderitemPage,
+  requestImportZhurongScjinggongOrderitemToExpert,
   requestRemoveZhurongScjinggongOrderitem,
   requestUpdateZhurongScjinggongOrderitem,
   requestZhurongScjinggongOrderitemGetById,

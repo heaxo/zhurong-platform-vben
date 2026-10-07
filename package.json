@@ -50,6 +50,7 @@
     "dev:antd": "pnpm -F @vben/web-antd run dev",
     "dev:zhurong-platform-custom-but": "pnpm -F @zhurong-platform/custom-but run dev",
     "dev:zhurong-platform-custom-xybaoyuan": "pnpm -F @zhurong-platform/custom-xybaoyuan run dev",
+    "dev:zhurong-platform-custom-scjinggong": "pnpm -F @zhurong-platform/custom-scjinggong run dev",
     "dev:antdv-next": "pnpm -F @vben/web-antdv-next run dev",
     "dev:docs": "pnpm -F @vben/docs run dev",
     "dev:ele": "pnpm -F @vben/web-ele run dev",

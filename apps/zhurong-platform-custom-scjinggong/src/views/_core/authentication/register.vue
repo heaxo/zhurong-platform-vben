@@ -117,8 +117,8 @@ async function handleSubmit(value: Recordable<any>) {
 <template>
   <div class="scjinggong-register">
     <header class="scjinggong-register__brand">
-      <img src="/scjinggong-logo.png" alt="Scjinggong SYSTEM" />
-      <span>固美特科技</span>
+      <img src="/logo.png" alt="Scjinggong SYSTEM" />
+      <span>盛驰精工</span>
     </header>
 
     <section class="scjinggong-register__visual" aria-hidden="true">
@@ -132,7 +132,7 @@ async function handleSubmit(value: Recordable<any>) {
     <main class="scjinggong-register__main">
       <section class="register-card">
         <div class="register-card__logo">
-          <img src="/scjinggong-logo.png" alt="Scjinggong SYSTEM" />
+          <img src="/logo.png" alt="Scjinggong SYSTEM" />
         </div>
 
         <AuthenticationRegister
