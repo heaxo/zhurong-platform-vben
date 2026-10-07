@@ -321,7 +321,7 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
       slots: { default: 'partMaintenance' },
       title: '零件档案',
       fixed: 'right',
-      width: 80,
+      width: 120,
     },
     {
       field: 'sendState',
@@ -662,7 +662,7 @@ async function exportData() {
       </template>
       <template #partMaintenance="{ row }">
         <Tag :color="row.partMaintenance ? 'green' : 'red'">
-          {{ row.partMaintenance ? '已维护' : '未维护' }}
+          {{ row.partMaintenance === true ? '已维护' : row.partMaintenance === false ? '未维护' : 'ERP未下发' }}
         </Tag>
       </template>
       <template #sendState="{ row }">
