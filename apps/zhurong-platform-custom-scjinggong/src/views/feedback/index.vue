@@ -107,7 +107,7 @@ async function clearTableState() {
 
 const checkboxConfig = {
   checkMethod({row}) {
-    return row.mstate !== 40 && row.mstate !== 90;
+    return row.mstate !== 90;
   },
 };
 </script>
