@@ -122,7 +122,6 @@ async function handleSubmit(value: Recordable<any>) {
     </header>
 
     <section class="scjinggong-register__visual" aria-hidden="true">
-      <img src="/scjinggong-login-visual.jpg" alt="" />
       <div class="visual-copy">
         <p>GOODMATE DIGITAL FACTORY</p>
         <h1>打造数字化工厂，落地看得见</h1>
