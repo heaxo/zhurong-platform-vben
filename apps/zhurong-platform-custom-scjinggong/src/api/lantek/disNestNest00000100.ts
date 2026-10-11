@@ -12,8 +12,16 @@ async function requestSyncReportedStatus(data:any) {
 async function requestBatchLocking(data: { recIds:number[] }) {
   return requestClient.put<boolean>(`${CUSTOM_BASE_PREFIX}/disNestNest00000100/batch_locking`, data);
 }
+async function requestFeedback(data: { recIds:number[] }) {
+  return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/disNestNest00000100/feedback`, data);
+}
+async function requestWithdraw(data: { recIds:number[] }) {
+  return requestClient.post<boolean>(`${CUSTOM_BASE_PREFIX}/disNestNest00000100/withdraw`, data);
+}
 
 export {
   requestSyncReportedStatus,
   requestBatchLocking,
+  requestFeedback,
+  requestWithdraw,
 }
