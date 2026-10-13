@@ -90,22 +90,22 @@ export interface ManufacturingOrder {
 }
 
 export const pageBaseParts = (params: Recordable<any>) =>
-  requestClient.get<PageResult<BasePart>>(`${PREFIX}/base-parts`, { params });
+  requestClient.get<PageResult<BasePart>>(`${PREFIX_CUSTOM}/base-parts`, { params });
 export const createBasePart = (data: Partial<BasePart>) =>
   requestClient.post<BasePart>(`${PREFIX}/base-parts`, data);
 export const deleteBaseParts = (ids: EntityId[]) =>
-  requestClient.delete(`${PREFIX}/base-parts`, { data: { ids } });
+  requestClient.delete(`${PREFIX_CUSTOM}/base-parts`, { data: { ids } });
 export const exportBaseParts = (params: Recordable<any>) =>
   download(`${PREFIX}/base-parts/export`, params, '象屿宝元-基础零件.csv');
 
 export const pageSteelPlates = (params: Recordable<any>) =>
-  requestClient.get<PageResult<SteelPlate>>(`${PREFIX}/steel-plates`, {
+  requestClient.get<PageResult<SteelPlate>>(`${PREFIX_CUSTOM}/steel-plates`, {
     params,
   });
 export const syncErpSteelPlates = (data: Recordable<any>) =>
   requestClient.post<number>(`${PREFIX_CUSTOM}/steel-plates/sync-erp`, data);
 export const deleteSteelPlates = (ids: EntityId[]) =>
-  requestClient.delete(`${PREFIX}/steel-plates`, { data: { ids } });
+  requestClient.delete(`${PREFIX_CUSTOM}/steel-plates`, { data: { ids } });
 export const importSteelPlates = (ids: EntityId[]) =>
   requestClient.post<ImportTask>(`${PREFIX}/steel-plates/import`, { ids });
 export const exportSteelPlates = (params: Recordable<any>) =>
@@ -113,11 +113,11 @@ export const exportSteelPlates = (params: Recordable<any>) =>
 
 export const pageOrders = (params: Recordable<any>) =>
   requestClient.get<PageResult<ManufacturingOrder>>(
-    `${PREFIX}/manufacturing-orders`,
+    `${PREFIX_CUSTOM}/manufacturing-orders`,
     { params },
   );
 export const updateOrders = (data: Recordable<any>[]) =>
-  requestClient.put(`${PREFIX}/manufacturing-orders/batch`, data);
+  requestClient.put(`${PREFIX_CUSTOM}/manufacturing-orders/batch`, data);
 export const createJob = (jobName: string, jobPath: string) =>
   requestClient.post<string>(`${PREFIX}/manufacturing-orders/jobs`, {
     jobName,
@@ -129,22 +129,22 @@ export const importOrders = (ids: EntityId[]) =>
   });
 export const exportOrders = (params: Recordable<any>) =>
   download(
-    `${PREFIX}/manufacturing-orders/export`,
+    `${PREFIX_CUSTOM}/manufacturing-orders/export`,
     params,
     '象屿宝元-生产订单.csv',
   );
 
 export const pageNests = (data: Recordable<any>) =>
-  requestClient.post<PageResult<Recordable<any>>>(`${PREFIX}/nests/page`, data);
+  requestClient.post<PageResult<Recordable<any>>>(`${PREFIX_CUSTOM}/nests/page`, data);
 export const sendNestFeedback = (
   ids: EntityId[],
   productionWorkshopCode: string,
   materialReceived: boolean,
 ) =>
-  requestClient.post(`${PREFIX}/nests/feedback`, {
+  requestClient.post(`${PREFIX_CUSTOM}/nests/feedback`, {
     ids,
     materialReceived,
     productionWorkshopCode,
   });
 export const withdrawNestFeedback = (ids: EntityId[]) =>
-  requestClient.post(`${PREFIX}/nests/feedback/withdraw`, { ids });
+  requestClient.post(`${PREFIX_CUSTOM}/nests/feedback/withdraw`, { ids });

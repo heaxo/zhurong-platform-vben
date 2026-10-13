@@ -91,6 +91,7 @@ const searchSchema: VbenFormSchema[] = [
     label: 'ERP内码',
   },
   { component: 'Input', fieldName: 'productionWorkshopName', label: '车间' },
+  { component: 'Input', fieldName: 'cusRef', label: '计划跟踪号' },
   {
     component: 'Select',
     fieldName: 'sendState',
@@ -115,6 +116,18 @@ const searchSchema: VbenFormSchema[] = [
   },
   { component: 'Input', fieldName: 'prdName', label: '图号' },
   { component: 'Input', fieldName: 'matRef', label: '材质' },
+  {
+    component: 'InputNumber',
+    componentProps: { class: 'w-full', min: 0 },
+    fieldName: 'minThickness',
+    label: '最小厚度',
+  },
+  {
+    component: 'InputNumber',
+    componentProps: { class: 'w-full', min: 0 },
+    fieldName: 'maxThickness',
+    label: '最大厚度',
+  },
 ];
 
 const machineSchema: VbenFormSchema[] = [
@@ -293,7 +306,17 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
   checkboxConfig: { highlight: true, range: true },
   columns: [
     { type: 'checkbox', width: 48 },
+    { field: 'cusRef', minWidth: 160, title: '计划跟踪号' },
     { field: 'productionOrderNumber', minWidth: 170, title: '生产订单号' },
+    {
+      field: 'sendState',
+      slots: { default: 'sendState' },
+      title: '导入状态',
+      // fixed: 'right',
+      width: 80,
+    },
+    { field: 'matRef', minWidth: 90, title: '材质' },
+    { field: 'prdName', minWidth: 160, title: '图号' },
     {
       field: 'productionOrderErpInternalCode',
       minWidth: 130,
@@ -301,13 +324,10 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
     },
     { field: 'productionWorkshopName', minWidth: 100, title: '生产车间' },
     { field: 'prdRef', minWidth: 150, title: '零件编号' },
-    { field: 'prdName', minWidth: 160, title: '图号' },
     { field: 'drawingCode', minWidth: 160, title: '零件名称' },
     { field: 'nestingPerson', minWidth: 120, title: '套料员' },
-    { field: 'matRef', minWidth: 90, title: '材质' },
     { field: 'thickness', title: '厚度', width: 65 },
     { field: 'quantity', title: '数量', width: 65 },
-    { field: 'cusRef', minWidth: 160, title: '计划跟踪号' },
     { field: 'wrkRef', minWidth: 110, title: '设备' },
     { field: 'jobName', minWidth: 150, title: '作业' },
     {
@@ -322,13 +342,6 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
       title: '零件档案',
       fixed: 'right',
       width: 120,
-    },
-    {
-      field: 'sendState',
-      slots: { default: 'sendState' },
-      title: '导入状态',
-      fixed: 'right',
-      width: 80,
     },
   ],
   height: 'auto',
@@ -356,7 +369,7 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
 
 const [Grid, gridApi] = useVbenVxeGrid<ManufacturingOrder>({
   formOptions: {
-    wrapperClass: 'grid-cols-4',
+    wrapperClass: 'grid-cols-6',
     collapsed: true,
     schema: searchSchema,
     submitOnChange: false,
