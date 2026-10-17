@@ -1,10 +1,7 @@
 import type {VbenFormSchema} from '#/adapter/form';
 import type {VxeTableGridOptions} from '#/adapter/vxe-table';
 import type {ZhurongScjinggongOrderitemVO} from '#/api';
-import {
-  getJobBrowserTree,
-  pageMachineTools,
-} from '@zhurong/api';
+import { pageMachineTools } from '@zhurong/api';
 
 export function useFormSchema(): VbenFormSchema[] {
   return [
@@ -37,6 +34,21 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'DatePicker',
       fieldName: 'rdate',
       label: '订单交货日期',
+    },
+    {
+      component: 'Input',
+      fieldName: 'prdName',
+      label: '零件名称',
+    },
+    {
+      component: 'Input',
+      fieldName: 'matRef',
+      label: '加工材质',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'thickness',
+      label: '加工厚度',
     },
     {
       component: 'Input',
@@ -97,6 +109,46 @@ export function useFormSchema(): VbenFormSchema[] {
       component: 'Input',
       fieldName: 'udata12',
       label: '工单状态',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata13',
+      label: '项次',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata14',
+      label: '唯一序列号',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata15',
+      label: 'BomList_id',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata16',
+      label: 'Prd_UData4',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata17',
+      label: 'Prd_UData5',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata18',
+      label: 'Prd_UData6',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata19',
+      label: 'Prd_UData7',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata20',
+      label: 'Prd_UData8',
     },
   ];
 }
@@ -173,6 +225,21 @@ export function useGridFormSchema(): VbenFormSchema[] {
     },
     {
       component: 'Input',
+      fieldName: 'prdName',
+      label: '零件名称',
+    },
+    {
+      component: 'Input',
+      fieldName: 'matRef',
+      label: '加工材质',
+    },
+    {
+      component: 'InputNumber',
+      fieldName: 'thickness',
+      label: '加工厚度',
+    },
+    {
+      component: 'Input',
       fieldName: 'udata1',
       label: '加工中心编码',
     },
@@ -231,10 +298,50 @@ export function useGridFormSchema(): VbenFormSchema[] {
       fieldName: 'udata12',
       label: '工单状态',
     },
+    {
+      component: 'Input',
+      fieldName: 'udata13',
+      label: '项次',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata14',
+      label: '唯一序列号',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata15',
+      label: 'BomList_id',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata16',
+      label: 'Prd_UData4',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata17',
+      label: 'Prd_UData5',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata18',
+      label: 'Prd_UData6',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata19',
+      label: 'Prd_UData7',
+    },
+    {
+      component: 'Input',
+      fieldName: 'udata20',
+      label: 'Prd_UData8',
+    },
   ];
 }
 
-export function useColumns<T = ZhurongScjinggongOrderitemVO>(): VxeTableGridOptions['columns'] {
+export function useColumns<T = ZhurongScjinggongOrderitemVO>(): VxeTableGridOptions<T>['columns'] {
   return [
     {
       align: 'left',
@@ -271,6 +378,21 @@ export function useColumns<T = ZhurongScjinggongOrderitemVO>(): VxeTableGridOpti
       field: 'rdate',
       title: '订单交货日期',
       width: 150
+    },
+    {
+      field: 'prdName',
+      title: '零件名称',
+      width: 150
+    },
+    {
+      field: 'matRef',
+      title: '加工材质',
+      width: 120
+    },
+    {
+      field: 'thickness',
+      title: '加工厚度',
+      width: 100
     },
     {
       field: 'udata1',
@@ -330,6 +452,46 @@ export function useColumns<T = ZhurongScjinggongOrderitemVO>(): VxeTableGridOpti
     {
       field: 'udata12',
       title: '工单状态',
+      width: 150
+    },
+    {
+      field: 'udata13',
+      title: '项次',
+      width: 100
+    },
+    {
+      field: 'udata14',
+      title: '唯一序列号',
+      width: 180
+    },
+    {
+      field: 'udata15',
+      title: 'BomList_id',
+      width: 150
+    },
+    {
+      field: 'udata16',
+      title: 'Prd_UData4',
+      width: 150
+    },
+    {
+      field: 'udata17',
+      title: 'Prd_UData5',
+      width: 150
+    },
+    {
+      field: 'udata18',
+      title: 'Prd_UData6',
+      width: 150
+    },
+    {
+      field: 'udata19',
+      title: 'Prd_UData7',
+      width: 150
+    },
+    {
+      field: 'udata20',
+      title: 'Prd_UData8',
       width: 150
     },
     {

@@ -1,5 +1,3 @@
-import type { Recordable } from '@vben/types';
-
 export interface ZhurongScjinggongOrderitemVO {
         /**
         * 
@@ -62,6 +60,18 @@ export interface ZhurongScjinggongOrderitemVO {
         */
         rdate?: string;
         /**
+        * 零件名称
+        */
+        prdName?: string;
+        /**
+        * 加工材质
+        */
+        matRef?: string;
+        /**
+        * 加工厚度
+        */
+        thickness?: number;
+        /**
         * 加工中心编码
         */
         udata1?: string;
@@ -110,9 +120,45 @@ export interface ZhurongScjinggongOrderitemVO {
         */
         udata12?: string;
         /**
+        * 项次
+        */
+        udata13?: string;
+        /**
+        * 唯一序列号
+        */
+        udata14?: string;
+        /**
+        * BomList_id
+        */
+        udata15?: string;
+        /**
+        * Prd_UData4
+        */
+        udata16?: string;
+        /**
+        * Prd_UData5
+        */
+        udata17?: string;
+        /**
+        * Prd_UData6
+        */
+        udata18?: string;
+        /**
+        * Prd_UData7
+        */
+        udata19?: string;
+        /**
+        * Prd_UData8
+        */
+        udata20?: string;
+        /**
         * 
         */
         orderId?: number;
+        /**
+        * 零件基础数据是否已下发
+        */
+        partIssued?: boolean;
 }
 
 export interface ZhurongScjinggongOrderitemDTO {
@@ -145,6 +191,18 @@ export interface ZhurongScjinggongOrderitemDTO {
         */
         rdate?: string;
         /**
+        * 零件名称
+        */
+        prdName?: string;
+        /**
+        * 加工材质
+        */
+        matRef?: string;
+        /**
+        * 加工厚度
+        */
+        thickness?: number;
+        /**
         * 加工中心编码
         */
         udata1?: string;
@@ -192,6 +250,38 @@ export interface ZhurongScjinggongOrderitemDTO {
         * 工单状态
         */
         udata12?: string;
+        /**
+        * 项次
+        */
+        udata13?: string;
+        /**
+        * 唯一序列号
+        */
+        udata14?: string;
+        /**
+        * BomList_id
+        */
+        udata15?: string;
+        /**
+        * Prd_UData4
+        */
+        udata16?: string;
+        /**
+        * Prd_UData5
+        */
+        udata17?: string;
+        /**
+        * Prd_UData6
+        */
+        udata18?: string;
+        /**
+        * Prd_UData7
+        */
+        udata19?: string;
+        /**
+        * Prd_UData8
+        */
+        udata20?: string;
         /**
         * 
         */
@@ -235,6 +325,18 @@ size?: number;
         */
         rdate?: string;
         /**
+        * 零件名称
+        */
+        prdName?: string;
+        /**
+        * 加工材质
+        */
+        matRef?: string;
+        /**
+        * 加工厚度
+        */
+        thickness?: number;
+        /**
         * 加工中心编码
         */
         udata1?: string;
@@ -282,6 +384,38 @@ size?: number;
         * 工单状态
         */
         udata12?: string;
+        /**
+        * 项次
+        */
+        udata13?: string;
+        /**
+        * 唯一序列号
+        */
+        udata14?: string;
+        /**
+        * BomList_id
+        */
+        udata15?: string;
+        /**
+        * Prd_UData4
+        */
+        udata16?: string;
+        /**
+        * Prd_UData5
+        */
+        udata17?: string;
+        /**
+        * Prd_UData6
+        */
+        udata18?: string;
+        /**
+        * Prd_UData7
+        */
+        udata19?: string;
+        /**
+        * Prd_UData8
+        */
+        udata20?: string;
         /**
         * 
         */
