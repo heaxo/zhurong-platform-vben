@@ -35,6 +35,16 @@ const warehouseOptions = [
 
 const syncSchema: VbenFormSchema[] = [
   {
+    component: 'Input',
+    componentProps: {
+      allowClear: true,
+      class: 'w-full',
+      placeholder: '物料编码',
+    },
+    fieldName: 'invcode',
+    label: '物料编码',
+  },
+  /*{
     component: 'Select',
     componentProps: {
       allowClear: true,
@@ -45,7 +55,7 @@ const syncSchema: VbenFormSchema[] = [
     fieldName: 'invcode',
     label: '仓库',
     rules: 'selectRequired',
-  },
+  },*/
 ];
 
 const [SyncForm, syncFormApi] = useVbenForm({
