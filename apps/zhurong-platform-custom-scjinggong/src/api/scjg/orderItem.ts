@@ -4,7 +4,7 @@ import type {
   ZhurongScjinggongOrderitemVO,
 } from '#/api';
 
-import { CUSTOM_BASE_PREFIX, requestClient } from '#/api/request';
+import { CUSTOM_BASE_PREFIX, CLIENT_PROXY_BASE_PREFIX, requestClient } from '#/api/request';
 
 type ZhurongScjinggongOrderitemImportToExpertDTO =
   ZhurongScjinggongOrderitemDTO & {
@@ -78,7 +78,7 @@ async function requestImportZhurongScjinggongOrderitemToExpert(
   data: ZhurongScjinggongOrderitemImportToExpertDTO,
 ) {
   return requestClient.post<boolean>(
-    `${CUSTOM_BASE_PREFIX}/zhurongScjinggongOrderitem/importToExpert`,
+    `${CLIENT_PROXY_BASE_PREFIX}/zhurongScjinggongOrderitem/importToExpert`,
     data,
   );
 }

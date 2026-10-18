@@ -4,7 +4,7 @@ import type {
   ZhurongScjinggongSteelplateinventoryVO,
 } from '#/api';
 
-import { CUSTOM_BASE_PREFIX, requestClient } from '#/api/request';
+import {CLIENT_PROXY_BASE_PREFIX, CUSTOM_BASE_PREFIX, requestClient} from '#/api/request';
 
 type ZhurongScjinggongSteelplateinventoryImportToExpertDTO =
   ZhurongScjinggongSteelplateinventoryDTO & {
@@ -15,12 +15,13 @@ interface U8InventoryRequest {
   invcode: string;
 }
 
-const PREFIX = `${CUSTOM_BASE_PREFIX}/zhurongScjinggongSteelplateinventory`;
+const PREFIX = `${CLIENT_PROXY_BASE_PREFIX}/zhurongScjinggongSteelplateinventory`;
+const PREFIX_CUSTOM = `${CUSTOM_BASE_PREFIX}/zhurongScjinggongSteelplateinventory`;
 
 async function requestGetZhurongScjinggongSteelplateinventoryPage(
   params: ZhurongScjinggongSteelplateinventoryPageQuery,
 ) {
-  return requestClient.get<any>(`${PREFIX}/page`, {
+  return requestClient.get<any>(`${PREFIX_CUSTOM}/page`, {
     params,
   });
 }
@@ -29,7 +30,7 @@ async function requestZhurongScjinggongSteelplateinventoryGetById(
   id: number | string,
 ) {
   return requestClient.get<ZhurongScjinggongSteelplateinventoryVO>(
-    `${PREFIX}/getById`,
+    `${PREFIX_CUSTOM}/getById`,
     {
       params: { id },
     },
@@ -39,14 +40,14 @@ async function requestZhurongScjinggongSteelplateinventoryGetById(
 async function requestCreateZhurongScjinggongSteelplateinventory(
   data: ZhurongScjinggongSteelplateinventoryDTO,
 ) {
-  return requestClient.post<string>(`${PREFIX}/save`, data);
+  return requestClient.post<string>(`${PREFIX_CUSTOM}/save`, data);
 }
 
 async function requestUpdateZhurongScjinggongSteelplateinventory(
   id: number | string,
   data: ZhurongScjinggongSteelplateinventoryDTO,
 ) {
-  return requestClient.put<boolean>(`${PREFIX}/update`, data, {
+  return requestClient.put<boolean>(`${PREFIX_CUSTOM}/update`, data, {
     params: { id },
   });
 }
@@ -54,7 +55,7 @@ async function requestUpdateZhurongScjinggongSteelplateinventory(
 async function requestRemoveZhurongScjinggongSteelplateinventory(
   id: number | string,
 ) {
-  return requestClient.delete<boolean>(`${PREFIX}/remove`, {
+  return requestClient.delete<boolean>(`${PREFIX_CUSTOM}/remove`, {
     params: { id },
   });
 }
@@ -62,7 +63,7 @@ async function requestRemoveZhurongScjinggongSteelplateinventory(
 async function requestBatchRemoveZhurongScjinggongSteelplateinventory(
   data: number[],
 ) {
-  return requestClient.delete<boolean>(`${PREFIX}/batchRemove`, {
+  return requestClient.delete<boolean>(`${PREFIX_CUSTOM}/batchRemove`, {
     data,
   });
 }
@@ -70,7 +71,7 @@ async function requestBatchRemoveZhurongScjinggongSteelplateinventory(
 async function requestSyncZhurongScjinggongSteelplateinventory(
   data: U8InventoryRequest,
 ) {
-  return requestClient.post<boolean>(`${PREFIX}/sync`, data);
+  return requestClient.post<boolean>(`${PREFIX_CUSTOM}/sync`, data);
 }
 
 async function requestImportZhurongScjinggongSteelplateinventoryToExpert(
