@@ -82,17 +82,17 @@ export function useGridFormSchema(): VbenFormSchema[] {
 export function useColumns(): VxeTableGridOptions<ScjinggongInventoryDirectRow>['columns'] {
   return [
     { align: 'left', type: 'checkbox', width: 42 },
-    { field: 'invClassCode', minWidth: 130, title: '存货分类编码' },
-    { field: 'invClassName', minWidth: 140, title: '存货分类名称' },
+    { field: 'iQuantity', minWidth: 90, title: '数量' },
+    { field: 'cWhCode', minWidth: 110, title: '仓库' },
     { field: 'invCode', minWidth: 150, title: '物料编码' },
     { field: 'invName', minWidth: 180, title: '物料名称' },
     { field: 'invSize', minWidth: 140, title: '规格尺寸' },
-    { field: 'invMaterialCode', minWidth: 120, title: '存货材质' },
-    { field: 'invDensity', minWidth: 130, title: '物料密度(g/cm³)' },
-    { field: 'invLong', minWidth: 120, title: '长 展开长(mm)' },
-    { field: 'invThick', minWidth: 120, title: '厚 展开厚(mm)' },
-    { field: 'invWide', minWidth: 120, title: '宽 展开宽(mm)' },
-    { field: 'iQuantity', minWidth: 110, title: '库存数量' },
-    { field: 'cWhCode', minWidth: 110, title: '仓库编码' },
+    { field: 'invMaterialCode', minWidth: 120, title: '材质' },
+    { field: 'invDensity', minWidth: 130, title: '密度(g/cm³)' },
+    { field: 'invLong', minWidth: 100, title: '长（mm）' },
+    { field: 'invWide', minWidth: 100, title: '宽（mm）' },
+    { field: 'invThick', minWidth: 100, title: '厚（mm）' },
+    { field: 'invClassCode', minWidth: 100, title: '分类编码' },
+    { field: 'invClassName', minWidth: 100, title: '分类名称' },
   ];
 }
