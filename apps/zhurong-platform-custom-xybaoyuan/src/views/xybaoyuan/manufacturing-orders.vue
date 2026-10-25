@@ -329,6 +329,7 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
     { field: 'thickness', title: '厚度', width: 65 },
     { field: 'quantity', title: '数量', width: 65 },
     { field: 'wrkRef', minWidth: 110, title: '设备' },
+    { field: 'createdAt', minWidth: 120, title: '推送日期' },
     { field: 'jobName', minWidth: 150, title: '作业' },
     {
       field: 'task',
@@ -345,7 +346,10 @@ const gridOptions: VxeTableGridOptions<ManufacturingOrder> = {
     },
   ],
   height: 'auto',
-  pagerConfig: {},
+  pagerConfig: {
+    pageSize: 200,
+    pageSizes: [200, 300,400,500],
+  },
   proxyConfig: {
     ajax: {
       async query({ page }, formValues) {
