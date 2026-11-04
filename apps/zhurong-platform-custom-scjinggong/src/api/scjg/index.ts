@@ -6,5 +6,6 @@ export * from './order';
 export * from './orderItem';
 export * from './orderitemTyping';
 export * from './orderTyping';
+export * from './reports';
 export * from './steelplateinventory';
 export * from './steelplateinventoryTyping';
