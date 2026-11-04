@@ -29,7 +29,7 @@ const lastQuery = ref<ReportQuery>({});
 const exporting = ref(false);
 
 const [Grid] = useVbenVxeGrid<CuttingProgramRow>({
-  formOptions: { schema, submitOnChange: false, wrapperClass: 'grid-cols-3',
+  formOptions: { schema, submitOnChange: false, wrapperClass: 'grid-cols-4',
     collapsed: true, },
   gridOptions: {
     columns,

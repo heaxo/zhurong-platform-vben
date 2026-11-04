@@ -35,7 +35,7 @@ const exporting = ref(false);
 
 const [Grid] = useVbenVxeGrid<PartReportRow>({
   formOptions: {
-    schema, submitOnChange: false, wrapperClass: 'grid-cols-3',
+    schema, submitOnChange: false, wrapperClass: 'grid-cols-5',
     collapsed: true,
   },
   gridOptions: {
