@@ -61,11 +61,22 @@ export function getPartReport(params: ReportQuery) {
 
 async function exportReport(path: string, fileName: string, params: ReportQuery) {
   // responseReturn=body 让 Vben 的认证拦截器继续生效，并直接取得二进制内容。
-  const blob = await requestClient.get<Blob>(`${prefix}/${path}/export`, {
-    params,
-    responseReturn: 'body',
-    responseType: 'blob',
-  });
+  let blob: Blob;
+  try {
+    blob = await requestClient.get<Blob>(`${prefix}/${path}/export`, {
+      params,
+      responseReturn: 'body',
+      responseType: 'blob',
+    });
+  } catch (error) {
+    // 非 2xx 响应同样会被 Axios 包装为 Blob；优先显示后端业务消息。
+    const responseBlob = (error as { response?: { data?: unknown } })?.response?.data;
+    if (responseBlob instanceof Blob && responseBlob.type.includes('json')) {
+      const payload = JSON.parse(await responseBlob.text());
+      throw new Error(payload.message || '导出失败');
+    }
+    throw error;
+  }
   if (blob.type.includes('json')) {
     const payload = JSON.parse(await blob.text());
     throw new Error(payload.message || '导出失败');

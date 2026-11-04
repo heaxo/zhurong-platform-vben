@@ -8,7 +8,7 @@ export function useFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'prdRef',
-      label: '零级编码',
+      label: '零件编码',
     },
     {
       component: 'Input',
@@ -159,7 +159,7 @@ export function useGridFormSchema(): VbenFormSchema[] {
     {
       component: 'Input',
       fieldName: 'prdRef',
-      label: '零级编码',
+      label: '零件编码',
     },
     {
       component: 'ApiSelect',
@@ -350,7 +350,7 @@ export function useColumns<T = ZhurongScjinggongOrderitemVO>(): VxeTableGridOpti
     },
     {
       field: 'prdRef',
-      title: '零级编码',
+      title: '零件编码',
       width: 150
     },
 
