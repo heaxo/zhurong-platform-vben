@@ -1,0 +1,59 @@
+{
+  "name": "@zhurong-platform/custom-roneind",
+  "version": "0.0.2",
+  "homepage": "https://vben.pro",
+  "bugs": "https://github.com/vbenjs/vue-vben-admin/issues",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vbenjs/vue-vben-admin.git",
+    "directory": "apps/web-antd"
+  },
+  "license": "MIT",
+  "author": {
+    "name": "vben",
+    "email": "zhuronghh@gmail.com",
+    "url": "https://github.com/anncwb"
+  },
+  "type": "module",
+  "scripts": {
+    "build": "pnpm vite build --mode production",
+    "docker:build": "docker build -f deploy/Dockerfile -t zhurong-platform/custom-roneind-nginx .",
+    "build:analyze": "pnpm vite build --mode analyze",
+    "dev": "pnpm vite --mode development",
+    "preview": "vite preview",
+    "typecheck": "vue-tsc --noEmit --skipLibCheck"
+  },
+  "imports": {
+    "#/*": "./src/*"
+  },
+  "dependencies": {
+    "@ant-design/icons-vue": "catalog:",
+    "@iconify/json": "catalog:",
+    "@iconify/vue": "catalog:",
+    "@vben-core/menu-ui": "workspace:*",
+    "@vben-core/shadcn-ui": "workspace:*",
+    "@vben/access": "workspace:*",
+    "@vben/common-ui": "workspace:*",
+    "@vben/constants": "workspace:*",
+    "@vben/hooks": "workspace:*",
+    "@vben/icons": "workspace:*",
+    "@vben/layouts": "workspace:*",
+    "@vben/locales": "workspace:*",
+    "@vben/plugins": "workspace:*",
+    "@vben/preferences": "workspace:*",
+    "@vben/request": "workspace:*",
+    "@vben/stores": "workspace:*",
+    "@vben/styles": "workspace:*",
+    "@vben/types": "workspace:*",
+    "@vben/utils": "workspace:*",
+    "@vueuse/core": "catalog:",
+    "@zhurong/components": "workspace:*",
+    "ant-design-vue": "catalog:",
+    "dayjs": "catalog:",
+    "lodash-es": "catalog:",
+    "pinia": "catalog:",
+    "qs": "catalog:",
+    "vue": "catalog:",
+    "vue-router": "catalog:"
+  }
+}
