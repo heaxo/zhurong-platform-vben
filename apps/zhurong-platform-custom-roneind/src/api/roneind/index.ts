@@ -96,7 +96,7 @@ export const createBasePart = (data: Partial<BasePart>) =>
 export const deleteBaseParts = (ids: EntityId[]) =>
   requestClient.delete(`${PREFIX_CUSTOM}/base-parts`, { data: { ids } });
 export const exportBaseParts = (params: Recordable<any>) =>
-  download(`${PREFIX}/base-parts/export`, params, '象屿宝元-基础零件.csv');
+  download(`${PREFIX}/base-parts/export`, params, '朗恩精密-基础零件.csv');
 
 export const pageSteelPlates = (params: Recordable<any>) =>
   requestClient.get<PageResult<SteelPlate>>(`${PREFIX_CUSTOM}/steel-plates`, {
@@ -109,7 +109,7 @@ export const deleteSteelPlates = (ids: EntityId[]) =>
 export const importSteelPlates = (ids: EntityId[]) =>
   requestClient.post<ImportTask>(`${PREFIX}/steel-plates/import`, { ids });
 export const exportSteelPlates = (params: Recordable<any>) =>
-  download(`${PREFIX}/steel-plates/export`, params, '象屿宝元-钢板.csv');
+  download(`${PREFIX}/steel-plates/export`, params, '朗恩精密-钢板.csv');
 
 export const pageOrders = (params: Recordable<any>) =>
   requestClient.get<PageResult<ManufacturingOrder>>(
@@ -131,7 +131,7 @@ export const exportOrders = (params: Recordable<any>) =>
   download(
     `${PREFIX_CUSTOM}/manufacturing-orders/export`,
     params,
-    '象屿宝元-生产订单.csv',
+    '朗恩精密-生产订单.csv',
   );
 
 export const pageNests = (data: Recordable<any>) =>
